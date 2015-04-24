@@ -2,6 +2,6 @@
 
 {8._6_}cdef2g
 
-{8.._3_}rc16rfrcrf
+{6.._3_}rc16rfrcrf
 
-
+1*4R

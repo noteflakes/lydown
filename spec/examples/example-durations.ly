@@ -4,7 +4,7 @@
 
   c8. d16 e8. f16 g2
 
-  r8.. c32 r16 f r c r f
+  r16.. c32 r16 f r c r f
   
   R1*4
 }

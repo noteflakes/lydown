@@ -31,8 +31,13 @@ module Lydown
     module DurationValueNode
       
       def compile(opus)
-        opus.context[:duration_values] = 
-          [LILYPOND_DURATIONS[text_value] || text_value]
+        value = text_value.sub(/^[0-9]+/) {|m| LILYPOND_DURATIONS[m] || m}
+        
+        if opus.context[:duration_macro]
+          opus.context[:duration_values] << value
+        else
+          opus.context[:duration_values] = [value]
+        end
       end
     end
 
@@ -45,6 +50,17 @@ module Lydown
     module RestNode
       def compile(opus)
         opus.add_note(text_value)
+      end
+    end
+    
+    module DurationMacroNode
+      include LydownNode
+      
+      def compile(opus)
+        opus.context[:duration_macro] = true
+        opus.context[:duration_values] = []
+        _compile(self, opus)
+        opus.context[:duration_macro] = false
       end
     end
   end

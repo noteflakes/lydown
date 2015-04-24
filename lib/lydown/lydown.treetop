@@ -42,8 +42,15 @@ grammar Lydown
     '*' number ('/' number)*
   end
   rule duration_macro
-    '{123}'
+    '{' macro_event* '}' <DurationMacroNode>
   end
+  rule macro_event
+  (duration / note_placeholder / rest) white_space*
+  end
+  rule note_placeholder
+    [_@]
+  end
+  
   rule note
     note_head accidental* octave_change* <NoteNode>
   end

@@ -2,6 +2,8 @@ require 'lydown/core_ext'
 require 'lydown/parser'
 require 'lydown/templates'
 
+require 'pp'
+
 module Lydown
   class Opus
     attr_accessor :context
@@ -16,8 +18,16 @@ module Lydown
     end
     
     def compile(source)
-      ast = LydownParser.new.parse(source)
-      ast.compile(self)
+      parser = LydownParser.new
+      ast = parser.parse(source)
+      unless ast
+        puts "Faild to compile"
+        puts parser.failure_reason
+        puts "  #{source.lines[parser.failure_line - 1]}"
+        puts " #{' ' * parser.failure_column}^"
+      else
+        ast.compile(self)
+      end
     end
     
     def add_note(note)
