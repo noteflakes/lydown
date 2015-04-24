@@ -1,0 +1,7 @@
+4c8d6e3fg4ab
+
+8.c6d8.e6f2g
+
+8..r3c16rfrcrf
+
+1*4R

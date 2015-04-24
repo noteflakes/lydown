@@ -48,7 +48,7 @@ grammar Lydown
     note_head accidental* octave_change* <NoteNode>
   end
   rule rest
-    'r' / 'R' <RestNode>
+    [rR] <RestNode>
   end
   rule note_head
     [a-h]

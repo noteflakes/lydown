@@ -16,7 +16,8 @@ module Lydown
     end
     
     def compile(source)
-      LydownParser.new.parse(source).compile(self)
+      ast = LydownParser.new.parse(source)
+      ast.compile(self)
     end
     
     def add_note(note)
