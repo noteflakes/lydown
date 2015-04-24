@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.homepage      = 'http://github.com/ciconia/lydown'
   s.license       = 'MIT'
 
-  s.files         = Dir["{lib}/**/*.rb", "bin/*", "LICENSE", "*.md"]
+  s.files         = Dir["{lib}/**/*", "bin/*", "LICENSE", "*.md"]
   s.require_path  = 'lib'
 
   s.executables   = ['lydown']

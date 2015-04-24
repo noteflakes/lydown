@@ -1,0 +1,63 @@
+grammar Lydown
+  rule lines
+    line ([\n] line)* <LydownNode>
+  end
+  rule line
+    comment / setting / music <LydownNode>
+  end
+  rule comment
+    '//' [^\n]* <NullNode>
+  end
+  rule setting
+    '-' white_space* setting_key ':' setting_value <NullNode>
+  end
+  rule setting_key
+    [a-z0-9]+
+  end
+  rule setting_value
+    [^\n]+
+  end
+  rule music
+    event* <LydownNode>
+  end
+  rule white_space
+    [ \t]+
+  end
+  rule event
+    (duration / note / rest) white_space*
+  end
+  rule duration
+    duration_value / duration_macro
+  end
+  rule duration_value
+    number dots* multiplier* <DurationValueNode>
+  end
+  rule number
+    [0-9]+
+  end
+  rule dots
+    '.'+
+  end
+  rule multiplier
+    '*' number ('/' number)*
+  end
+  rule duration_macro
+    '{123}'
+  end
+  rule note
+    note_head accidental* octave_change* <NoteNode>
+  end
+  rule rest
+    'r' / 'R' <RestNode>
+  end
+  rule note_head
+    [a-h]
+  end
+  rule accidental
+    [\+\-#]+
+  end
+  rule octave_change
+    [\,']+
+  end
+end
+

@@ -123,7 +123,7 @@ Just like in lilypond, barlines are taken care of automatically according to the
     
 ### Beams, slurs and ties
 
-Lydown uses automatic beaming as the default, except in the case of vocal parts (see the section below on document settings). Auto beaming can be 
+Lydown uses automatic beaming as the default, except in the case of vocal parts (see [document settings](#settings)). Auto beaming can be 
 
 Beaming and sluring is similar to lilypond, except the beam/slur start comes before the note:
 
@@ -162,20 +162,91 @@ An important feature of lydown is the macro, which facilitates rapid entry of re
 
 A common scenario is repeated articulation, for example a sequence of staccato notes:
 
-    {_.}cdefgabc => c-. d-. e-. f-. g-. a-. b-. c-.
+    {.}cdefgabc => c-. d-. e-. f-. g-. a-. b-. c-.
+    
+A macro can also contain a fully qualified lilypond articulation specifier:
 
-Another common scenario is a dotted rhythm:
+    {\tenuto}cege => c\tenuto e\tenuto g\tenuto e\tenuto
 
+Rhythmic macros can be used for repeated rhythmic patterns. A common scenario is a dotted rhythm:
+
+    // The _ symbol denotes a note placeholder
     {8._6_}cdefgfed => c8. d16 e8. f16 g8. f16 e8. d16
     
 A repeating diminution may also be expressed succintly:
 
-    // the @ symbol denotes a repeated pitch
-    {16_@@@}cfgf => c16 c c c f f f f g g g g f f f f 
+    // The @ symbol denotes a repeated pitch
+    {16_@@@}cfgf => c16 c c c f f f f g g g g f f f f
+    
+A macro can include both durations and articulation marks:
 
-A macro can also include both durations and articulation marks:
+    {4_~6@(_._._.)}cdefgfed => c4 ~ c16 d-.( e-. f-.) g4 ~ g16 f-.( e-. d-.)
 
-    {4_~6@_._._.}cdefgfed => c4 ~ c16 d-. e-. f-. g4 ~ g16 f-. e-. d-.
+A macro containing durations will remain valid until another duration or duration macro is encountered. A macro containing articulation only will be valid until another duration, macro or empty macro is encountered:
+
+    6{.}gg{}aa => g16-. g-. a a
+    
+### Named macros
+
+Macros can be defined with a name and reused:
+
+    - dotted: {8._6_}
+    {dotted}gaba2g{dotted}abcb2a => g8. a16 b8. a16 g2 a8. b16 c8. b16 a2
+
+### Clefs, key and time signatures
+
+Clefs are determined automatically by lydown based on the specified part. In case no part is specified, the default clef is a treble clef. The clef values are the same as in [lilypond](http://www.lilypond.org/doc/v2.18/Documentation/notation/displaying-pitches#clef). The clef can be changed at any time with a clef setting:
+
+    - clef: bass
+    8cdefgabc
+    - clef: tenor
+    defedcbd
+    - clef: bass
+    1c
+
+Key and time signatures are entered inline as document settings ([see below](#settings)). The [key](http://www.lilypond.org/doc/v2.18/Documentation/notation/displaying-pitches#key-signature) and [time](http://www.lilypond.org/doc/v2.18/Documentation/notation/displaying-rhythms#time-signature) values follow the lilypond syntax:
+
+    - key: d major
+    - time: 3/4
+
+In the case of key signatures, accidentals will follow the lydown syntax:
+
+    - key: b- major
+    - key: f+ minor
+
+The default key signature is C major, and the default time signature is 4/4.
+
+Key or time signatures can be changed on the fly:
+
+    - time: 4/4
+    4c e g b
+    - time: 3/4
+    c e g 2.c
+
+### Inline lyrics
+
+Lyrics for vocal parts can be entered on separate lines prefixed by a > symbol:
+
+    4c[8de]4fd(4c[8de]2f)
+    > Ly-down is the bomb__
+
+Text alignment follows the duration, beaming and slurring of the music, just like in lilypond. Sillables are expected to be separated by a dash. Melismas, i.e. a single sillable streched over multiple notes, is signified by one or more underscores.
+
+## <a name="settings"></a>Document settings
+
+Document settings are entered on separate lines prefixed with a dash:
+
+    - clef: treble
+    - time: 4/4
+
+The following settings are recognized:
+
+    - clef:
+    - time:
+    - key:
+    - pickup: {a duration value for a pickup/upbeat/anacrusis}
+
+
 
 ## Multiple parts
 
