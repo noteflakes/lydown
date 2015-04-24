@@ -15,7 +15,7 @@ RSpec.describe Lydown::Opus do
     it "correctly translates duration macros" do
       @opus.compile(load_example('example-duration-macros.ld'))
       ly = @opus.to_lilypond.strip_whitespace
-      expect(ly).to eq(load_example('example-durations.ly'))
+      expect(ly).to eq(load_example('example-duration-macros.ly'))
     end
   end
 end

@@ -30,20 +30,6 @@ module Lydown
       end
     end
     
-    def add_note(note)
-      value = @context[:duration_values].first
-      @context[:duration_values].rotate!
-      music = ''
-      
-      # only add the value if different than the last used
-      if value == @context[:last_value]
-        value = ''
-      else
-        @context[:last_value] = value
-      end
-      add_music(note + value + ' ')
-    end
-    
     def add_music(music)
       current_stream(:music) << music
     end

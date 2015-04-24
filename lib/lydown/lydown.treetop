@@ -42,15 +42,17 @@ grammar Lydown
     '*' number ('/' number)*
   end
   rule duration_macro
-    '{' macro_event* '}' <DurationMacroNode>
+    '{' duration_macro__expression '}'
+  end
+  rule duration_macro__expression
+    macro_event* <DurationMacroExpressionNode>
   end
   rule macro_event
-  (duration / note_placeholder / rest) white_space*
+    (duration / note_placeholder / rest) white_space*
   end
   rule note_placeholder
     [_@]
   end
-  
   rule note
     note_head accidental* octave_change* <NoteNode>
   end
