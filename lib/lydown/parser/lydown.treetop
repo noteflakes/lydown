@@ -63,7 +63,7 @@ grammar Lydown
     [rR] <RestNode>
   end
   rule note_head
-    [a-h]
+    [a-g]
   end
   rule accidental
     [\+\-#]+
