@@ -12,9 +12,8 @@ class String
   end
 end
 
-def verify_example(name)
+def verify_example(name, result_name = nil)
   @opus.compile(load_example("example-#{name}.ld"))
   ly = @opus.to_lilypond.strip_whitespace
-  puts ly
-  expect(ly).to eq(load_example("example-#{name}.ly").strip_whitespace)
+  expect(ly).to eq(load_example("example-#{result_name || name}.ly").strip_whitespace)
 end

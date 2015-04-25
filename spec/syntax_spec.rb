@@ -6,15 +6,11 @@ RSpec.describe Lydown::Opus do
   end
     
   it "correctly translates durations and duration syntax" do
-    @opus.compile(load_example('example-durations.ld'))
-    ly = @opus.to_lilypond.strip_whitespace
-    expect(ly).to eq(load_example('example-durations.ly'))
+    verify_example('durations')
   end
 
   it "correctly translates duration macros" do
-    @opus.compile(load_example('example-duration-macros.ld'))
-    ly = @opus.to_lilypond.strip_whitespace
-    expect(ly).to eq(load_example('example-duration-macros.ly'))
+    verify_example('duration-macros')
   end
     
   it "correctly translates time signature settings" do

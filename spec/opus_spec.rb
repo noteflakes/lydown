@@ -17,9 +17,7 @@ RSpec.describe Lydown::Opus do
     end
 
     it "compiles correctly to lilypond document" do
-      @opus.compile(@source)
-      ly = @opus.to_lilypond
-      expect(ly.strip_whitespace).to eq(load_example('example-simple.ly'))
+      verify_example('simple')
     end
   end
 end
