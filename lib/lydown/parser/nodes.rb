@@ -24,7 +24,7 @@ module Lydown::Parsing
       else
         opus.context[:last_value] = value
       end
-      opus.add_music(note + value + ' ')
+      opus.emit(:music, note + value + ' ')
     end
   
     def add_macro_note(opus, note)
@@ -92,7 +92,7 @@ module Lydown::Parsing
       opus.context[key] = value
       if RENDERABLE_SETTING_KEYS.include?(key)
         value = transform_value(opus, key, value)
-        opus.add_music("\\#{key} #{value} ")
+        opus.emit(:music, "\\#{key} #{value} ")
       end
     end
     
@@ -142,6 +142,12 @@ module Lydown::Parsing
     
     def compile(opus)
       opus.context[:duration_macro] = text_value
+    end
+  end
+  
+  module CommentContentNode
+    def compile(opus)
+      opus.emit(:music, "\n%{#{text_value.strip}}\n")
     end
   end
 end

@@ -30,8 +30,8 @@ module Lydown
       end
     end
     
-    def add_music(music)
-      current_stream(:music) << music
+    def emit(stream, content)
+      current_stream(stream) << content
     end
     
     def current_stream(type)

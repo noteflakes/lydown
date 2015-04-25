@@ -6,10 +6,13 @@ grammar Lydown
     comment / setting / music <LydownNode>
   end
   rule comment
-    '//' [^\n]* <NullNode>
+    '//' comment_content
+  end
+  rule comment_content
+    [^\n]* <CommentContentNode>
   end
   rule setting
-    '-' white_space* setting_key ':' setting_value
+    '-' white_space* setting_key ':' setting_value comment?
   end
   rule setting_key
     [a-z0-9_]+ <SettingKeyNode>
@@ -18,7 +21,7 @@ grammar Lydown
     [^\n]+ <SettingValueNode>
   end
   rule music
-    event* <LydownNode>
+    event* comment?
   end
   rule white_space
     [ \t]+

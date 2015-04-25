@@ -12,6 +12,10 @@ RSpec.describe Lydown::Opus do
   it "correctly translates duration macros" do
     verify_example('duration-macros')
   end
+
+  it "correctly translates comments" do
+    verify_example('comments')
+  end
     
   it "correctly translates time signature settings" do
     verify_example('time-signature')
