@@ -9,13 +9,13 @@ grammar Lydown
     '//' [^\n]* <NullNode>
   end
   rule setting
-    '-' white_space* setting_key ':' setting_value <NullNode>
+    '-' white_space* setting_key ':' setting_value
   end
   rule setting_key
-    [a-z0-9]+
+    [a-z0-9_]+ <SettingKeyNode>
   end
   rule setting_value
-    [^\n]+
+    [^\n]+ <SettingValueNode>
   end
   rule music
     event* <LydownNode>
