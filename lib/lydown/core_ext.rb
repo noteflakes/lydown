@@ -41,6 +41,8 @@ class Hash
   def [](k)
     if @deep && k.is_a?(String) && k =~ /\//
       lookup(k)
+    elsif @deep && k.is_a?(Symbol)
+      old_get(k.to_s)
     else
       old_get(k)
     end
@@ -50,6 +52,8 @@ class Hash
   def []=(k, v)
     if @deep && k.is_a?(String) && k =~ /\//
       set(k, v)
+    elsif @deep && k.is_a?(Symbol)
+      old_set(k.to_s, v)
     else
       old_set(k, v)
     end

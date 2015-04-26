@@ -7,7 +7,6 @@ module Lydown
     @@templates = {}
     
     def self.render(name, context)
-      context.deep = true
       template(name).result(binding)
     end
     

@@ -57,19 +57,22 @@ grammar Lydown
     [_@]
   end
   rule note
-    note_head accidental* octave_change* <NoteNode>
+    note_head octave* accidental_flag? <NoteNode>
   end
   rule rest
     [rR] <RestNode>
   end
   rule note_head
-    [a-g]
+    [a-g] accidental* <NoteNode::Head>
   end
   rule accidental
-    [\+\-#]+
+    [\+\-]+
   end
-  rule octave_change
-    [\,']+
+  rule octave
+    [\,']+ <NoteNode::Octave>
+  end
+  rule accidental_flag
+    [\!\?] <NoteNode::AccidentalFlag>
   end
 end
 

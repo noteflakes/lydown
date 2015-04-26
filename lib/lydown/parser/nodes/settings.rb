@@ -6,19 +6,19 @@ module Lydown::Parsing
   module SettingKeyNode
     def compile(opus)
       if SETTING_KEYS.include?(text_value)
-        opus.context['parser/setting_key'] = text_value
+        opus['parser/setting_key'] = text_value
       end
     end
   end
   
   module SettingValueNode
     def compile(opus)
-      key = opus.context['parser/setting_key']
+      key = opus['parser/setting_key']
       value = text_value.strip
       return unless key
 
       emit_setting(opus, key, value)
-      opus.context['parser/setting_key'] = nil
+      opus['parser/setting_key'] = nil
       
     end
     
@@ -27,7 +27,7 @@ module Lydown::Parsing
     ]
     
     def emit_setting(opus, key, value)
-      opus.context[key.to_sym] = value
+      opus[key] = value
       if RENDERABLE_SETTING_KEYS.include?(key)
         value = transform_value(opus, key, value)
         opus.emit(:music, "\\#{key} #{value} ")

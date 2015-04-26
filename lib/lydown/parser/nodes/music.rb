@@ -1,47 +1,67 @@
 module Lydown::Parsing
   module Notes
-    def add_note(opus, note)
-      return add_macro_note(opus, note) if opus.context[:duration_macro]
+    def add_note(opus, note_info)
+      return add_macro_note(opus, note_info) if opus['parser/duration_macro']
     
-      value = opus.context[:duration_values].first
-      opus.context[:duration_values].rotate!
+      value = opus['parser/duration_values'].first
+      opus['parser/duration_values'].rotate!
     
       # only add the value if different than the last used
-      if value == opus.context[:last_value]
+      if value == opus[:last_value]
         value = ''
       else
-        opus.context[:last_value] = value
+        opus[:last_value] = value
       end
       
-      note = Accidentals.lilypond_note_name(note, opus.context[:key])
-      
-      opus.emit(:music, note + value + ' ')
+      opus.emit(:music, lilypond_note(opus, note_info, value: value))
+    end
+    
+    def lilypond_note(opus, note_info, options = {})
+      head = Accidentals.lilypond_note_name(note_info[:head], opus[:key])
+      if options[:head_only]
+        head
+      else
+        "%s%s%s%s " % [
+          head, 
+          note_info[:octave], 
+          note_info[:accidental_flag], 
+          options[:value]
+        ]
+      end
     end
   
-    def add_macro_note(opus, note)
-      opus.context[:macro_group] ||= opus.context[:duration_macro].clone
+    def add_macro_note(opus, note_info)
+      opus['parser/macro_group'] ||= opus['parser/duration_macro'].clone
       _found = false # underscore found?
 
       # replace place holder and repeaters in macro group with actual note
-      opus.context[:macro_group].gsub!(/[_@]/) do |match|
+      opus['parser/macro_group'].gsub!(/[_@]/) do |match|
         if match == '_' && _found
           match
         else
-          _found = true if match == '_'
-          note
+          if match == '_'
+            _found = true
+            note_info[:raw]
+          else
+            # if repeating, we repeat only the note head
+            # that way, we avoid adding wrong octave displacements when e.g.
+            # using tied notes in a macro: 4_~6@___
+            note_info[:head]
+          end
         end
       end
-    
-      unless opus.context[:macro_group].include?('_')
-        # stash macro, in order to compile macro group
-        macro = opus.context[:duration_macro]
-        opus.context[:duration_macro] = nil
 
-        opus.compile(opus.context[:macro_group])
+      # if group is complete, compile it just like regular code
+      unless opus['parser/macro_group'].include?('_')
+        # stash macro, in order to compile macro group
+        macro = opus['parser/duration_macro']
+        opus['parser/duration_macro'] = nil
+
+        opus.compile(opus['parser/macro_group'])
 
         # restore macro
-        opus.context[:duration_macro] = macro
-        opus.context[:macro_group] = nil
+        opus['parser/duration_macro'] = macro
+        opus['parser/macro_group'] = nil
       end
     end
   end
@@ -56,8 +76,8 @@ module Lydown::Parsing
     def compile(opus)
       value = text_value.sub(/^[0-9]+/) {|m| LILYPOND_DURATIONS[m] || m}
       
-      opus.context[:duration_values] = [value]
-      opus.context[:duration_macro] = nil unless opus.context[:macro_group]
+      opus['parser/duration_values'] = [value]
+      opus['parser/duration_macro'] = nil unless opus['parser/macro_group']
     end
   end
   
@@ -105,10 +125,33 @@ module Lydown::Parsing
   end
   
   module NoteNode
+    include LydownNode
     include Notes
     
     def compile(opus)
-      add_note(opus, text_value)
+      note_info = opus['parser/note_info'] = {'raw' => text_value}
+      note_info.deep = true # allow easy symbol key access
+      _compile(self, opus)
+      add_note(opus, note_info)
+      opus['parser/note_info'] = nil
+    end
+    
+    module Head
+      def compile(opus)
+        opus['parser/note_info/head'] = text_value
+      end
+    end
+    
+    module Octave
+      def compile(opus)
+        opus['parser/note_info/octave'] = text_value
+      end
+    end
+    
+    module AccidentalFlag
+      def compile(opus)
+        opus['parser/note_info/accidental_flag'] = text_value
+      end
     end
   end
 
@@ -116,13 +159,15 @@ module Lydown::Parsing
     include Notes
     
     def compile(opus)
-      add_note(opus, text_value)
+      note_info = {'raw' => text_value, 'head' => text_value}
+      note_info.deep = true
+      add_note(opus, note_info)
     end
   end
   
   module DurationMacroExpressionNode
     def compile(opus)
-      opus.context[:duration_macro] = text_value
+      opus['parser/duration_macro'] = text_value
     end
   end
 end

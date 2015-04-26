@@ -9,12 +9,11 @@ module Lydown
     attr_accessor :context
     
     def initialize
-      @context = {
-        time:             '4/4',
-        key:              'c major',
-        duration_values:  ['4']
-      }
+      @context = {}
       @context.deep = true
+      @context[:time] = '4/4'
+      @context[:key] = 'c major'
+      @context['parser/duration_values'] = ['4']
     end
     
     def compile(source)
