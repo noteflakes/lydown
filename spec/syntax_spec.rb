@@ -29,4 +29,8 @@ RSpec.describe Lydown::Opus do
     verify_example('accidentals')
   end
 
+  it "correctly translate octave markers" do
+    verify_example('octaves')
+  end
+
 end
