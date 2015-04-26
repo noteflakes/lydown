@@ -32,22 +32,16 @@ module Lydown::Parsing
   
     def add_macro_note(opus, note_info)
       opus['parser/macro_group'] ||= opus['parser/duration_macro'].clone
-      _found = false # underscore found?
+      underscore_count = 0
 
       # replace place holder and repeaters in macro group with actual note
       opus['parser/macro_group'].gsub!(/[_@]/) do |match|
-        if match == '_' && _found
-          match
-        else
-          if match == '_'
-            _found = true
-            note_info[:raw]
-          else
-            # if repeating, we repeat only the note head
-            # that way, we avoid adding wrong octave displacements when e.g.
-            # using tied notes in a macro: 4_~6@___
-            note_info[:head]
-          end
+        case match
+        when '_'
+          underscore_count += 1
+          underscore_count == 1 ? note_info[:raw] : match
+        when '@'
+          underscore_count < 2 ? note_info[:head] : match
         end
       end
 
