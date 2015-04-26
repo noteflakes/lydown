@@ -33,4 +33,8 @@ RSpec.describe Lydown::Opus do
     verify_example('octaves')
   end
 
+  it "correctly translate full bar rests" do
+    verify_example('full-bar-rests')
+  end
+
 end

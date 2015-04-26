@@ -1,4 +1,47 @@
 module Lydown::Parsing
+  module Accidentals
+    KEY_CYCLE = %w{c- g- d- a- e- b- f c g d a e b f+ c+ g+ d+ a+ e+ b+}
+    C_IDX = KEY_CYCLE.index('c'); A_IDX = KEY_CYCLE.index('a')
+    SHARPS_IDX = KEY_CYCLE.index('f+'); FLATS_IDX = KEY_CYCLE.index('b-')
+    KEY_ACCIDENTALS = {}
+    
+    def self.accidentals_for_key_signature(signature)
+      KEY_ACCIDENTALS[signature] ||= calc_accidentals_for_key_signature(signature)
+    end
+    
+    def self.calc_accidentals_for_key_signature(signature)
+      unless signature =~ /^([a-g][\+\-]*) (major|minor)$/
+        raise "Invalid key signature #{signature.inspect}"
+      end
+
+      key = $1; mode = $2
+      
+      # calculate offset from c major / a minor
+      base_idx = (mode == 'major') ? C_IDX : A_IDX
+      offset = KEY_CYCLE.index(key) - base_idx
+        
+      if offset >= 0
+        calc_accidentals_map(KEY_CYCLE[SHARPS_IDX, offset])
+      else
+        calc_accidentals_map(KEY_CYCLE[FLATS_IDX + offset + 1, -offset])
+      end
+    end
+    
+    def self.calc_accidentals_map(accidentals)
+      accidentals.inject({}) { |h, a| h[a[0]] = (a[1] == '+') ? 1 : -1; h}
+    end
+    
+    def self.lilypond_note_name(note, key_signature = 'c major')
+      value = 0
+      # accidental value from note
+      note = note.gsub(/[\-\+]/) { |c| value += (c == '+') ? 1 : -1; '' }
+      # add key signature value
+      value += accidentals_for_key_signature(key_signature)[note] || 0
+
+      note + (value >= 0 ? 'is' * value : 'es' * -value)
+    end
+  end
+  
   module Notes
     def add_note(opus, note_info)
       return add_macro_note(opus, note_info) if opus['parser/duration_macro']
@@ -75,56 +118,12 @@ module Lydown::Parsing
     end
   end
   
-  module Accidentals
-    KEY_CYCLE = %w{c- g- d- a- e- b- f c g d a e b f+ c+ g+ d+ a+ e+ b+}
-    C_IDX = KEY_CYCLE.index('c'); A_IDX = KEY_CYCLE.index('a')
-    SHARPS_IDX = KEY_CYCLE.index('f+'); FLATS_IDX = KEY_CYCLE.index('b-')
-    KEY_ACCIDENTALS = {}
-    
-    def self.accidentals_for_key_signature(signature)
-      KEY_ACCIDENTALS[signature] ||= calc_accidentals_for_key_signature(signature)
-    end
-    
-    def self.calc_accidentals_for_key_signature(signature)
-      unless signature =~ /^([a-g][\+\-]*) (major|minor)$/
-        raise "Invalid key signature #{signature.inspect}"
-      end
-
-      key = $1; mode = $2
-      
-      # calculate offset from c major / a minor
-      base_idx = (mode == 'major') ? C_IDX : A_IDX
-      offset = KEY_CYCLE.index(key) - base_idx
-        
-      if offset >= 0
-        calc_accidentals_map(KEY_CYCLE[SHARPS_IDX, offset])
-      else
-        calc_accidentals_map(KEY_CYCLE[FLATS_IDX + offset + 1, -offset])
-      end
-    end
-    
-    def self.calc_accidentals_map(accidentals)
-      accidentals.inject({}) { |h, a| h[a[0]] = (a[1] == '+') ? 1 : -1; h}
-    end
-    
-    def self.lilypond_note_name(note, key_signature = 'c major')
-      value = 0
-      # accidental value from note
-      note = note.gsub(/[\-\+]/) { |c| value += (c == '+') ? 1 : -1; '' }
-      # add key signature value
-      value += accidentals_for_key_signature(key_signature)[note] || 0
-
-      note + (value >= 0 ? 'is' * value : 'es' * -value)
-    end
-  end
-  
   module NoteNode
     include LydownNode
     include Notes
     
     def compile(opus)
-      note_info = opus['parser/note_info'] = {'raw' => text_value}
-      note_info.deep = true # allow easy symbol key access
+      note_info = opus['parser/note_info'] = {'raw' => text_value}.deep!
       _compile(self, opus)
       add_note(opus, note_info)
       opus['parser/note_info'] = nil
@@ -153,8 +152,14 @@ module Lydown::Parsing
     include Notes
     
     def compile(opus)
-      note_info = {'raw' => text_value, 'head' => text_value}
-      note_info.deep = true
+      if text_value =~ /^R(\*([0-9]+))?$/
+        multiplier = $2 || '1'
+        value = "R#{multiplier}*#{opus[:time]}"
+      else
+        value = text_value
+      end
+        
+      note_info = {'raw' => value, 'head' => value}.deep!
       add_note(opus, note_info)
     end
   end

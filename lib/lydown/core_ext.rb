@@ -61,7 +61,7 @@ class Hash
   
   alias_method :old_merge, :merge
   def merge(hash)
-    if deep || hash.deep
+    if @deep || hash.deep
       deep_merge(hash)
     else
       old_merge(hash)
@@ -70,11 +70,16 @@ class Hash
   
   alias_method :old_merge!, :merge!
   def merge!(hash)
-    if deep || hash.deep
+    if @deep || hash.deep
       deep_merge!(hash)
     else
       old_merge!(hash)
     end
+  end
+  
+  def deep!
+    @deep = true
+    self
   end
 end
 

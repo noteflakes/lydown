@@ -33,7 +33,7 @@ grammar Lydown
     duration_value / duration_macro
   end
   rule duration_value
-    number dots* multiplier* <DurationValueNode>
+    number dots* multiplier? <DurationValueNode>
   end
   rule number
     [0-9]+
@@ -60,7 +60,7 @@ grammar Lydown
     note_head octave* accidental_flag? <NoteNode>
   end
   rule rest
-    [rR] <RestNode>
+    [rR] multiplier* <RestNode>
   end
   rule note_head
     [a-g] accidental* <NoteNode::Head>

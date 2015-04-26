@@ -84,6 +84,18 @@ Augmentation dots are entered like in lilypond:
     8.c6d 8.e6f 2g => c8. d16 e8. f16 g2
     8..g 3g 4c => g8.. g32 c4
 
+### Rests
+
+Normal rests are written [like in lilypond](http://www.lilypond.org/doc/v2.18/Documentation/notation/writing-rests#rests):
+
+    4ce2r => c4 e r2
+
+Full bar rests are [similar to lilypond](http://www.lilypond.org/doc/v2.18/Documentation/notation/writing-rests#full-measure-rests), except there's no need to enter the rest value (it is implicit in the time signature):
+
+    - time: 3/4
+    // 4 bar rest in the middle
+    2c4e R*4 2.g
+
 ### Accidentals
 
 Accidentals are entered using + and -
