@@ -20,4 +20,8 @@ RSpec.describe Lydown::Opus do
   it "correctly translates time signature settings" do
     verify_example('time-signature')
   end
+
+  it "correctly translates time signature settings" do
+    verify_example('key-signature')
+  end
 end

@@ -37,7 +37,15 @@ module Lydown::Parsing
     def transform_value(opus, key, value)
       case key
       when 'time'
-        value.sub(/[0-9]+$/) {|m| LILYPOND_DURATIONS[m] || m}
+        value.sub(/[0-9]+$/) { |m| LILYPOND_DURATIONS[m] || m }
+      when 'key'
+        unless value =~ /^([a-g][\+\-]*) (major|minor)$/
+          raise "Invalid key signature #{value.inspect}"
+        end
+        
+        key = Lydown::Parsing::Accidentals.lilypond_note_name($1)
+        mode = $2
+        "#{key} \\#{mode}"
       else
         value
       end

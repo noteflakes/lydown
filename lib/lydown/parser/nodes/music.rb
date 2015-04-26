@@ -90,14 +90,14 @@ module Lydown::Parsing
       accidentals.inject({}) { |h, a| h[a[0]] = (a[1] == '+') ? 1 : -1; h}
     end
     
-    def self.lilypond_note_name(note, key_signature)
-      value = accidentals_for_key_signature(key_signature)[note] || 0
-      note.scan(/[\-\+]/) { |c| value += (c == '+') ? 1 : -1 }
-      if value >= 0
-        note + 'is' * value
-      else
-        note + 'es' * -value
-      end
+    def self.lilypond_note_name(note, key_signature = 'c major')
+      value = 0
+      # accidental value from note
+      note = note.gsub(/[\-\+]/) { |c| value += (c == '+') ? 1 : -1; '' }
+      # add key signature value
+      value += accidentals_for_key_signature(key_signature)[note] || 0
+
+      note + (value >= 0 ? 'is' * value : 'es' * -value)
     end
   end
   
