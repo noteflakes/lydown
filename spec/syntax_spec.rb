@@ -24,4 +24,9 @@ RSpec.describe Lydown::Opus do
   it "correctly translates time signature settings" do
     verify_example('key-signature')
   end
+
+  it "correctly translate accidentals" do
+    verify_example('accidentals')
+  end
+
 end

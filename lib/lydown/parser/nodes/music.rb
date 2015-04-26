@@ -12,6 +12,9 @@ module Lydown::Parsing
       else
         opus.context[:last_value] = value
       end
+      
+      note = Accidentals.lilypond_note_name(note, opus.context[:key])
+      
       opus.emit(:music, note + value + ' ')
     end
   

@@ -27,7 +27,7 @@ module Lydown::Parsing
     ]
     
     def emit_setting(opus, key, value)
-      opus.context[key] = value
+      opus.context[key.to_sym] = value
       if RENDERABLE_SETTING_KEYS.include?(key)
         value = transform_value(opus, key, value)
         opus.emit(:music, "\\#{key} #{value} ")
