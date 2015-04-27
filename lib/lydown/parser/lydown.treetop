@@ -57,7 +57,17 @@ grammar Lydown
     [_@]
   end
   rule note
-    note_head octave* accidental_flag? <NoteNode>
+    note_head octave* accidental_flag? expression* <NoteNode>
+  end
+  rule expression
+    (expression_shorthand / expression_longhand) <NoteNode::Expression>
+  end
+  
+  rule expression_shorthand
+    [\_\.`]
+  end
+  rule expression_longhand
+    '\\' [^\s\n]+
   end
   rule rest
     [rR] multiplier* <RestNode>

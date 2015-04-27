@@ -74,11 +74,12 @@ module Lydown::Parsing
       if options[:head_only]
         head
       else
-        "%s%s%s%s " % [
+        "%s%s%s%s%s " % [
           head, 
           note_info[:octave], 
-          note_info[:accidental_flag], 
-          options[:value]
+          note_info[:accidental_flag],
+          options[:value],
+          note_info[:expressions] ? note_info[:expressions].join : ''
         ]
       end
     end
@@ -154,6 +155,25 @@ module Lydown::Parsing
     module AccidentalFlag
       def compile(opus)
         opus['parser/note_info/accidental_flag'] = text_value
+      end
+    end
+    
+    module Expression
+      LILYPOND_EXPRESSIONS = {
+        '_' => '--',
+        '.' => '-.',
+        '`' => '-!'
+      }
+      
+      def compile(opus)
+        opus['parser/note_info/expressions'] ||= []
+        if text_value =~ /^\\/
+          opus['parser/note_info/expressions'] << text_value
+        elsif LILYPOND_EXPRESSIONS[text_value]
+          opus['parser/note_info/expressions'] << LILYPOND_EXPRESSIONS[text_value]
+        else
+          raise LydownError, "Invalid expression #{text_value.inspect}"
+        end
       end
     end
   end

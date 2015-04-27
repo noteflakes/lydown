@@ -44,4 +44,7 @@ RSpec.describe Lydown::Opus do
     verify_example('clefs')
   end
 
+  it "correctly translates articulation shorthand" do
+    verify_example('articulation')
+  end
 end
