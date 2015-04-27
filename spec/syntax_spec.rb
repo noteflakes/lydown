@@ -37,4 +37,8 @@ RSpec.describe Lydown::Opus do
     verify_example('full-bar-rests')
   end
 
+  it "correctly translates clef settings" do
+    verify_example('clefs')
+  end
+
 end
