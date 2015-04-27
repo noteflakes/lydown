@@ -28,8 +28,9 @@ module Lydown
       end
     end
     
-    def emit(stream, content)
-      current_stream(stream) << content
+    def emit(stream, *content)
+      stream = current_stream(stream)
+      content.each {|c| stream << c}
     end
     
     def current_stream(type)

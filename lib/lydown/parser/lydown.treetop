@@ -3,7 +3,7 @@ grammar Lydown
     line ([\n] line)* <LydownNode>
   end
   rule line
-    comment / setting / music <LydownNode>
+    comment / setting / lyrics / music
   end
   rule comment
     '//' comment_content
@@ -83,6 +83,12 @@ grammar Lydown
   end
   rule accidental_flag
     [\!\?] <NoteNode::AccidentalFlag>
+  end
+  rule lyrics
+    '>' white_space* lyrics_content
+  end
+  rule lyrics_content
+    (!"\n" !"//" .)* <LyricsNode>
   end
 end
 
