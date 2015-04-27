@@ -6,3 +6,5 @@ g+a+b-
 cdefga-
 - key: e- major
 bcdeff+gg+a+
+// accidental flags
+c+'!e? 8.g!

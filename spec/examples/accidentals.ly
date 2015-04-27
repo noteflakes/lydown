@@ -8,4 +8,6 @@
   cis dis e fis gis aes
   \key ees \major
   bes c d ees f fis g gis a
+  %{accidental flags}
+  cis'! ees? g!8.
 }
