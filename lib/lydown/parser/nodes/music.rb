@@ -40,6 +40,16 @@ module Lydown::Parsing
 
       note + (value >= 0 ? 'is' * value : 'es' * -value)
     end
+    
+    # Takes into account the accidentals mode
+    def self.translate_note_name(opus, note)
+      if opus[:accidentals] == 'manual'
+        key = 'c major'
+      else
+        key = opus[:key]
+      end
+      lilypond_note_name(note, key)
+    end
   end
   
   module Notes
@@ -60,7 +70,7 @@ module Lydown::Parsing
     end
     
     def lilypond_note(opus, note_info, options = {})
-      head = Accidentals.lilypond_note_name(note_info[:head], opus[:key])
+      head = Accidentals.translate_note_name(opus, note_info[:head])
       if options[:head_only]
         head
       else

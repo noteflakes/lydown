@@ -1,0 +1,2 @@
+class LydownError < RuntimeError
+end

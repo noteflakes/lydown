@@ -1,6 +1,7 @@
 module Lydown::Parsing
   SETTING_KEYS = [
-    'key', 'time', 'pickup', 'clef', 'part', 'movement'
+    'key', 'time', 'pickup', 'clef', 'part', 'movement',
+    'accidentals'
   ]
   
   module SettingKeyNode
@@ -27,11 +28,24 @@ module Lydown::Parsing
     ]
     
     def emit_setting(opus, key, value)
-      opus[key] = value
+      opus[key] = check_setting_value(opus, key, value)
       if RENDERABLE_SETTING_KEYS.include?(key)
         value = transform_value(opus, key, value)
         opus.emit(:music, "\\#{key} #{value} ")
       end
+    end
+    
+    ALLOWED_SETTING_VALUES = {
+      'accidentals' => ['manual', 'auto']
+    }
+    
+    def check_setting_value(opus, key, value)
+      if ALLOWED_SETTING_VALUES[key]
+        unless ALLOWED_SETTING_VALUES[key].include?(value)
+          raise LydownError, "Invalid value for setting #{key}: #{value.inspect}"
+        end
+      end
+      value
     end
     
     def transform_value(opus, key, value)
@@ -40,7 +54,7 @@ module Lydown::Parsing
         value.sub(/[0-9]+$/) { |m| LILYPOND_DURATIONS[m] || m }
       when 'key'
         unless value =~ /^([a-g][\+\-]*) (major|minor)$/
-          raise "Invalid key signature #{value.inspect}"
+          raise LydownError, "Invalid key signature #{value.inspect}"
         end
         
         key = Lydown::Parsing::Accidentals.lilypond_note_name($1)

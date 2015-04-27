@@ -1,10 +1,6 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'spec_helper')
 
 RSpec.describe Lydown::Opus do
-  before(:example) do
-    @opus = Lydown::Opus.new
-  end
-    
   it "correctly translates durations and duration syntax" do
     verify_example('durations')
   end
@@ -29,6 +25,13 @@ RSpec.describe Lydown::Opus do
     verify_example('accidentals')
   end
 
+  it "correctly interprets accidental modes" do
+    opus = Lydown::Opus.new
+    expect {opus.compile('- accidentals: blah')}.to raise_error(LydownError)
+    
+    verify_example('accidental-modes')
+  end
+  
   it "correctly translate octave markers" do
     verify_example('octaves')
   end

@@ -18,7 +18,7 @@ grammar Lydown
     [a-z0-9_]+ <SettingKeyNode>
   end
   rule setting_value
-    [^\n]+ <SettingValueNode>
+    (!"\n" !"//" .)* <SettingValueNode>
   end
   rule music
     event* comment?
