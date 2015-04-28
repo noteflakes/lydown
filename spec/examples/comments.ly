@@ -1,5 +1,5 @@
 \version "2.18.2"
-{
+\relative c {
   c4 d e f
   %{this is a comment on a separate line}
   g a b c

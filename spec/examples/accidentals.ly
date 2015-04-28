@@ -1,5 +1,5 @@
 \version "2.18.2"
-{
+\relative c {
   \key d \major
   cis4 d e fis
   \key a \minor
