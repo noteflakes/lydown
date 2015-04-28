@@ -30,7 +30,7 @@ module Lydown::Parsing
     def emit_setting(opus, key, value)
       opus[key] = check_setting_value(opus, key, value)
       if RENDERABLE_SETTING_KEYS.include?(key)
-        emit_setting(opus, key, value)
+        render_setting(opus, key, value)
       end
     end
     
@@ -48,7 +48,7 @@ module Lydown::Parsing
       value
     end
     
-    def emit_setting(opus, key, value)
+    def render_setting(opus, key, value)
       setting = "\\#{key} "
       case key
       when 'time'
