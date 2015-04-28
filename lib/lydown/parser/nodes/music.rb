@@ -74,11 +74,21 @@ module Lydown::Parsing
       if options[:head_only]
         head
       else
-        "%s%s%s%s%s " % [
+        phrasing = ''
+        if opus['parser/open_beam']
+          phrasing << '['
+          opus['parser/open_beam'] = nil
+        end
+        if opus['parser/note_info/close_beam']
+          phrasing << ']'
+        end
+        
+        "%s%s%s%s%s%s " % [
           head, 
           note_info[:octave], 
           note_info[:accidental_flag],
           options[:value],
+          phrasing,
           note_info[:expressions] ? note_info[:expressions].join : ''
         ]
       end
@@ -174,6 +184,18 @@ module Lydown::Parsing
         else
           raise LydownError, "Invalid expression #{text_value.inspect}"
         end
+      end
+    end
+    
+    module BeamOpen
+      def compile(opus)
+        opus['parser/open_beam'] = true
+      end
+    end
+    
+    module BeamClose
+      def compile(opus)
+        opus['parser/note_info/close_beam'] = true
       end
     end
   end

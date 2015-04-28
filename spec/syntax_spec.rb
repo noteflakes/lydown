@@ -47,4 +47,8 @@ RSpec.describe Lydown::Opus do
   it "correctly translates articulation shorthand" do
     verify_example('articulation')
   end
+
+  it "correctly translates beaming" do
+    verify_example('beams')
+  end
 end
