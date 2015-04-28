@@ -26,8 +26,9 @@ RSpec.describe Lydown::Opus do
   end
 
   it "correctly interprets accidental modes" do
+    lydown = LydownParser.parse('- accidentals: blah')
     opus = Lydown::Opus.new
-    expect {opus.compile('- accidentals: blah')}.to raise_error(LydownError)
+    expect {opus.translate(lydown)}.to raise_error(LydownError)
     
     verify_example('accidental-modes')
   end

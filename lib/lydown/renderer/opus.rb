@@ -5,6 +5,14 @@ require 'lydown/templates'
 require 'pp'
 
 module Lydown
+  # Opus is a virtual lilypond document. It can contain multiple movements,
+  # and each movement can contain multiple parts. Each part can contain multiple
+  # streams: music, lyrics, figured bass.
+  # 
+  # An Opus instance is created in order to translate lydown code into a 
+  # virtual lilypond document, and then render it. The actual rendering may
+  # include all of the streams in the document, or only a selection,such as a
+  # specific movement, a specific part, or a specific stream type.
   class Opus
     attr_accessor :context
     
@@ -12,19 +20,17 @@ module Lydown
       @context = {}.deep!
       @context[:time] = '4/4'
       @context[:key] = 'c major'
-      @context['parser/duration_values'] = ['4']
+      @context['translate/duration_values'] = ['4']
     end
     
-    def compile(source)
-      parser = LydownParser.new
-      ast = parser.parse(source)
-      unless ast
-        puts "Faild to compile"
-        puts parser.failure_reason
-        puts "  #{source.lines[parser.failure_line - 1]}"
-        puts " #{' ' * parser.failure_column}^"
-      else
-        ast.compile(self)
+    # translate a lydown stream into a lilypond document
+    def translate(lydown_stream)
+      lydown_stream.each_with_index do |e, idx|
+        if e[:type]
+          Lydown::Rendering.translate(self, e, lydown_stream, idx)
+        else
+          raise LydownError, "Invalid lydown stream event: #{e.inspect}"
+        end
       end
     end
     
@@ -40,7 +46,7 @@ module Lydown
       @context[path] ||= ''
     end
     
-    def to_lilypond(options = {})
+    def render(options = {})
       if options[:stream_path]
         @context[options[:stream_path]].strip
       else

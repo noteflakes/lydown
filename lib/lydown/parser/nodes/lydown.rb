@@ -1,21 +1,17 @@
 module Lydown::Parsing
   module LydownNode
-    def _compile(element, opus)
+    def _to_stream(element, stream)
       if element.elements
         element.elements.each do |e|
-          e.respond_to?(:compile) ? e.compile(opus) : _compile(e, opus)
+          e.respond_to?(:to_stream) ? e.to_stream(stream) : _to_stream(e, stream)
         end
-      end    
+      end
+      stream
     end
 
-    def compile(opus)
-      _compile(self, opus)
-    end
-  end
-
-  module NullNode
-    def compile(opus)
-      ''
+    def to_stream(stream = [])
+      _to_stream(self, stream)
+      stream
     end
   end
 end

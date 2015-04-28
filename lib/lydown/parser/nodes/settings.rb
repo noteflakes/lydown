@@ -1,75 +1,31 @@
 module Lydown::Parsing
-  SETTING_KEYS = [
-    'key', 'time', 'pickup', 'clef', 'part', 'movement',
-    'accidentals', 'beams'
-  ]
-  
-  module SettingKeyNode
-    def compile(opus)
-      if SETTING_KEYS.include?(text_value)
-        opus['parser/setting_key'] = text_value
-      end
-    end
-  end
-  
-  module SettingValueNode
-    def compile(opus)
-      key = opus['parser/setting_key']
-      value = text_value.strip
-      return unless key
-
-      emit_setting(opus, key, value)
-      opus['parser/setting_key'] = nil
-      
+  module SettingNode
+    include LydownNode
+    
+    def to_stream(stream)
+      @setting = {type: :setting}
+      _to_stream(self, stream)
     end
     
-    RENDERABLE_SETTING_KEYS = [
-      'key', 'time', 'clef', 'beams'
-    ]
+    def setting
+      @setting
+    end
     
-    def emit_setting(opus, key, value)
-      opus[key] = check_setting_value(opus, key, value)
-      if RENDERABLE_SETTING_KEYS.include?(key)
-        render_setting(opus, key, value)
+    def emit_setting(stream)
+      stream << @setting
+    end
+    
+    module Key
+      def to_stream(stream)
+        parent.setting[:key] = text_value
       end
     end
     
-    ALLOWED_SETTING_VALUES = {
-      'accidentals' => ['manual', 'auto'],
-      'beams' => ['manual', 'auto']
-    }
-    
-    def check_setting_value(opus, key, value)
-      if ALLOWED_SETTING_VALUES[key]
-        unless ALLOWED_SETTING_VALUES[key].include?(value)
-          raise LydownError, "Invalid value for setting #{key}: #{value.inspect}"
-        end
+    module Value
+      def to_stream(stream)
+        parent.setting[:value] = text_value.strip
+        parent.emit_setting(stream)
       end
-      value
-    end
-    
-    def render_setting(opus, key, value)
-      setting = "\\#{key} "
-      case key
-      when 'time'
-        setting << value.sub(/[0-9]+$/) { |m| LILYPOND_DURATIONS[m] || m }
-      when 'key'
-        unless value =~ /^([a-g][\+\-]*) (major|minor)$/
-          raise LydownError, "Invalid key signature #{value.inspect}"
-        end
-        
-        note = Lydown::Parsing::Accidentals.lilypond_note_name($1)
-        mode = $2
-        setting << "#{note} \\#{mode}"
-      when 'beams'
-        setting = (value == 'manual') ? '\autoBeamOff' : '\autoBeamOn'
-      else
-        setting << value
-      end
-      
-      setting << ' '
-      
-      opus.emit(:music, setting)
     end
   end
 end

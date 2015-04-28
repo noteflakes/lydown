@@ -12,13 +12,13 @@ grammar Lydown
     [^\n]* <CommentContentNode>
   end
   rule setting
-    '-' white_space* setting_key ':' setting_value comment?
+    '-' white_space* setting_key ':' setting_value comment? <SettingNode>
   end
   rule setting_key
-    [a-z0-9_]+ <SettingKeyNode>
+    [a-z0-9_]+ <SettingNode::Key>
   end
   rule setting_value
-    (!"\n" !"//" .)* <SettingValueNode>
+    (!"\n" !"//" .)* <SettingNode::Value>
   end
   rule music
     event* comment?
@@ -27,7 +27,7 @@ grammar Lydown
     [ \t]+
   end
   rule event
-    (duration / note / rest / phrasing_open) white_space*
+    (duration / note / rest / phrasing) white_space*
   end
   rule duration
     duration_value / duration_macro
@@ -57,7 +57,7 @@ grammar Lydown
     [_@] expression*
   end
   rule note
-    note_head octave* accidental_flag? expression* phrasing_close* <NoteNode>
+    note_head octave* accidental_flag? expression* <NoteNode>
   end
   rule expression
     (expression_shorthand / expression_longhand) <NoteNode::Expression>

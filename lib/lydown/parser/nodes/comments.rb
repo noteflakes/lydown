@@ -1,7 +1,7 @@
 module Lydown::Parsing
   module CommentContentNode
-    def compile(opus)
-      opus.emit(:music, "\n%{#{text_value.strip}}\n")
+    def to_stream(stream)
+      stream << {type: :comment, content: text_value.strip}
     end
   end
 end

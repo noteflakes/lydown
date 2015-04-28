@@ -1,7 +1,7 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'spec_helper')
 
-RSpec.describe Lydown::Parsing::Accidentals do
-  include Lydown::Parsing
+RSpec.describe Lydown::Rendering::AccidentalTranslation do
+  Accidentals = Lydown::Rendering::AccidentalTranslation
   
   it "calculates accidental maps for major scales" do
     acc = Accidentals.accidentals_for_key_signature('c major')
