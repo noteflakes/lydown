@@ -1,10 +1,10 @@
 require 'treetop'
 
-require 'lydown/parser/nodes'
+require 'lydown/parsing/nodes'
 
 include Lydown::Parsing
 
-Treetop.load './lib/lydown/parser/lydown'
+Treetop.load './lib/lydown/parsing/lydown'
 
 class LydownParser
   def self.parse(source)

@@ -1,4 +1,62 @@
 module Lydown::Parsing
+  module LydownNode
+    def _to_stream(element, stream)
+      if element.elements
+        element.elements.each do |e|
+          e.respond_to?(:to_stream) ? e.to_stream(stream) : _to_stream(e, stream)
+        end
+      end
+      stream
+    end
+
+    def to_stream(stream = [])
+      _to_stream(self, stream)
+      stream
+    end
+  end
+end
+
+module Lydown::Parsing
+  module CommentContentNode
+    def to_stream(stream)
+      stream << {type: :comment, content: text_value.strip}
+    end
+  end
+end
+
+module Lydown::Parsing
+  module SettingNode
+    include LydownNode
+    
+    def to_stream(stream)
+      @setting = {type: :setting}
+      _to_stream(self, stream)
+    end
+    
+    def setting
+      @setting
+    end
+    
+    def emit_setting(stream)
+      stream << @setting
+    end
+    
+    module Key
+      def to_stream(stream)
+        parent.setting[:key] = text_value
+      end
+    end
+    
+    module Value
+      def to_stream(stream)
+        parent.setting[:value] = text_value.strip
+        parent.emit_setting(stream)
+      end
+    end
+  end
+end
+
+module Lydown::Parsing
   module DurationValueNode
     
     def to_stream(stream)
@@ -70,3 +128,12 @@ module Lydown::Parsing
     end
   end
 end
+
+module Lydown::Parsing
+  module LyricsNode
+    def to_stream(stream)
+      stream << {type: :lyrics, content: text_value}
+    end
+  end
+end
+

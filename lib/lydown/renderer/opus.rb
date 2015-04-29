@@ -1,5 +1,4 @@
 require 'lydown/core_ext'
-require 'lydown/parser'
 require 'lydown/templates'
 
 require 'pp'
