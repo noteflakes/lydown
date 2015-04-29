@@ -1,10 +1,10 @@
 require 'lydown/templates'
-require 'lydown/renderer/opus'
-require 'lydown/renderer/base'
-require 'lydown/renderer/comments'
-require 'lydown/renderer/lyrics'
-require 'lydown/renderer/music'
-require 'lydown/renderer/settings'
+require 'lydown/rendering/opus'
+require 'lydown/rendering/base'
+require 'lydown/rendering/comments'
+require 'lydown/rendering/lyrics'
+require 'lydown/rendering/music'
+require 'lydown/rendering/settings'
 
 module Lydown::Rendering
   class << self
