@@ -1,5 +1,5 @@
 module Lydown::Parsing
-  module LydownNode
+  module Root
     def _to_stream(element, stream)
       if element.elements
         element.elements.each do |e|
@@ -14,19 +14,15 @@ module Lydown::Parsing
       stream
     end
   end
-end
 
-module Lydown::Parsing
-  module CommentContentNode
+  module CommentContent
     def to_stream(stream)
       stream << {type: :comment, content: text_value.strip}
     end
   end
-end
 
-module Lydown::Parsing
-  module SettingNode
-    include LydownNode
+  module Setting
+    include Root
     
     def to_stream(stream)
       @setting = {type: :setting}
@@ -54,18 +50,15 @@ module Lydown::Parsing
       end
     end
   end
-end
 
-module Lydown::Parsing
-  module DurationValueNode
-    
+  module DurationValue
     def to_stream(stream)
       stream << {type: :duration, value: text_value}
     end
   end
   
-  module NoteNode
-    include LydownNode
+  module Note
+    include Root
     
     def to_stream(stream)
       note = {type: :note, raw: text_value}
@@ -97,7 +90,9 @@ module Lydown::Parsing
         note[:expressions] << text_value
       end
     end
-    
+  end
+  
+  module Phrasing
     module BeamOpen
       def to_stream(stream)
         stream << {type: :beam_open}
@@ -123,19 +118,19 @@ module Lydown::Parsing
     end
   end
   
-  module TieNode
+  module Tie
     def to_stream(stream)
       stream << {type: :tie}
     end
   end
 
-  module ShortTieNode
+  module ShortTie
     def to_stream(stream)
       stream << {type: :short_tie}
     end
   end
 
-  module RestNode
+  module Rest
     def to_stream(stream)
       rest = {type: :rest, raw: text_value, head: text_value[0]}
       if text_value =~ /^R(\*([0-9]+))?$/
@@ -146,15 +141,13 @@ module Lydown::Parsing
     end
   end
   
-  module DurationMacroExpressionNode
+  module DurationMacroExpression
     def to_stream(stream)
       stream << {type: :duration_macro, macro: text_value}
     end
   end
-end
 
-module Lydown::Parsing
-  module LyricsNode
+  module Lyrics
     def to_stream(stream)
       stream << {type: :lyrics, content: text_value}
     end

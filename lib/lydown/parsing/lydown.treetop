@@ -2,7 +2,7 @@ grammar Lydown
   include Lydown::Parsing
 
   rule lines
-    line ([\n] line)* <LydownNode>
+    line ([\n] line)* <Root>
   end
   rule line
     comment / setting / lyrics / music
@@ -11,16 +11,16 @@ grammar Lydown
     '//' comment_content
   end
   rule comment_content
-    [^\n]* <CommentContentNode>
+    [^\n]* <CommentContent>
   end
   rule setting
-    '-' white_space* setting_key ':' setting_value comment? <SettingNode>
+    '-' white_space* setting_key ':' setting_value comment? <Setting>
   end
   rule setting_key
-    [a-z0-9_]+ <SettingNode::Key>
+    [a-z0-9_]+ <Setting::Key>
   end
   rule setting_value
-    (!"\n" !"//" .)* <SettingNode::Value>
+    (!"\n" !"//" .)* <Setting::Value>
   end
   rule music
     event* comment?
@@ -35,7 +35,7 @@ grammar Lydown
     duration_value / duration_macro
   end
   rule duration_value
-    number dots* multiplier? <DurationValueNode>
+    number dots* multiplier? <DurationValue>
   end
   rule number
     [0-9]+
@@ -50,7 +50,7 @@ grammar Lydown
     '{' duration_macro__expression '}'
   end
   rule duration_macro__expression
-    macro_event* <DurationMacroExpressionNode>
+    macro_event* <DurationMacroExpression>
   end
   rule macro_event
     (duration / note_placeholder / rest / phrasing / tie) white_space*
@@ -59,10 +59,10 @@ grammar Lydown
     [_@] expression*
   end
   rule note
-    note_head octave* accidental_flag? expression* <NoteNode>
+    note_head octave* accidental_flag? expression* <Note>
   end
   rule expression
-    (expression_shorthand / expression_longhand) <NoteNode::Expression>
+    (expression_shorthand / expression_longhand) <Note::Expression>
   end
   
   rule expression_shorthand
@@ -72,49 +72,49 @@ grammar Lydown
     '\\' [^\s\n]+
   end
   rule rest
-    [rR] multiplier* <RestNode>
+    [rR] multiplier* <Rest>
   end
   rule note_head
-    [a-g] accidental* <NoteNode::Head>
+    [a-g] accidental* <Note::Head>
   end
   rule accidental
     [\+\-]+
   end
   rule octave
-    [\,']+ <NoteNode::Octave>
+    [\,']+ <Note::Octave>
   end
   rule accidental_flag
-    [\!\?] <NoteNode::AccidentalFlag>
+    [\!\?] <Note::AccidentalFlag>
   end
   rule phrasing
     beam_open / beam_close / slur_open / slur_close
   end
   rule beam_open
-    [\[] white_space* <NoteNode::BeamOpen>
+    [\[] white_space* <Phrasing::BeamOpen>
   end
   rule beam_close
-    white_space* [\]] white_space* <NoteNode::BeamClose>
+    white_space* [\]] white_space* <Phrasing::BeamClose>
   end
   rule slur_open
-    [\(] white_space* <NoteNode::SlurOpen>
+    [\(] white_space* <Phrasing::SlurOpen>
   end
   rule slur_close
-    white_space* [\)] white_space* <NoteNode::SlurClose>
+    white_space* [\)] white_space* <Phrasing::SlurClose>
   end
   rule tie
     regular_tie / short_tie
   end
   rule regular_tie
-    '~' <TieNode>
+    '~' <Tie>
   end
   rule short_tie
-    '&' <ShortTieNode>
+    '&' <ShortTie>
   end
   rule lyrics
     '>' white_space* lyrics_content
   end
   rule lyrics_content
-    (!"\n" !"//" .)* <LyricsNode>
+    (!"\n" !"//" .)* <Lyrics>
   end
 end
 
