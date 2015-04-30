@@ -1,4 +1,6 @@
 grammar Lydown
+  include Lydown::Parsing
+
   rule lines
     line ([\n] line)* <LydownNode>
   end

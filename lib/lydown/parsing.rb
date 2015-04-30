@@ -2,8 +2,6 @@ require 'treetop'
 
 require 'lydown/parsing/nodes'
 
-include Lydown::Parsing
-
 Treetop.load './lib/lydown/parsing/lydown'
 
 class LydownParser
