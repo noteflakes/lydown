@@ -85,19 +85,19 @@ grammar Lydown
     [\!\?] <NoteNode::AccidentalFlag>
   end
   rule phrasing
-    phrasing_open / phrasing_close
-  end
-  rule phrasing_open
-    beam_open
-  end
-  rule phrasing_close
-    beam_close
+    beam_open / beam_close / slur_open / slur_close
   end
   rule beam_open
     [\[] white_space* <NoteNode::BeamOpen>
   end
   rule beam_close
     white_space* [\]] white_space* <NoteNode::BeamClose>
+  end
+  rule slur_open
+    [\(] white_space* <NoteNode::SlurOpen>
+  end
+  rule slur_close
+    white_space* [\)] white_space* <NoteNode::SlurClose>
   end
   rule tie
     regular_tie / short_tie

@@ -109,6 +109,18 @@ module Lydown::Parsing
         stream << {type: :beam_close}
       end
     end
+
+    module SlurOpen
+      def to_stream(stream)
+        stream << {type: :slur_open}
+      end
+    end
+    
+    module SlurClose
+      def to_stream(stream)
+        stream << {type: :slur_close}
+      end
+    end
   end
   
   module TieNode

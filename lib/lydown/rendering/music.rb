@@ -76,24 +76,30 @@ module Lydown::Rendering
       if options[:head_only]
         head
       else
-        phrasing = ''
-        if opus['translate/open_beam']
-          phrasing << '['
-          opus['translate/open_beam'] = nil
-        end
-        if note_info[:beam_close]
-          phrasing << ']'
-        end
-        
         "%s%s%s%s%s%s " % [
           head, 
           note_info[:octave], 
           note_info[:accidental_flag],
           options[:value],
-          phrasing,
+          lilypond_phrasing(opus, note_info),
           note_info[:expressions] ? note_info[:expressions].join : ''
         ]
       end
+    end
+    
+    def lilypond_phrasing(opus, note_info)
+      phrasing = ''
+      if opus['translate/open_beam']
+        phrasing << '['
+        opus['translate/open_beam'] = nil
+      end
+      if opus['translate/open_slur']
+        phrasing << '('
+        opus['translate/open_slur'] = nil
+      end
+      phrasing << ']' if note_info[:beam_close]
+      phrasing << ')' if note_info[:slur_close]
+      phrasing
     end
   
     def add_macro_note(opus, note_info)
@@ -146,13 +152,19 @@ module Lydown::Rendering
 
     def translate
       translate_expressions
-
+      
       # look ahead and see if any beam or slur closing after note
-      if @stream[@idx + 1]
+      look_ahead_idx = @idx + 1
+      while event = @stream[look_ahead_idx]
         case @stream[@idx + 1][:type]
         when :beam_close
           @event[:beam_close] = true
+        when :slur_close
+          @event[:slur_close] = true
+        else
+          break
         end
+        look_ahead_idx += 1
       end
       
       add_note(@opus, @event)
@@ -186,6 +198,15 @@ module Lydown::Rendering
   end
   
   class Beam_close < Base
+  end
+  
+  class Slur_open < Base
+    def translate
+      @opus['translate/open_slur'] = true
+    end
+  end
+  
+  class Slur_close < Base
   end
   
   class Tie < Base

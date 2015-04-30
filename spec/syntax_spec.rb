@@ -56,4 +56,8 @@ RSpec.describe Lydown::Opus do
   it "correctly translates ties" do
     verify_example('ties')
   end
+
+  it "correctly translates slurs" do
+    verify_example('slurs')
+  end
 end
