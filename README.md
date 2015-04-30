@@ -141,10 +141,14 @@ Beaming and sluring is similar to lilypond, except the beam/slur start comes bef
 
     8(cdef)g[6fe]4f => c8( d e f) g f16[ e] f4
     
-a tie is written just like in lilypond:
+a regular tie is written just like in lilypond:
 
     4g~6gfed2c => g4 ~ g16 f e d c2
     
+Lydown also supports a shortened tie form, where the tied note is not repeated:
+
+    4g6&fed2c => g4 ~ g16 f e d c2
+
 ### Articulation and expression marks
 
 Lilypond [shorthand articulation marks](http://www.lilypond.org/doc/v2.18/Documentation/notation/expressive-marks-attached-to-notes#articulations-and-ornamentations) can be entered after a backslash

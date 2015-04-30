@@ -8,13 +8,12 @@ Treetop.load './lib/lydown/parsing/lydown'
 
 class LydownParser
   def self.parse(source)
-    ast = self.new.parse(source)
+    parser = self.new
+    ast = parser.parse(source)
     unless ast
-      STDERR.puts "Faild to compile"
-      STDERR.puts parser.failure_reason
-      STDERR.puts "  #{source.lines[parser.failure_line - 1]}"
-      STDERR.puts " #{' ' * parser.failure_column}^"
-      raise LydownError, "Failed to compile"
+      error_info = "Failed to compile: #{parser.failure_reason}\n  #{source.lines[parser.failure_line - 1]}\n #{' ' * parser.failure_column}^"
+      STDERR.puts error_info
+      raise LydownError, error_info
     else
       ast.to_stream
     end

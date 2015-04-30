@@ -27,7 +27,7 @@ grammar Lydown
     [ \t]+
   end
   rule event
-    (duration / note / rest / phrasing) white_space*
+    (duration / note / rest / phrasing / tie) white_space*
   end
   rule duration
     duration_value / duration_macro
@@ -51,7 +51,7 @@ grammar Lydown
     macro_event* <DurationMacroExpressionNode>
   end
   rule macro_event
-    (duration / note_placeholder / rest / phrasing) white_space*
+    (duration / note_placeholder / rest / phrasing / tie) white_space*
   end
   rule note_placeholder
     [_@] expression*
@@ -98,6 +98,15 @@ grammar Lydown
   end
   rule beam_close
     white_space* [\]] white_space* <NoteNode::BeamClose>
+  end
+  rule tie
+    regular_tie / short_tie
+  end
+  rule regular_tie
+    '~' <TieNode>
+  end
+  rule short_tie
+    '&' <ShortTieNode>
   end
   rule lyrics
     '>' white_space* lyrics_content

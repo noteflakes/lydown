@@ -55,7 +55,9 @@ module Lydown::Rendering
   module NoteTranslation
     def add_note(opus, note_info)
       return add_macro_note(opus, note_info) if opus['translate/duration_macro']
-    
+
+      opus['translate/last_note_head'] = note_info[:head]
+
       value = opus['translate/duration_values'].first
       opus['translate/duration_values'].rotate!
     
@@ -184,6 +186,22 @@ module Lydown::Rendering
   end
   
   class Beam_close < Base
+  end
+  
+  class Tie < Base
+    def translate
+      @opus.emit(:music, '~ ')
+    end
+  end
+  
+  class Short_tie < Base
+    include NoteTranslation
+    
+    def translate
+      note_head = @opus['translate/last_note_head']
+      @opus.emit(:music, '~ ')
+      add_note(@opus, {head: note_head})
+    end
   end
   
   class Rest < Base

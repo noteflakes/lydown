@@ -52,4 +52,8 @@ RSpec.describe Lydown::Opus do
   it "correctly translates beaming" do
     verify_example('beams')
   end
+
+  it "correctly translates ties" do
+    verify_example('ties')
+  end
 end

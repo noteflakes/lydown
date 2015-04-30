@@ -17,13 +17,14 @@ module Lydown::Rendering
     end
     
     def translate(opus, e, lydown_stream, idx)
-      begin
-        klass = Lydown::Rendering.const_get(e[:type].capitalize)
-        klass.new(e, opus, lydown_stream, idx).translate
-      rescue => e
-        raise e
-        # raise LydownError, "Invalid lydown stream event: #{e.inspect}"
-      end
+      klass = class_for_event(e)
+      klass.new(e, opus, lydown_stream, idx).translate
+    end
+    
+    def class_for_event(e)
+      Lydown::Rendering.const_get(e[:type].capitalize)
+    rescue
+      raise LydownError, "Invalid lydown event: #{e.inspect}"
     end
   end
   

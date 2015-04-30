@@ -110,6 +110,18 @@ module Lydown::Parsing
       end
     end
   end
+  
+  module TieNode
+    def to_stream(stream)
+      stream << {type: :tie}
+    end
+  end
+
+  module ShortTieNode
+    def to_stream(stream)
+      stream << {type: :short_tie}
+    end
+  end
 
   module RestNode
     def to_stream(stream)
