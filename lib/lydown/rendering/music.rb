@@ -191,22 +191,22 @@ module Lydown::Rendering
     end
   end
   
-  class Beam_open < Base
+  class BeamOpen < Base
     def translate
       @opus['translate/open_beam'] = true
     end
   end
   
-  class Beam_close < Base
+  class BeamClose < Base
   end
   
-  class Slur_open < Base
+  class SlurOpen < Base
     def translate
       @opus['translate/open_slur'] = true
     end
   end
   
-  class Slur_close < Base
+  class SlurClose < Base
   end
   
   class Tie < Base
@@ -215,7 +215,7 @@ module Lydown::Rendering
     end
   end
   
-  class Short_tie < Base
+  class ShortTie < Base
     include NoteTranslation
     
     def translate
@@ -237,7 +237,7 @@ module Lydown::Rendering
     end
   end
   
-  class Duration_macro < Base
+  class DurationMacro < Base
     def translate
       @opus['translate/duration_macro'] = @event[:macro]
     end

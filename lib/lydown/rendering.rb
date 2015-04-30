@@ -22,7 +22,7 @@ module Lydown::Rendering
     end
     
     def class_for_event(e)
-      Lydown::Rendering.const_get(e[:type].capitalize)
+      Lydown::Rendering.const_get(e[:type].to_s.camelize)
     rescue
       raise LydownError, "Invalid lydown event: #{e.inspect}"
     end
