@@ -1,5 +1,5 @@
 module Lydown::Rendering
-  module AccidentalTranslation
+  module Accidentals
     KEY_CYCLE = %w{c- g- d- a- e- b- f c g d a e b f+ c+ g+ d+ a+ e+ b+}
     C_IDX = KEY_CYCLE.index('c'); A_IDX = KEY_CYCLE.index('a')
     SHARPS_IDX = KEY_CYCLE.index('f+'); FLATS_IDX = KEY_CYCLE.index('b-')
@@ -52,7 +52,7 @@ module Lydown::Rendering
     end
   end
   
-  module NoteTranslation
+  module Notes
     def add_note(opus, note_info)
       return add_macro_note(opus, note_info) if opus['translate/duration_macro']
 
@@ -124,7 +124,7 @@ module Lydown::Rendering
         opus['translate/duration_macro'] = nil
 
         code = LydownParser.parse(opus['translate/macro_group'])
-        opus.translate(code)
+        opus.process(code)
 
         # restore macro
         opus['translate/duration_macro'] = macro
@@ -148,7 +148,7 @@ module Lydown::Rendering
   end
   
   class Note < Base
-    include NoteTranslation
+    include Notes
 
     def translate
       translate_expressions
@@ -216,7 +216,7 @@ module Lydown::Rendering
   end
   
   class ShortTie < Base
-    include NoteTranslation
+    include Notes
     
     def translate
       note_head = @opus['translate/last_note_head']
@@ -226,7 +226,7 @@ module Lydown::Rendering
   end
   
   class Rest < Base
-    include NoteTranslation
+    include Notes
     
     def translate
       if @event[:multiplier]

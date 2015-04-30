@@ -43,7 +43,7 @@ module Lydown::Rendering
           raise LydownError, "Invalid key signature #{value.inspect}"
         end
         
-        note = Lydown::Rendering::AccidentalTranslation.lilypond_note_name($1)
+        note = Lydown::Rendering::Accidentals.lilypond_note_name($1)
         mode = $2
         setting << "#{note} \\#{mode}"
       when 'beams'

@@ -5,13 +5,21 @@ RSpec.describe Lydown::Opus do
     it "compiles correctly to raw" do
       lydown_code = LydownParser.parse(load_example('simple.ld'))
       opus = Lydown::Opus.new
-      opus.translate(lydown_code)
-      ly = opus.render(stream_path: 'movements//parts//music')
+      opus.process(lydown_code)
+      ly = opus.to_lilypond(stream_path: 'movements//parts//music')
       expect(ly.strip_whitespace).to eq(load_example('simple-raw.ly'))
     end
 
-    it "compiles correctly to lilypond document" do
+    it "translates correctly to lilypond document" do
       verify_example('simple')
+    end
+    
+    it "compiles correctly to PDF" do
+      lydown_code = LydownParser.parse(load_example('simple.ld'))
+      opus = Lydown::Opus.new
+      opus.process(lydown_code)
+      ly = opus.to_lilypond
+      expect {Lydown::Lilypond.compile(ly)}.not_to raise_error
     end
   end
 end

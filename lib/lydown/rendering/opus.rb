@@ -23,7 +23,7 @@ module Lydown
     end
     
     # translate a lydown stream into a lilypond document
-    def translate(lydown_stream)
+    def process(lydown_stream)
       lydown_stream.each_with_index do |e, idx|
         if e[:type]
           Lydown::Rendering.translate(self, e, lydown_stream, idx)
@@ -45,12 +45,19 @@ module Lydown
       @context[path] ||= ''
     end
     
-    def render(options = {})
-      if options[:stream_path]
-        @context[options[:stream_path]].strip
+    def to_lilypond(opts = {})
+      ly_code = ''
+      if opts[:stream_path]
+        @context[opts[:stream_path]].strip
       else
         Lydown::Templates.render(:lilypond_doc, opus: self)
       end
+    end
+    
+    def compile(opts = {})
+      code = to_lilypond(opts)
+      
+      Lydown::Lilypond.compile(code, opts)
     end
     
     def [](path)
