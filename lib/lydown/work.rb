@@ -19,10 +19,10 @@ module Lydown
       @context = {}.deep!
       @context[:time] = '4/4'
       @context[:key] = 'c major'
-      @context['translate/duration_values'] = ['4']
+      @context['process/duration_values'] = ['4']
     end
     
-    # translate a lydown stream into a lilypond document
+    # translate a lydown stream into lilypond
     def process(lydown_stream)
       lydown_stream.each_with_index do |e, idx|
         if e[:type]
@@ -33,14 +33,14 @@ module Lydown
       end
     end
     
-    def emit(stream, *content)
-      stream = current_stream(stream)
+    def emit(stream_type, *content)
+      stream = current_stream(stream_type)
       content.each {|c| stream << c}
     end
     
     def current_stream(type)
-      movement = @context[:current_movement]
-      part = @context[:current_part]
+      movement = @context[:movement]
+      part = @context[:part]
       path = "movements/#{movement}/parts/#{part}/#{type}"
       @context[path] ||= ''
     end
@@ -50,8 +50,36 @@ module Lydown
       if opts[:stream_path]
         @context[opts[:stream_path]].strip
       else
-        Lydown::Templates.render(:lilypond_doc, work: self)
+        @original_context = @context
+        @context = filter_context(opts)
+        ly = Lydown::Templates.render(:lilypond_doc, work: self)
+        @context = @original_context
+        ly
       end
+    end
+    
+    def filter_context(opts = {})
+      filtered = @context.deep_clone
+      filtered.deep = true
+      if opts[:movements]
+        opts[:movements] = [opts[:movements]] unless opts[:movements].is_a?(Array)
+        filtered['movements'].select! do |name, m|
+          opts[:movements].include?(name.to_s)
+        end
+      end
+      
+      if opts[:parts]
+        opts[:parts] = [opts[:parts]] unless opts[:parts].is_a?(Array)
+      end
+      filtered['movements'].each do |name, m|
+        if opts[:parts]
+          m['parts'].select! do |pname, p|
+            opts[:parts].include?(pname.to_s)
+          end
+        end
+      end
+      
+      filtered
     end
     
     def compile(opts = {})

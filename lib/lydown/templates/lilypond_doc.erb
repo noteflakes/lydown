@@ -1,5 +1,5 @@
 \version "2.18.2"
 
 <% context[:work]['movements'].each do |name, movement| %>
-  <%= Lydown::Rendering.render_movement(name, movement) %>
+  <%= Lydown::Rendering.render_movement(name, movement, context[:opts]) %>
 <% end %>

@@ -23,6 +23,21 @@ class Hash
     self.deep = true
     self
   end
+  
+  def deep_clone
+    dest = {}.deep!
+    each do |k, v|
+      dest[k] = case v
+      when Hash
+        v.deep_clone
+      when Array
+        v.clone
+      else
+        v
+      end
+    end
+    dest
+  end
 
   def lookup(path)
     path.split("/").inject(self) {|m,i| m[i].nil? ? (return nil) : m[i]}

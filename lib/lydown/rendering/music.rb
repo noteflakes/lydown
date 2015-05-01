@@ -54,18 +54,18 @@ module Lydown::Rendering
   
   module Notes
     def add_note(work, note_info)
-      return add_macro_note(work, note_info) if work['translate/duration_macro']
+      return add_macro_note(work, note_info) if work['process/duration_macro']
 
-      work['translate/last_note_head'] = note_info[:head]
+      work['process/last_note_head'] = note_info[:head]
 
-      value = work['translate/duration_values'].first
-      work['translate/duration_values'].rotate!
+      value = work['process/duration_values'].first
+      work['process/duration_values'].rotate!
     
       # only add the value if different than the last used
-      if value == work[:last_value]
+      if value == work['process/last_value']
         value = ''
       else
-        work[:last_value] = value
+        work['process/last_value'] = value
       end
       
       work.emit(:music, lilypond_note(work, note_info, value: value))
@@ -89,13 +89,13 @@ module Lydown::Rendering
     
     def lilypond_phrasing(work, note_info)
       phrasing = ''
-      if work['translate/open_beam']
+      if work['process/open_beam']
         phrasing << '['
-        work['translate/open_beam'] = nil
+        work['process/open_beam'] = nil
       end
-      if work['translate/open_slur']
+      if work['process/open_slur']
         phrasing << '('
-        work['translate/open_slur'] = nil
+        work['process/open_slur'] = nil
       end
       phrasing << ']' if note_info[:beam_close]
       phrasing << ')' if note_info[:slur_close]
@@ -103,11 +103,11 @@ module Lydown::Rendering
     end
   
     def add_macro_note(work, note_info)
-      work['translate/macro_group'] ||= work['translate/duration_macro'].clone
+      work['process/macro_group'] ||= work['process/duration_macro'].clone
       underscore_count = 0
 
       # replace place holder and repeaters in macro group with actual note
-      work['translate/macro_group'].gsub!(/[_@]/) do |match|
+      work['process/macro_group'].gsub!(/[_@]/) do |match|
         case match
         when '_'
           underscore_count += 1
@@ -118,17 +118,17 @@ module Lydown::Rendering
       end
 
       # if group is complete, compile it just like regular code
-      unless work['translate/macro_group'].include?('_')
+      unless work['process/macro_group'].include?('_')
         # stash macro, in order to compile macro group
-        macro = work['translate/duration_macro']
-        work['translate/duration_macro'] = nil
+        macro = work['process/duration_macro']
+        work['process/duration_macro'] = nil
 
-        code = LydownParser.parse(work['translate/macro_group'])
+        code = LydownParser.parse(work['process/macro_group'])
         work.process(code)
 
         # restore macro
-        work['translate/duration_macro'] = macro
-        work['translate/macro_group'] = nil
+        work['process/duration_macro'] = macro
+        work['process/macro_group'] = nil
       end
     end
   end
@@ -142,8 +142,8 @@ module Lydown::Rendering
     def translate
       value = @event[:value].sub(/^[0-9]+/) {|m| LILYPOND_DURATIONS[m] || m}
       
-      @work['translate/duration_values'] = [value]
-      @work['translate/duration_macro'] = nil unless @work['translate/macro_group']
+      @work['process/duration_values'] = [value]
+      @work['process/duration_macro'] = nil unless @work['process/macro_group']
     end
   end
   
@@ -193,7 +193,7 @@ module Lydown::Rendering
   
   class BeamOpen < Base
     def translate
-      @work['translate/open_beam'] = true
+      @work['process/open_beam'] = true
     end
   end
   
@@ -202,7 +202,7 @@ module Lydown::Rendering
   
   class SlurOpen < Base
     def translate
-      @work['translate/open_slur'] = true
+      @work['process/open_slur'] = true
     end
   end
   
@@ -219,7 +219,7 @@ module Lydown::Rendering
     include Notes
     
     def translate
-      note_head = @work['translate/last_note_head']
+      note_head = @work['process/last_note_head']
       @work.emit(:music, '~ ')
       add_note(@work, {head: note_head})
     end
@@ -239,7 +239,7 @@ module Lydown::Rendering
   
   class DurationMacro < Base
     def translate
-      @work['translate/duration_macro'] = @event[:macro]
+      @work['process/duration_macro'] = @event[:macro]
     end
   end
 end

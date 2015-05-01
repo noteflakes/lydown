@@ -8,12 +8,12 @@ require 'lydown/rendering/settings'
 
 module Lydown::Rendering
   class << self
-    def render_movement(name, movement)
-      Lydown::Templates.render(:movement, name: name, movement: movement)
+    def render_movement(name, movement, opts = {})
+      Lydown::Templates.render(:movement, name: name, movement: movement, opts: opts)
     end
     
-    def render_part(name, part)
-      Lydown::Templates.render(:part, name: name, part: part)
+    def render_part(name, part, opts = {})
+      Lydown::Templates.render(:part, name: name, part: part, opts: opts)
     end
     
     def translate(work, e, lydown_stream, idx)
