@@ -1,8 +1,8 @@
 module Lydown::Rendering
   class Base
-    def initialize(event, opus, stream, idx)
+    def initialize(event, work, stream, idx)
       @event = event
-      @opus = opus
+      @work = work
       @stream = stream
       @idx = idx
     end

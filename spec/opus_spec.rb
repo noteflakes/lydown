@@ -1,12 +1,12 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'spec_helper')
 
-RSpec.describe Lydown::Opus do
+RSpec.describe Lydown::Work do
   context "with a clean context" do
     it "compiles correctly to raw" do
       lydown_code = LydownParser.parse(load_example('simple.ld'))
-      opus = Lydown::Opus.new
-      opus.process(lydown_code)
-      ly = opus.to_lilypond(stream_path: 'movements//parts//music')
+      work = Lydown::Work.new
+      work.process(lydown_code)
+      ly = work.to_lilypond(stream_path: 'movements//parts//music')
       expect(ly.strip_whitespace).to eq(load_example('simple-raw.ly'))
     end
 
@@ -16,9 +16,9 @@ RSpec.describe Lydown::Opus do
     
     it "compiles correctly to PDF" do
       lydown_code = LydownParser.parse(load_example('simple.ld'))
-      opus = Lydown::Opus.new
-      opus.process(lydown_code)
-      ly = opus.to_lilypond
+      work = Lydown::Work.new
+      work.process(lydown_code)
+      ly = work.to_lilypond
       expect {Lydown::Lilypond.compile(ly)}.not_to raise_error
     end
   end

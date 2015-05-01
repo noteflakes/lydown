@@ -42,37 +42,37 @@ module Lydown::Rendering
     end
     
     # Takes into account the accidentals mode
-    def self.translate_note_name(opus, note)
-      if opus[:accidentals] == 'manual'
+    def self.translate_note_name(work, note)
+      if work[:accidentals] == 'manual'
         key = 'c major'
       else
-        key = opus[:key]
+        key = work[:key]
       end
       lilypond_note_name(note, key)
     end
   end
   
   module Notes
-    def add_note(opus, note_info)
-      return add_macro_note(opus, note_info) if opus['translate/duration_macro']
+    def add_note(work, note_info)
+      return add_macro_note(work, note_info) if work['translate/duration_macro']
 
-      opus['translate/last_note_head'] = note_info[:head]
+      work['translate/last_note_head'] = note_info[:head]
 
-      value = opus['translate/duration_values'].first
-      opus['translate/duration_values'].rotate!
+      value = work['translate/duration_values'].first
+      work['translate/duration_values'].rotate!
     
       # only add the value if different than the last used
-      if value == opus[:last_value]
+      if value == work[:last_value]
         value = ''
       else
-        opus[:last_value] = value
+        work[:last_value] = value
       end
       
-      opus.emit(:music, lilypond_note(opus, note_info, value: value))
+      work.emit(:music, lilypond_note(work, note_info, value: value))
     end
     
-    def lilypond_note(opus, note_info, options = {})
-      head = Accidentals.translate_note_name(opus, note_info[:head])
+    def lilypond_note(work, note_info, options = {})
+      head = Accidentals.translate_note_name(work, note_info[:head])
       if options[:head_only]
         head
       else
@@ -81,33 +81,33 @@ module Lydown::Rendering
           note_info[:octave], 
           note_info[:accidental_flag],
           options[:value],
-          lilypond_phrasing(opus, note_info),
+          lilypond_phrasing(work, note_info),
           note_info[:expressions] ? note_info[:expressions].join : ''
         ]
       end
     end
     
-    def lilypond_phrasing(opus, note_info)
+    def lilypond_phrasing(work, note_info)
       phrasing = ''
-      if opus['translate/open_beam']
+      if work['translate/open_beam']
         phrasing << '['
-        opus['translate/open_beam'] = nil
+        work['translate/open_beam'] = nil
       end
-      if opus['translate/open_slur']
+      if work['translate/open_slur']
         phrasing << '('
-        opus['translate/open_slur'] = nil
+        work['translate/open_slur'] = nil
       end
       phrasing << ']' if note_info[:beam_close]
       phrasing << ')' if note_info[:slur_close]
       phrasing
     end
   
-    def add_macro_note(opus, note_info)
-      opus['translate/macro_group'] ||= opus['translate/duration_macro'].clone
+    def add_macro_note(work, note_info)
+      work['translate/macro_group'] ||= work['translate/duration_macro'].clone
       underscore_count = 0
 
       # replace place holder and repeaters in macro group with actual note
-      opus['translate/macro_group'].gsub!(/[_@]/) do |match|
+      work['translate/macro_group'].gsub!(/[_@]/) do |match|
         case match
         when '_'
           underscore_count += 1
@@ -118,17 +118,17 @@ module Lydown::Rendering
       end
 
       # if group is complete, compile it just like regular code
-      unless opus['translate/macro_group'].include?('_')
+      unless work['translate/macro_group'].include?('_')
         # stash macro, in order to compile macro group
-        macro = opus['translate/duration_macro']
-        opus['translate/duration_macro'] = nil
+        macro = work['translate/duration_macro']
+        work['translate/duration_macro'] = nil
 
-        code = LydownParser.parse(opus['translate/macro_group'])
-        opus.process(code)
+        code = LydownParser.parse(work['translate/macro_group'])
+        work.process(code)
 
         # restore macro
-        opus['translate/duration_macro'] = macro
-        opus['translate/macro_group'] = nil
+        work['translate/duration_macro'] = macro
+        work['translate/macro_group'] = nil
       end
     end
   end
@@ -142,8 +142,8 @@ module Lydown::Rendering
     def translate
       value = @event[:value].sub(/^[0-9]+/) {|m| LILYPOND_DURATIONS[m] || m}
       
-      @opus['translate/duration_values'] = [value]
-      @opus['translate/duration_macro'] = nil unless @opus['translate/macro_group']
+      @work['translate/duration_values'] = [value]
+      @work['translate/duration_macro'] = nil unless @work['translate/macro_group']
     end
   end
   
@@ -167,7 +167,7 @@ module Lydown::Rendering
         look_ahead_idx += 1
       end
       
-      add_note(@opus, @event)
+      add_note(@work, @event)
     end
     
     LILYPOND_EXPRESSIONS = {
@@ -193,7 +193,7 @@ module Lydown::Rendering
   
   class BeamOpen < Base
     def translate
-      @opus['translate/open_beam'] = true
+      @work['translate/open_beam'] = true
     end
   end
   
@@ -202,7 +202,7 @@ module Lydown::Rendering
   
   class SlurOpen < Base
     def translate
-      @opus['translate/open_slur'] = true
+      @work['translate/open_slur'] = true
     end
   end
   
@@ -211,7 +211,7 @@ module Lydown::Rendering
   
   class Tie < Base
     def translate
-      @opus.emit(:music, '~ ')
+      @work.emit(:music, '~ ')
     end
   end
   
@@ -219,9 +219,9 @@ module Lydown::Rendering
     include Notes
     
     def translate
-      note_head = @opus['translate/last_note_head']
-      @opus.emit(:music, '~ ')
-      add_note(@opus, {head: note_head})
+      note_head = @work['translate/last_note_head']
+      @work.emit(:music, '~ ')
+      add_note(@work, {head: note_head})
     end
   end
   
@@ -230,16 +230,16 @@ module Lydown::Rendering
     
     def translate
       if @event[:multiplier]
-        @event[:head] = "#{@event[:head]}#{@event[:multiplier]}*#{@opus[:time]}"
+        @event[:head] = "#{@event[:head]}#{@event[:multiplier]}*#{@work[:time]}"
       end
       
-      add_note(@opus, @event)
+      add_note(@work, @event)
     end
   end
   
   class DurationMacro < Base
     def translate
-      @opus['translate/duration_macro'] = @event[:macro]
+      @work['translate/duration_macro'] = @event[:macro]
     end
   end
 end

@@ -1,4 +1,2 @@
-- lilypond execution
 - command line tool
-- rename Opus to Work
 - parts and scores

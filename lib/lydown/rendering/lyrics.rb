@@ -2,7 +2,7 @@ module Lydown::Rendering
   class Lyrics < Base
     def translate
       value = lilypond_lyrics(@event[:content])
-      @opus.emit(:lyrics, value, ' ')
+      @work.emit(:lyrics, value, ' ')
     end
     
     def lilypond_lyrics(lyrics)

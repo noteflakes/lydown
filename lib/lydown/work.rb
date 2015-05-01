@@ -4,15 +4,15 @@ require 'lydown/templates'
 require 'pp'
 
 module Lydown
-  # Opus is a virtual lilypond document. It can contain multiple movements,
+  # Work is a virtual lilypond document. It can contain multiple movements,
   # and each movement can contain multiple parts. Each part can contain multiple
   # streams: music, lyrics, figured bass.
   # 
-  # An Opus instance is created in order to translate lydown code into a 
+  # A Work instance is created in order to translate lydown code into a 
   # virtual lilypond document, and then render it. The actual rendering may
   # include all of the streams in the document, or only a selection,such as a
   # specific movement, a specific part, or a specific stream type.
-  class Opus
+  class Work
     attr_accessor :context
     
     def initialize
@@ -50,7 +50,7 @@ module Lydown
       if opts[:stream_path]
         @context[opts[:stream_path]].strip
       else
-        Lydown::Templates.render(:lilypond_doc, opus: self)
+        Lydown::Templates.render(:lilypond_doc, work: self)
       end
     end
     

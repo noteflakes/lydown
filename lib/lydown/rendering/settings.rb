@@ -18,7 +18,7 @@ module Lydown::Rendering
       key = @event[:key]
       value = @event[:value]
       
-      @opus[key] = check_setting_value(key, value)
+      @work[key] = check_setting_value(key, value)
       if RENDERABLE_SETTING_KEYS.include?(key)
         render_setting(key, value)
       end
@@ -54,7 +54,7 @@ module Lydown::Rendering
       
       setting << ' '
       
-      @opus.emit(:music, setting)
+      @work.emit(:music, setting)
     end
   end
 end

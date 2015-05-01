@@ -14,9 +14,9 @@ end
 
 def verify_example(name, result_name = nil)
   lydown = LydownParser.parse(load_example("#{name}.ld"))
-  opus = Lydown::Opus.new
-  opus.process(lydown)
-  ly = opus.to_lilypond.strip_whitespace
+  work = Lydown::Work.new
+  work.process(lydown)
+  ly = work.to_lilypond.strip_whitespace
   expect(ly).to eq(load_example("#{result_name || name}.ly").strip_whitespace)
   # expect {Lydown::Lilypond.compile(ly)}.not_to raise_error
 end

@@ -1,5 +1,5 @@
 require 'lydown/templates'
-require 'lydown/rendering/opus'
+require 'lydown/work'
 require 'lydown/rendering/base'
 require 'lydown/rendering/comments'
 require 'lydown/rendering/lyrics'
@@ -16,9 +16,9 @@ module Lydown::Rendering
       Lydown::Templates.render(:part, name: name, part: part)
     end
     
-    def translate(opus, e, lydown_stream, idx)
+    def translate(work, e, lydown_stream, idx)
       klass = class_for_event(e)
-      klass.new(e, opus, lydown_stream, idx).translate
+      klass.new(e, work, lydown_stream, idx).translate
     end
     
     def class_for_event(e)
@@ -29,9 +29,9 @@ module Lydown::Rendering
   end
   
   class Base
-    def initialize(event, opus, stream, idx)
+    def initialize(event, work, stream, idx)
       @event = event
-      @opus = opus
+      @work = work
       @stream = stream
       @idx = idx
     end
