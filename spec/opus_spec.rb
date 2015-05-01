@@ -19,7 +19,7 @@ RSpec.describe Lydown::Work do
       work = Lydown::Work.new
       work.process(lydown_code)
       ly = work.to_lilypond
-      expect {Lydown::Lilypond.compile(ly)}.not_to raise_error
+      expect {Lydown::Lilypond.compile(ly, output_filename: 'test')}.not_to raise_error
     end
   end
 end

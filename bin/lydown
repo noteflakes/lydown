@@ -3,4 +3,154 @@
 require 'rubygems'
 require 'lydown'
 require 'lydown/version'
-puts "Lydown version #{Lydown::VERSION}"
+require 'optparse'
+
+trap("INT") {exit}
+trap("TERM") {exit}
+
+help = <<HELP
+Lydown is not lilypond
+HELP
+
+$options = {'format' => 'pdf'}
+opts = OptionParser.new do |opts|
+  opts.banner = help
+
+  opts.on("-v", "--version", "Display current version") do
+    puts "lydown " + Lydown::VERSION
+    exit 0
+  end
+  
+  opts.on("-p", "--parts PART", "Parts (comma-separated)") do |v|
+    $options["parts"] = v.split(',')
+  end
+  
+  opts.on("-m", "--mvts MVT", "Movements (comma-separated)") do |v|
+    $options["movements"] = v.split(',')
+  end
+  
+  opts.on("--no-score", "Do not generate secore") do
+    $options["no_score"] = true
+  end
+  
+  opts.on("-s", "--score", "Generate only score, no parts") do
+    $options["score_only"] = true
+  end
+  
+  opts.on("-V", "--vocal", "Generate only vocal score") do
+    $options["vocal_only"] = true
+  end
+  
+  opts.on("--ly", "Generate Lilypond file") do
+    $options["format"] = 'ly'
+  end
+  
+  opts.on("--pdf", "Generate PDF file") do
+    $options["format"] = 'pdf'
+  end
+
+  opts.on("--png", "Generate PNG file") do
+    $options["format"] = 'png'
+  end
+
+  opts.on("-M", "--midi", "Generate midi file") do
+    $options["format"] = 'midi'
+    $options["score_only"] = true # implied
+  end
+  
+  opts.on("-O", "--open", "Open PDF/Midi file after processing") do
+    $options["open_target"] = true
+  end
+
+  opts.on("-o", "--output", "Filename for output") do |v|
+    $options["output_filename"] = v
+  end
+
+  opts.on("-W", "--work", "Create new work") do
+    $options["gen"] = :work
+  end
+end
+
+opts.parse!
+
+if $options["gen"]
+  # Ripple.generate($options["gen"], ARGV)
+  exit
+end
+
+source = ''
+if ARGV[0].nil? || ARGV[0] == '-'
+  # read source from stdin
+  source = STDIN.read
+  
+  # the output defaults to a file named lydown expect if the format is ly.
+  # In that case the output will be sent to STDOUT.
+  $options["output_filename"] ||= 'lydown' unless $options["format"] == 'ly'
+else
+  filename = ARGV[0]
+  $options['source_filename'] = filename
+  if (filename !~ /\.ld$/) and File.file?(filename + ".ld")
+    filename += ".ld"
+  end
+  
+  $options["output_filename"] ||= (filename =~ /^(.+)\.ld$/) ? $1 : filename
+
+  begin
+    source = IO.read(filename)
+  rescue
+    STDERR.puts "Failed to read file #{filename}"
+    exit 1
+  end
+end
+
+# translate lydown code to lilypond code
+ly = ''
+begin
+  lydown = LydownParser.parse(source, 
+    source_filename: $options['source_filename'], nice_error: true)
+  work = Lydown::Work.new
+  work.process(lydown)
+  ly = work.to_lilypond
+rescue LydownError => e
+  exit 1
+rescue => e
+  STDERR.puts "#{e.class}: #{e.message}"
+  exit 1
+end
+
+if $options['format'] == 'ly'
+  unless $options["output_filename"]
+    puts ly
+    exit
+  else
+    begin
+      File.open($options["output_filename"] + '.ly', 'w+') do |f|
+        f.write ly
+      end
+      exit
+    rescue => e
+      STDERR.puts "#{e.class}: #{e.message}"
+      exit 1
+    end
+  end
+end
+
+# compile lilypond code
+begin
+  opts = {
+    output_filename:  $options['output_filename'],
+    format:           $options['format']
+  }
+  Lydown::Lilypond.compile(ly, opts)
+rescue LydownError => e
+  STDERR.puts e.message
+  exit 1
+rescue => e
+  STDERR.puts "#{e.class}: #{e.message}"
+  exit 1
+end
+
+if $options['open_target']
+  filename = "#{$options['output_filename']}.#{$options['format']}"
+  system("open #{filename}")
+end

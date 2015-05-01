@@ -1,4 +1,4 @@
-require File.expand_path("./lib/lydown/version", __FILE__)
+require File.expand_path("./lib/lydown/version", File.dirname(__FILE__))
 
 Gem::Specification.new do |s|
   s.name          = 'lydown'
@@ -12,8 +12,8 @@ Gem::Specification.new do |s|
   s.homepage      = 'http://github.com/ciconia/lydown'
   s.license       = 'MIT'
 
-  s.files         = Dir["{lib}/**/*", "bin/*", "LICENSE", "*.md"]
   s.require_path  = 'lib'
+  s.files         = Dir["{lib}/**/*", "bin/*", "LICENSE", "README.md"]
 
   s.executables   = ['lydown']
   

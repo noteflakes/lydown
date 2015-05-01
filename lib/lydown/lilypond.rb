@@ -4,9 +4,11 @@ module Lydown
   module Lilypond
     class << self
       def compile(source, opts = {})
+        opts[:output_filename] ||= 'lydown'
+        
         # Run lilypond, pipe source into its STDIN, and capture its STDERR
         cmd = 'lilypond -lERROR '
-        cmd << (opts[:path] ? "-o #{opts[:path]} " : '-o lydown ')
+        cmd << "-o #{opts[:output_filename]} "
         cmd << "--#{opts[:format]} " if opts[:format]
         cmd << '-s - 2>&1'
         

@@ -1,2 +1,1 @@
-- command line tool
 - parts and scores

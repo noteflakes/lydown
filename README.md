@@ -42,19 +42,23 @@ And here's the equivalent lilypond code:
 
 ## Compiling the lydown code
 
-The lydown command line tool can compile the code into lilypond code, PDF, PNG, or MIDI. The program creates an output file with the same name as the input file and the corresponding extension. Specifiying the -o switch causes the output to be opened immediately.
-
-To create a PDF file:
-
-    lydown -o --pdf helloworld.lydown
-
-To create a MIDI file:
-
-    lydown -o --midi helloworld.lydown
+The lydown command line tool can compile the code into lilypond code, PDF, PNG, or MIDI. The program creates an output file with the same name as the input file and the corresponding extension. Specifiying the -O switch causes the output to be opened immediately.
 
 To create a lilypond file:
 
-    lydown -o --ly helloworld.lydown
+    lydown -O --ly helloworld.lydown
+
+To create a PDF file:
+
+    lydown -O --pdf helloworld.lydown
+
+To create a PNG file:
+
+    lydown -O --png helloworld.lydown
+
+To create a MIDI file:
+
+    lydown -O --midi helloworld.lydown
 
 ## The lydown syntax
 
