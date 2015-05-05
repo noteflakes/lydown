@@ -62,7 +62,7 @@ opts = OptionParser.new do |opts|
     $options["open_target"] = true
   end
 
-  opts.on("-o", "--output", "Filename for output") do |v|
+  opts.on("-o", "--output FILE", "Filename for output") do |v|
     $options["output_filename"] = v
   end
 
