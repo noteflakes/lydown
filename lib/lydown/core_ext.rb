@@ -99,7 +99,23 @@ class Hash
 end
 
 class String
+  def titlize(all_capitals = false)
+    all_capitals ? 
+      self.gsub("-", " ").gsub(/\b('?[a-z])/) {$1.capitalize} :
+      self.gsub("-", " ").capitalize
+  end
+
   def camelize
     split('_').collect(&:capitalize).join
   end
 end
+
+class Fixnum
+  ROMAN = %w[0 I II III IV V VI VII VIII IX X XI XII XIII XIV XV XVI XVII XVIII XIX
+    XX XXI XXII XXIII XXIV XXV XXVI XXVII XXVIII XXIX XXX]
+  
+  def to_roman
+    ROMAN[self]
+  end
+end
+
