@@ -8,14 +8,6 @@ require 'lydown/rendering/settings'
 
 module Lydown::Rendering
   class << self
-    def render_movement(name, movement, opts = {})
-      Lydown::Templates.render(:movement, name: name, movement: movement, opts: opts)
-    end
-    
-    def render_part(name, part, opts = {})
-      Lydown::Templates.render(:part, name: name, part: part, opts: opts)
-    end
-    
     def translate(work, e, lydown_stream, idx)
       klass = class_for_event(e)
       klass.new(e, work, lydown_stream, idx).translate
@@ -25,6 +17,14 @@ module Lydown::Rendering
       Lydown::Rendering.const_get(e[:type].to_s.camelize)
     rescue
       raise LydownError, "Invalid lydown event: #{e.inspect}"
+    end
+    
+    def part_title(part_name)
+      if part_name =~ /^([^\d]+)(\d+)$/
+        "#{$1.titlize} #{$2.to_i.to_roman}"
+      else
+        part_name.titlize
+      end
     end
   end
   

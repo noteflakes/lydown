@@ -6,8 +6,9 @@ module Lydown
     
     @@templates = {}
     
-    def self.render(name, context)
-      template(name).result(binding)
+    def self.render(name, ctx, locals = {})
+      _binding = ctx.respond_to?(:template_binding) ? ctx.template_binding(locals) : binding
+      template(name).result(_binding)
     end
     
     def self.template(name)

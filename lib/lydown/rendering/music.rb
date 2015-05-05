@@ -53,26 +53,26 @@ module Lydown::Rendering
   end
   
   module Notes
-    def add_note(work, note_info)
-      return add_macro_note(work, note_info) if work['process/duration_macro']
+    def add_note(note_info)
+      return add_macro_note(note_info) if @work['process/duration_macro']
 
-      work['process/last_note_head'] = note_info[:head]
+      @work['process/last_note_head'] = note_info[:head]
 
-      value = work['process/duration_values'].first
-      work['process/duration_values'].rotate!
+      value = @work['process/duration_values'].first
+      @work['process/duration_values'].rotate!
     
       # only add the value if different than the last used
-      if value == work['process/last_value']
+      if value == @work['process/last_value']
         value = ''
       else
-        work['process/last_value'] = value
+        @work['process/last_value'] = value
       end
       
-      work.emit(:music, lilypond_note(work, note_info, value: value))
+      @work.emit(:music, lilypond_note(note_info, value: value))
     end
     
-    def lilypond_note(work, note_info, options = {})
-      head = Accidentals.translate_note_name(work, note_info[:head])
+    def lilypond_note(note_info, options = {})
+      head = Accidentals.translate_note_name(@work, note_info[:head])
       if options[:head_only]
         head
       else
@@ -81,54 +81,81 @@ module Lydown::Rendering
           note_info[:octave], 
           note_info[:accidental_flag],
           options[:value],
-          lilypond_phrasing(work, note_info),
+          lilypond_phrasing(note_info),
           note_info[:expressions] ? note_info[:expressions].join : ''
         ]
       end
     end
     
-    def lilypond_phrasing(work, note_info)
+    def lilypond_phrasing(note_info)
       phrasing = ''
-      if work['process/open_beam']
+      if @work['process/open_beam']
         phrasing << '['
-        work['process/open_beam'] = nil
+        @work['process/open_beam'] = nil
       end
-      if work['process/open_slur']
+      if @work['process/open_slur']
         phrasing << '('
-        work['process/open_slur'] = nil
+        @work['process/open_slur'] = nil
       end
       phrasing << ']' if note_info[:beam_close]
       phrasing << ')' if note_info[:slur_close]
       phrasing
     end
+    
+    def lydown_phrasing_open(note_info)
+      phrasing = ''
+      if @work['process/open_beam']
+        phrasing << '['
+        @work['process/open_beam'] = nil
+      end
+      if @work['process/open_slur']
+        phrasing << '('
+        @work['process/open_slur'] = nil
+      end
+      phrasing
+    end
   
-    def add_macro_note(work, note_info)
-      work['process/macro_group'] ||= work['process/duration_macro'].clone
+    def lydown_phrasing_close(note_info)
+      phrasing = ''
+      phrasing << ']' if note_info[:beam_close]
+      phrasing << ')' if note_info[:slur_close]
+      phrasing
+    end
+  
+    def add_macro_note(note_info)
+      @work['process/macro_group'] ||= @work['process/duration_macro'].clone
       underscore_count = 0
-
+      
+      lydown_note = "%s%s%s%s%s%s" % [
+        lydown_phrasing_open(note_info),
+        note_info[:head], note_info[:octave], note_info[:accidental_flag],
+        lydown_phrasing_close(note_info),
+        note_info[:expressions] ? note_info[:expressions].join : ''
+      ]
+      
       # replace place holder and repeaters in macro group with actual note
-      work['process/macro_group'].gsub!(/[_@]/) do |match|
+      @work['process/macro_group'].gsub!(/[_@]/) do |match|
         case match
         when '_'
           underscore_count += 1
-          underscore_count == 1 ? note_info[:raw] : match
+          underscore_count == 1 ? lydown_note : match
         when '@'
           underscore_count < 2 ? note_info[:head] : match
         end
       end
 
       # if group is complete, compile it just like regular code
-      unless work['process/macro_group'].include?('_')
+      unless @work['process/macro_group'].include?('_')
         # stash macro, in order to compile macro group
-        macro = work['process/duration_macro']
-        work['process/duration_macro'] = nil
+        macro = @work['process/duration_macro']
+        @work['process/duration_macro'] = nil
 
-        code = LydownParser.parse(work['process/macro_group'])
-        work.process(code)
+        code = LydownParser.parse(@work['process/macro_group'])
+        @work.process(code)
 
         # restore macro
-        work['process/duration_macro'] = macro
-        work['process/macro_group'] = nil
+        @work['process/duration_macro'] = macro
+        @work['process/macro_group'] = nil
       end
     end
   end
@@ -167,7 +194,7 @@ module Lydown::Rendering
         look_ahead_idx += 1
       end
       
-      add_note(@work, @event)
+      add_note(@event)
     end
     
     LILYPOND_EXPRESSIONS = {
@@ -198,6 +225,8 @@ module Lydown::Rendering
   end
   
   class BeamClose < Base
+    def translate
+    end
   end
   
   class SlurOpen < Base
@@ -221,7 +250,7 @@ module Lydown::Rendering
     def translate
       note_head = @work['process/last_note_head']
       @work.emit(:music, '~ ')
-      add_note(@work, {head: note_head})
+      add_note({head: note_head})
     end
   end
   
@@ -233,7 +262,7 @@ module Lydown::Rendering
         @event[:head] = "#{@event[:head]}#{@event[:multiplier]}*#{@work[:time]}"
       end
       
-      add_note(@work, @event)
+      add_note(@event)
     end
   end
   

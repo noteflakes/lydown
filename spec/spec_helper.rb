@@ -2,6 +2,8 @@ require File.join(File.expand_path(File.dirname(__FILE__)), '../lib/lydown')
 
 EXAMPLES_PATH = File.join(File.expand_path(File.dirname(__FILE__)), 'examples')
 
+$spec_mode = true
+
 def load_example(name, strip = false)
   content = IO.read(File.join(EXAMPLES_PATH, name))
   strip ? content.strip_whitespace : content

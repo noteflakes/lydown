@@ -1,5 +1,15 @@
 \version "2.18.2"
 
-<% context[:work]['movements'].each do |name, movement| %>
-  <%= Lydown::Rendering.render_movement(name, movement, context[:opts]) %>
+<% if self['layout'] %>
+\layout {
+}
 <% end %>
+
+\book {
+  \header {
+  }
+  
+  <% self['movements'].each do |n, m| %>
+    <%= Lydown::Templates.render(:movement, self, name: n, movement: m) %>
+  <% end %>
+}

@@ -22,6 +22,13 @@ module Lydown
       @context['process/duration_values'] = ['4']
     end
     
+    # Used to bind to instance when rendering templates
+    def template_binding(locals = {})
+      b = binding
+      locals.each {|k, v| b.local_variable_set(k.to_sym, v)}
+      b
+    end
+    
     # translate a lydown stream into lilypond
     def process(lydown_stream)
       lydown_stream.each_with_index do |e, idx|
@@ -46,13 +53,14 @@ module Lydown
     end
     
     def to_lilypond(opts = {})
+      @context['render_opts'] = opts
       ly_code = ''
       if opts[:stream_path]
         @context[opts[:stream_path]].strip
       else
         @original_context = @context
         @context = filter_context(opts)
-        ly = Lydown::Templates.render(:lilypond_doc, work: self)
+        ly = Lydown::Templates.render(:lilypond_doc, self)
         @context = @original_context
         ly
       end
@@ -60,7 +68,12 @@ module Lydown
     
     def filter_context(opts = {})
       filtered = @context.deep_clone
-      filtered.deep = true
+
+      # delete default movement if other movements are present
+      if filtered['movements'].size > 1
+        filtered['movements'].delete('')
+      end
+      
       if opts[:movements]
         opts[:movements] = [opts[:movements]] unless opts[:movements].is_a?(Array)
         filtered['movements'].select! do |name, m|
@@ -72,6 +85,11 @@ module Lydown
         opts[:parts] = [opts[:parts]] unless opts[:parts].is_a?(Array)
       end
       filtered['movements'].each do |name, m|
+        # delete default part if other parts are present
+        if m['parts'].size > 1
+          m['parts'].delete('')
+        end
+        
         if opts[:parts]
           m['parts'].select! do |pname, p|
             opts[:parts].include?(pname.to_s)
