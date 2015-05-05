@@ -1,7 +1,5 @@
-- Find better solution for composable templates. The main problem is (lack of) caller binding, which makes passing arguments to sub templates cumbersome.
 - A movement should be enclosed with a \bookPart
 - A group of staves is enclosed with a StaffGroup
-- A staff for a part does not set the InstrumentName variable
 
 music features:
 - support for (s)ilences.
@@ -10,34 +8,34 @@ music features:
 
 - figured bass:
 
-  /2 s /8 7- 6 /4 5
-  /2 642 /8 s /32 s /16. 65- /4 s
-  /32 s /16. 64 /8 s s 75 /2 6
-  5 /4 s /8 68 5-7
-  95' 86 /4 75- /2 6`
-  s /4 7-5 6
-  /2 s 64'2
-  s /4 6 642
-  /8 s 642' h 4'2 6 6` b 6
-  7 6 /4 h /2 6
-  6 /4 53 4'2
-  s /8 6 6b 7 5' 45 64'2
-  /1 6
-  /2 7# 64'2
-  s /4 65 7-_
-  /4 s 6 6- /8 4' 5
-  /4 s /8 64 5'# 5 6` _ 5
-  /4 6` 5 /2 5'
-  s 6`4'2'
-  s 7-5
-  /1 5'
-  /2 6`4'2 /4 6 /8 6`4 5'#
-  /1 8#
-  /2 7# 6`5-
-  s 6
-  6` 65 
-  s /8 s 6 6 64
-  64'2 6 75 /16 8# 7_ /8 3 742 64 5#
+  % /2 s /8 7- 6 /4 5
+  % /2 642 /8 s /32 s /16. 65- /4 s
+  % /32 s /16. 64 /8 s s 75 /2 6
+  % 5 /4 s /8 68 5-7
+  % 95' 86 /4 75- /2 6`
+  % s /4 7-5 6
+  % /2 s 64'2
+  % s /4 6 642
+  % /8 s 642' h 4'2 6 6` b 6
+  % 7 6 /4 h /2 6
+  % 6 /4 53 4'2
+  % s /8 6 6b 7 5' 45 64'2
+  % /1 6
+  % /2 7# 64'2
+  % s /4 65 7-_
+  % /4 s 6 6- /8 4' 5
+  % /4 s /8 64 5'# 5 6` _ 5
+  % /4 6` 5 /2 5'
+  % s 6`4'2'
+  % s 7-5
+  % /1 5'
+  % /2 6`4'2 /4 6 /8 6`4 5'#
+  % /1 8#
+  % /2 7# 6`5-
+  % s 6
+  % 6` 65 
+  % s /8 s 6 6 64
+  % 64'2 6 75 /16 8# 7_ /8 3 742 64 5#
 
 - multiple voices
 
