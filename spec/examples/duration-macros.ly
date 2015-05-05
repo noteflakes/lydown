@@ -1,4 +1,12 @@
 \version "2.18.2"
-\relative c {
-  g8 a16 a b8 c16 c
+\book {
+  \header {
+  }
+  
+  \new Staff = Staff \with { } 
+  \context Staff = Staff {
+    \relative c {
+      a8. g16[ f8] ees'
+    }
+  }
 }
