@@ -1,17 +1,18 @@
 <%
   title = nil
-  id = 'Staff'
-  if name && (name != '') && !self['mode'] == :part
+  if name && (name != '')
     title = Lydown::Rendering.part_title(name)
-    id = "#{name.gsub(' ', '')}Staff"
   end
+  id = "#{title && title.gsub(' ', '')}Staff"
+  
+  score_mode = self['render_opts/mode'] == :score
 %>
 
 \new Staff = <%= id %> \with {
 }
 
 \context Staff = <%= id %> {
-<% if title %>\set Staff.instrumentName = #"<%= title %>"<% end %>
+<% if score_mode %>\set Staff.instrumentName = #"<%= title %>"<% end %>
   \relative c { <%= part['music'] %> }
 }
 

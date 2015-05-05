@@ -1,3 +1,10 @@
+<% score_mode = self['render_opts/mode'] == :score %>
+<% if score_mode %>
+  \score { <<
+<% end %>
 <% movement['parts'].each do |n, p| %>
   <%= Lydown::Templates.render(:part, self, name: n, part: p) %>
+<% end %>
+<% if score_mode %>
+  >> }
 <% end %>

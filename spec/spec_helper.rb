@@ -15,11 +15,13 @@ class String
   end
 end
 
-def verify_example(name, result_name = nil)
+def verify_example(name, result_name = nil, opts = {})
   lydown = LydownParser.parse(load_example("#{name}.ld"))
   work = Lydown::Work.new
   work.process(lydown)
-  ly = work.to_lilypond.strip_whitespace
-  expect(ly).to eq(load_example("#{result_name || name}.ly", true))
+  ly = work.to_lilypond(opts).strip_whitespace
+  
+  ex = load_example("#{result_name || name}.ly", true)
+  expect(ly).to eq(ex)
   # expect {Lydown::Lilypond.compile(ly)}.not_to raise_error
 end

@@ -28,4 +28,8 @@ RSpec.describe Lydown::Work do
     expect(work.to_lilypond(parts: 'violino1', mode: :part).strip_whitespace).to eq(load_example('2_part_violino1.ly', true))
     expect(work.to_lilypond(parts: 'violino2', mode: :part).strip_whitespace).to eq(load_example('2_part_violino2.ly', true))
   end
+  
+  it "handles multiple part scores" do
+    verify_example('2_part', nil, mode: :score)
+  end
 end
