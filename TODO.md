@@ -1,4 +1,3 @@
-- A group of staves is enclosed with a StaffGroup
 - correct clefs, beaming mode for different parts
 - A movement should be enclosed with a \bookPart
 

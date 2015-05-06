@@ -1,10 +1,31 @@
-<% score_mode = self['render_opts/mode'] == :score %>
+<% 
+  score_mode = self['render_opts/mode'] == :score
+  staff_groups = Lydown::Rendering::Staves.staff_groups(
+    self, movement, movement['parts'].keys)
+  parts_in_order = staff_groups.flatten
+  staff_hierarchy = Lydown::Rendering::Staves.staff_hierarchy(staff_groups)
+    
+  parts = parts_in_order.inject({}) do |m, p|
+    m[p] = movement['parts'][p]
+    m
+  end
+%>
 <% if score_mode %>
-  \score { <<
+  \score {
+    \new StaffGroup <<
+      \set StaffGroup.systemStartDelimiterHierarchy = <%= staff_hierarchy %>
 <% end %>
-<% movement['parts'].each do |n, p| %>
-  <%= Lydown::Templates.render(:part, self, name: n, part: p) %>
-<% end %>
+      
+    <% if n = movement['bar_number'] %>
+      \set Score.currentBarNumber = #<%= n %>
+      \set Score.barNumberVisibility = #all-bar-numbers-visible
+      \bar ""
+    <% end %>
+
+    <% parts.each do |n, p| %>
+      <%= Lydown::Templates.render(:part, self, name: n, part: p) %>
+    <% end %>
+
 <% if score_mode %>
   >> }
 <% end %>

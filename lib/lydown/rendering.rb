@@ -5,11 +5,12 @@ require 'lydown/rendering/comments'
 require 'lydown/rendering/lyrics'
 require 'lydown/rendering/music'
 require 'lydown/rendering/settings'
+require 'lydown/rendering/staves'
 
 require 'yaml'
 
 module Lydown::Rendering
-  DEFAULTS = YAML.load(IO.read(File.join(File.dirname(__FILE__), 'rendering/defaults.yml')))
+  DEFAULTS = YAML.load(IO.read(File.join(File.dirname(__FILE__), 'rendering/defaults.yml'))).deep!
   
   class << self
     def translate(work, e, lydown_stream, idx)
