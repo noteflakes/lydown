@@ -6,7 +6,11 @@ require 'lydown/rendering/lyrics'
 require 'lydown/rendering/music'
 require 'lydown/rendering/settings'
 
+require 'yaml'
+
 module Lydown::Rendering
+  DEFAULTS = YAML.load(IO.read(File.join(File.dirname(__FILE__), 'rendering/defaults.yml')))
+  
   class << self
     def translate(work, e, lydown_stream, idx)
       klass = class_for_event(e)
