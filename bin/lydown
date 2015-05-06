@@ -110,11 +110,11 @@ begin
     source_filename: $options['source_filename'], nice_error: true)
   work = Lydown::Work.new
   work.process(lydown)
-  ly = work.to_lilypond
+  ly = work.to_lilypond(mode: :score)
 rescue LydownError => e
   exit 1
 rescue => e
-  STDERR.puts "#{e.class}: #{e.message}"
+  STDERR.puts "#{e.class}: #{e.message}\n#{e.backtrace.join("\n")}"
   exit 1
 end
 
@@ -139,7 +139,8 @@ end
 begin
   opts = {
     output_filename:  $options['output_filename'],
-    format:           $options['format']
+    format:           $options['format'],
+    mode:             :score
   }
   Lydown::Lilypond.compile(ly, opts)
 rescue LydownError => e
