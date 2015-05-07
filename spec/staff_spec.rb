@@ -40,17 +40,17 @@ RSpec.describe Lydown::Rendering::Staves do
   end
   
   it "passes the correct end barline when rendering staves" do
-    # barline = Lydown::Rendering::Staves.end_barline({'end_barline': 'none'}, {})
-    # expect(barline).to be_nil
-    #
-    # # movement settings have precedence over work settings
-    # barline = Lydown::Rendering::Staves.end_barline({'end_barline': '|:'}, {'end_barline': '||'})
-    # expect(barline).to eq('||')
-    #
-    # # default
-    # barline = Lydown::Rendering::Staves.end_barline({}, {})
-    # expect(barline).to eq('|.')
-    #
-    # verify_example('end_barline')
+    barline = Lydown::Rendering::Staves.end_barline({'end_barline' => 'none'}, {})
+    expect(barline).to be_nil
+
+    # movement settings have precedence over work settings
+    barline = Lydown::Rendering::Staves.end_barline({'end_barline' => '|:'}, {'end_barline' => '||'})
+    expect(barline).to eq('||')
+
+    # default
+    barline = Lydown::Rendering::Staves.end_barline({}, {})
+    expect(barline).to eq('|.')
+
+    verify_example('end_barline')
   end
 end

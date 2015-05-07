@@ -76,7 +76,7 @@ module Lydown::Rendering
     DEFAULT_END_BARLINE = '|.'
     
     def self.end_barline(work, movement)
-      barline = work['end_barline'] || movement['end_barline'] || DEFAULT_END_BARLINE
+      barline = movement['end_barline'] || work['end_barline'] || DEFAULT_END_BARLINE
       barline == 'none' ? nil : barline
     end
   end
