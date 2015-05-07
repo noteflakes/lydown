@@ -56,6 +56,9 @@ module Lydown
       @context['render_opts'] = opts
       ly_code = ''
       if opts[:stream_path]
+        unless @context[opts[:stream_path]]
+          raise LydownError, "Invalid stream path #{opts[:stream_path].inspect}"
+        end
         @context[opts[:stream_path]].strip
       else
         @original_context = @context

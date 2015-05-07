@@ -23,11 +23,15 @@
         \clef <%= clef %>
     <% end %>
     <%= beaming_mode %>
-    <%= part['music'] %> 
+    <%= part['music'] %>
     
     <% if end_barline %>
       \bar "<%= end_barline %>"
     <% end %>
   }
+  <% if part['lyrics'] %>
+    \addlyrics { <%= part['lyrics'] %> }
+  <% end %>
 }
 
+    

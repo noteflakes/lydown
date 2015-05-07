@@ -1,4 +1,4 @@
-- correct clefs, beaming mode for different parts
+- lyrics
 - A movement should be enclosed with a \bookPart
 
 music features:
