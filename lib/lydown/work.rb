@@ -59,10 +59,12 @@ module Lydown
         @context[opts[:stream_path]].strip
       else
         @original_context = @context
-        @context = filter_context(opts)
-        ly = Lydown::Templates.render(:lilypond_doc, self)
-        @context = @original_context
-        ly
+        begin
+          @context = filter_context(opts)
+          Lydown::Templates.render(:lilypond_doc, self)
+        ensure
+          @context = @original_context
+        end
       end
     end
     

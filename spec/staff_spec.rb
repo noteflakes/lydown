@@ -24,4 +24,33 @@ RSpec.describe Lydown::Rendering::Staves do
     expect(hierarchy).to eq(
     "#'(SystemStartBracket (SystemStartBrace violino1 violino2) viola )")
   end
+  
+  it "gives correct clef, beaming mode for different parts" do
+    clef = Lydown::Rendering::Staves.clef('continuo')
+    expect(clef).to eq('bass')
+    
+    clef = Lydown::Rendering::Staves.clef('viola')
+    expect(clef).to eq('alto')
+    
+    mode = Lydown::Rendering::Staves.beaming_mode('violino1')
+    expect(mode).to be_nil
+    
+    mode = Lydown::Rendering::Staves.beaming_mode('soprano')
+    expect(mode).to eq('\autoBeamOff')
+  end
+  
+  it "passes the correct end barline when rendering staves" do
+    # barline = Lydown::Rendering::Staves.end_barline({'end_barline': 'none'}, {})
+    # expect(barline).to be_nil
+    #
+    # # movement settings have precedence over work settings
+    # barline = Lydown::Rendering::Staves.end_barline({'end_barline': '|:'}, {'end_barline': '||'})
+    # expect(barline).to eq('||')
+    #
+    # # default
+    # barline = Lydown::Rendering::Staves.end_barline({}, {})
+    # expect(barline).to eq('|.')
+    #
+    # verify_example('end_barline')
+  end
 end

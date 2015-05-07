@@ -6,6 +6,11 @@
   id = "#{title && title.gsub(' ', '')}Staff"
   
   score_mode = self['render_opts/mode'] == :score
+  
+  clef = Lydown::Rendering::Staves.clef(name)
+  beaming_mode = Lydown::Rendering::Staves.beaming_mode(name)
+  
+  end_barline = Lydown::Rendering::Staves.end_barline(self, movement)
 %>
 
 \new Staff = <%= id %> \with {
@@ -13,6 +18,16 @@
 
 \context Staff = <%= id %> {
 <% if score_mode %>\set Staff.instrumentName = #"<%= title %>"<% end %>
-  \relative c { <%= part['music'] %> }
+  \relative c { 
+    <% if clef %>
+        \clef <%= clef %>
+    <% end %>
+    <%= beaming_mode %>
+    <%= part['music'] %> 
+    
+    <% if end_barline %>
+      \bar "<%= end_barline %>"
+    <% end %>
+  }
 }
 

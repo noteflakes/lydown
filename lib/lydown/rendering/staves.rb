@@ -54,5 +54,30 @@ module Lydown::Rendering
         
       "#'(SystemStartBracket #{expr})"
     end
+    
+    def self.clef(part)
+      DEFAULTS["parts/#{part}/clef"]
+    end
+    
+    def self.beaming_mode(part)
+      beaming = DEFAULTS["parts/#{part}/beaming"]
+      return nil if beaming.nil?
+      
+      case beaming
+      when 'auto'
+        '\autoBeamOn'
+      when 'manual'
+        '\autoBeamOff'
+      else
+        raise LydownError, "Invalid beaming mode (#{beaming.inspect})"
+      end
+    end
+    
+    DEFAULT_END_BARLINE = '|.'
+    
+    def self.end_barline(work, movement)
+      barline = work['end_barline'] || movement['end_barline'] || DEFAULT_END_BARLINE
+      barline == 'none' ? nil : barline
+    end
   end
 end

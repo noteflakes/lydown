@@ -23,9 +23,10 @@
     <% end %>
 
     <% parts.each do |n, p| %>
-      <%= Lydown::Templates.render(:part, self, name: n, part: p) %>
+      <%= Lydown::Templates.render(:part, self, 
+        name: n, part: p, movement: movement) %>
     <% end %>
-
+    
 <% if score_mode %>
   >> }
 <% end %>

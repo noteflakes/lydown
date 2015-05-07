@@ -5,75 +5,75 @@ lilypond_cmd: lilypond
 parts:
   soprano:
     clef: treble
-    auto_beam: false
+    beaming: manual
     midi_instrument:  voice oohs
   soprano1:
     clef: treble
-    auto_beam: false
+    beaming: manual
     midi_instrument:  voice oohs
   soprano2:
     clef: treble
-    auto_beam: false
+    beaming: manual
     midi_instrument:  voice oohs
   alto:
     clef: treble
-    auto_beam: false
+    beaming: manual
     midi_instrument: voice oohs
   alto1:
     clef: treble
-    auto_beam: false
+    beaming: manual
     midi_instrument: voice oohs
   alto2:
     clef: treble
-    auto_beam: false
+    beaming: manual
     midi_instrument: voice oohs
   tenor:             
     clef: treble_8   
-    auto_beam: false 
+    beaming: manual 
     midi_instrument: voice oohs
   tenor1:             
     clef: treble_8   
-    auto_beam: false 
+    beaming: manual 
     midi_instrument: voice oohs
   tenor2:             
     clef: treble_8   
-    auto_beam: false 
+    beaming: manual 
     midi_instrument: voice oohs
   tenore:            
     clef: treble_8   
-    auto_beam: false 
+    beaming: manual 
     midi_instrument: voice oohs
   tenore1:            
     clef: treble_8   
-    auto_beam: false 
+    beaming: manual 
     midi_instrument: voice oohs
   tenore2:            
     clef: treble_8   
-    auto_beam: false 
+    beaming: manual 
     midi_instrument: voice oohs
   bass:              
     clef: bass       
-    auto_beam: false 
+    beaming: manual 
     midi_instrument: voice oohs
   bass1:              
     clef: bass       
-    auto_beam: false 
+    beaming: manual 
     midi_instrument: voice oohs
   bass2:              
     clef: bass       
-    auto_beam: false 
+    beaming: manual 
     midi_instrument: voice oohs
   basso:             
     clef: bass       
-    auto_beam: false 
+    beaming: manual 
     midi_instrument: voice oohs
   basso1:             
     clef: bass       
-    auto_beam: false 
+    beaming: manual 
     midi_instrument: voice oohs
   basso2:             
     clef: bass       
-    auto_beam: false 
+    beaming: manual 
     midi_instrument: voice oohs
   violin:
     clef: treble
@@ -121,6 +121,12 @@ parts:
     clef: bass
     midi_instrument: viola
   viola-da-gamba2:
+    clef: bass
+    midi_instrument: viola
+  gamba1:
+    clef: bass
+    midi_instrument: viola
+  gamba2:
     clef: bass
     midi_instrument: viola
   fagott:
@@ -174,4 +180,6 @@ score:
     - viola
     - [gamba1, gamba2]
     - [soprano, alto, tenore, basso]
+    - [soprano1, alto1, tenore1, basso1]
+    - [soprano2, alto2, tenore2, basso2]
     - continuo

@@ -2,7 +2,7 @@ module Lydown::Rendering
   class Setting < Base
     SETTING_KEYS = [
       'key', 'time', 'pickup', 'clef', 'part', 'movement',
-      'accidentals', 'beams'
+      'accidentals', 'beams', 'end_barline'
     ]
 
     RENDERABLE_SETTING_KEYS = [
