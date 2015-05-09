@@ -40,4 +40,30 @@ RSpec.describe Lydown::Work do
     verify_example('2_part', nil, mode: :score)
     verify_example('part_settings', nil, mode: :score)
   end
+  
+  it "processes files if given path" do
+    work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'simple'))
+    work['end_barline'] = 'none'
+    
+    ly = work.to_lilypond(mode: :part).strip_whitespace
+    ex = load_example('simple.ly', strip: true)
+    expect(ly).to eq(ex)
+  end
+  
+  it "handles multipart directories" do
+    work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'multipart'))
+    work['end_barline'] = 'none'
+    
+    ly = work.to_lilypond(parts: 'violino1', mode: :part).strip_whitespace
+    ex = load_example('multipart_violino1.ly', strip: true)
+    expect(ly).to eq(ex)
+    
+    ly = work.to_lilypond(parts: 'violino2', mode: :part).strip_whitespace
+    ex = load_example('multipart_violino2.ly', strip: true)
+    expect(ly).to eq(ex)
+
+    ly = work.to_lilypond(mode: :score).strip_whitespace
+    ex = load_example('multipart_score.ly', strip: true)
+    expect(ly).to eq(ex)
+  end
 end

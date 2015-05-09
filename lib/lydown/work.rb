@@ -15,11 +15,15 @@ module Lydown
   class Work
     attr_accessor :context
     
-    def initialize
+    def initialize(opts = {})
       @context = {}.deep!
       @context[:time] = '4/4'
       @context[:key] = 'c major'
       @context['process/duration_values'] = ['4']
+      
+      opts.each {|k, v| @context[k] = v}
+      
+      process_work_files if opts[:path]
     end
     
     # Used to bind to instance when rendering templates
@@ -117,6 +121,44 @@ module Lydown
     
     def []=(path, value)
       context[path] = value
+    end
+    
+    def process_work_files
+      path = @context[:path]
+      path += '.ld' if File.file?(path + '.ld')
+
+      if File.file?(path)
+        process_lydown_file(path)
+      elsif File.directory?(path)
+        process_directory(path)
+      else
+        raise LydownError, "Could not read #{path}"
+      end
+    end
+    
+    DEFAULT_BASENAMES = %w{work movement}
+    
+    def process_directory(path)
+      # process work code
+      process_lydown_file(File.join(path, 'work.ld'))
+      
+      # process movement specific code
+      process_lydown_file(File.join(path, 'movement.ld'))
+      
+      Dir["#{path}/*"].each do |entry|
+        if File.file?(entry) && (entry =~ /\.ld$/)
+          basename = File.basename(entry, '.*')
+          unless DEFAULT_BASENAMES.include?(basename)
+            part_code = [{type: :setting, key: 'part', value: basename}]
+            lydown_code = part_code + LydownParser.parse(IO.read(entry))
+            process(lydown_code)
+          end
+        end
+      end
+    end
+    
+    def process_lydown_file(path)
+      process LydownParser.parse(IO.read(path)) if File.file?(path)
     end
   end
 end

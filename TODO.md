@@ -1,4 +1,3 @@
-- lyrics
 - A movement should be enclosed with a \bookPart
 
 music features:
