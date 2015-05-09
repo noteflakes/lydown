@@ -1,5 +1,5 @@
 module Lydown::Rendering
-  module Staves
+  module Staff
     def self.staff_groups(work, movement, parts)
       model = work['score/order'] || movement['score/order'] || DEFAULTS['score/order']
       parts_copy = parts.clone

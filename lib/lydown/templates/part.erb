@@ -7,10 +7,10 @@
   
   score_mode = self['render_opts/mode'] == :score
   
-  clef = Lydown::Rendering::Staves.clef(name)
-  beaming_mode = Lydown::Rendering::Staves.beaming_mode(name)
+  clef = Lydown::Rendering::Staff.clef(name)
+  beaming_mode = Lydown::Rendering::Staff.beaming_mode(name)
   
-  end_barline = Lydown::Rendering::Staves.end_barline(self, movement)
+  end_barline = Lydown::Rendering::Staff.end_barline(self, movement)
 %>
 
 \new Staff = <%= id %> \with {

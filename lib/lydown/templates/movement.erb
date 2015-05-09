@@ -1,9 +1,9 @@
 <%
   score_mode = self['render_opts/mode'] == :score
-  staff_groups = Lydown::Rendering::Staves.staff_groups(
+  staff_groups = Lydown::Rendering::Staff.staff_groups(
     self, movement, movement['parts'].keys)
   parts_in_order = staff_groups.flatten
-  staff_hierarchy = Lydown::Rendering::Staves.staff_hierarchy(staff_groups)
+  staff_hierarchy = Lydown::Rendering::Staff.staff_hierarchy(staff_groups)
     
   parts = parts_in_order.inject({}) do |m, p|
     m[p] = movement['parts'][p]

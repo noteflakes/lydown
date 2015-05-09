@@ -5,7 +5,7 @@ require 'lydown/rendering/comments'
 require 'lydown/rendering/lyrics'
 require 'lydown/rendering/music'
 require 'lydown/rendering/settings'
-require 'lydown/rendering/staves'
+require 'lydown/rendering/staff'
 require 'lydown/rendering/movement'
 
 require 'yaml'
