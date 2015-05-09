@@ -1,4 +1,5 @@
 - A movement should be enclosed with a \bookPart
+- spec overriding beaming mode for parts.
 
 music features:
 - support for (s)ilences.

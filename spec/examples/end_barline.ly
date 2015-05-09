@@ -3,11 +3,13 @@
   \header {
   }
   
-  \new Staff = Staff \with { } 
-  \context Staff = Staff {
-    \relative c {
-      c4 d e f
-      \bar "||"
+  \bookpart {
+    \new Staff = Staff \with { } 
+    \context Staff = Staff {
+      \relative c {
+        c4 d e f
+        \bar "||"
+      }
     }
   }
 }

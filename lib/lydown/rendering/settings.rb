@@ -27,8 +27,9 @@ module Lydown::Rendering
         key =  @work[:key]
         render_setting('key', key) unless key == 'c major'
 
-        # make sure duration of first note is emitted
-        @work['process/last_value'] = nil
+        @work.reset_context(:part)
+      when 'movement'
+        @work.reset_context(:movement)
       end
 
       if RENDERABLE_SETTING_KEYS.include?(key)

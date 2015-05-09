@@ -1,4 +1,4 @@
-<% 
+<%
   score_mode = self['render_opts/mode'] == :score
   staff_groups = Lydown::Rendering::Staves.staff_groups(
     self, movement, movement['parts'].keys)
@@ -9,24 +9,40 @@
     m[p] = movement['parts'][p]
     m
   end
+  
+  movement_title = Lydown::Rendering::Movement.movement_title(name)
 %>
-<% if score_mode %>
-  \score {
-    \new StaffGroup <<
-      \set StaffGroup.systemStartDelimiterHierarchy = <%= staff_hierarchy %>
-<% end %>
-      
-    <% if n = movement['bar_number'] %>
-      \set Score.currentBarNumber = #<%= n %>
-      \set Score.barNumberVisibility = #all-bar-numbers-visible
-      \bar ""
-    <% end %>
 
-    <% parts.each do |n, p| %>
-      <%= Lydown::Templates.render(:part, self, 
-        name: n, part: p, movement: movement) %>
-    <% end %>
+\bookpart {
+  <% if movement_title %>
+    \header { 
+      piece = \markup {
+        \column {
+          \fill-line {\bold \large "<%= movement_title %>"}
+          
+        }
+      }
+    }
+  <% end %>
+  
+  <% if score_mode %>
+    \score {
+      \new StaffGroup <<
+        \set StaffGroup.systemStartDelimiterHierarchy = <%= staff_hierarchy %>
+  <% end %>
     
-<% if score_mode %>
-  >> }
-<% end %>
+      <% if n = movement['bar_number'] %>
+        \set Score.currentBarNumber = #<%= n %>
+        \set Score.barNumberVisibility = #all-bar-numbers-visible
+        \bar ""
+      <% end %>
+
+      <% parts.each do |n, p| %>
+        <%= Lydown::Templates.render(:part, self, 
+          name: n, part: p, movement: movement) %>
+      <% end %>
+  
+  <% if score_mode %>
+    >> }
+  <% end %>
+}

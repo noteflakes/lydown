@@ -17,13 +17,27 @@ module Lydown
     
     def initialize(opts = {})
       @context = {}.deep!
-      @context[:time] = '4/4'
-      @context[:key] = 'c major'
-      @context['process/duration_values'] = ['4']
+      reset_context(:work)
       
       opts.each {|k, v| @context[k] = v}
       
       process_work_files if opts[:path]
+    end
+    
+    def reset_context(mode)
+      case mode
+      when :work, :movement
+        @context[:time] = '4/4'
+        @context[:key] = 'c major'
+        @context[:partial] = nil
+        @context[:beaming] = nil
+        @context[:end_barline] = nil
+        @context['process/duration_values'] = ['4']
+        @context['process/last_value'] = nil
+      when :part
+        @context['process/duration_values'] = ['4']
+        @context['process/last_value'] = nil
+      end
     end
     
     # Used to bind to instance when rendering templates
@@ -46,6 +60,7 @@ module Lydown
     
     def emit(stream_type, *content)
       stream = current_stream(stream_type)
+      
       content.each {|c| stream << c}
     end
     
@@ -59,6 +74,7 @@ module Lydown
     def to_lilypond(opts = {})
       @context['render_opts'] = opts
       ly_code = ''
+
       if opts[:stream_path]
         unless @context[opts[:stream_path]]
           raise LydownError, "Invalid stream path #{opts[:stream_path].inspect}"

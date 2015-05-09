@@ -66,4 +66,23 @@ RSpec.describe Lydown::Work do
     ex = load_example('multipart_score.ly', strip: true)
     expect(ly).to eq(ex)
   end
+  
+  it "handles multiple movements" do
+    work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, '2_movement.ld'))
+    work['end_barline'] = 'none'
+    
+    ly = work.to_lilypond(movements: '01-intro').strip_whitespace
+    ex = load_example('2_movement_intro.ly', strip: true)
+    expect(ly).to eq(ex)
+    
+    ly = work.to_lilypond(movements: '02-outro', mode: :part).strip_whitespace
+    ex = load_example('2_movement_outro.ly', strip: true)
+    expect(ly).to eq(ex)
+
+    ly = work.to_lilypond(mode: :part).strip_whitespace
+    ex = load_example('2_movement.ly', strip: true)
+    expect(ly).to eq(ex)
+  end
+  
+  
 end

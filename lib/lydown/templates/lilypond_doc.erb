@@ -8,8 +8,8 @@
 \book {
   \header {
   }
-  
   <% self['movements'].each do |n, m| %>
-    <%= Lydown::Templates.render(:movement, self, name: n, movement: m) %>
+    <%= Lydown::Templates.render(:movement, self, name: n, movement: m) 
+    %>
   <% end %>
 }
