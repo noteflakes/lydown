@@ -1,6 +1,17 @@
+- support for full work processing in command line tool
+- support for movement filtering in command line tool
+- support for part filtering in command line tool
+- support for default output directory (_pdf) in command line tool
 - spec for overriding beaming mode for parts.
 
 music features:
+- stream switching for lyrics and figured bass:
+  cdefgabc
+  --lyrics
+  I'm a lit-tle pig-gy
+  --figures
+  /2 s /8 7- 6
+
 - support for (s)ilences.
 
   2s4ce

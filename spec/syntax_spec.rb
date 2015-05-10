@@ -20,6 +20,10 @@ RSpec.describe Lydown do
   it "correctly translates time signature settings" do
     verify_example('key-signature')
   end
+    
+  it "correctly translates pickup settings" do
+    verify_example('pickup')
+  end
 
   it "correctly translate accidentals" do
     verify_example('accidentals')

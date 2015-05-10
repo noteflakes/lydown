@@ -9,6 +9,7 @@
   
   clef = Lydown::Rendering::Staff.clef(name)
   beaming_mode = Lydown::Rendering::Staff.beaming_mode(name)
+  partial = self[:pickup] ? "\\partial #{self[:pickup]}" : ""
   
   end_barline = Lydown::Rendering::Staff.end_barline(self, movement)
 %>
@@ -23,6 +24,7 @@
         \clef <%= clef %>
     <% end %>
     <%= beaming_mode %>
+    <%= partial %>
     <%= part['music'] %>
     
     <% if end_barline %>

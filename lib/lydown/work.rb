@@ -29,7 +29,7 @@ module Lydown
       when :work, :movement
         @context[:time] = '4/4'
         @context[:key] = 'c major'
-        @context[:partial] = nil
+        @context[:pickup] = nil
         @context[:beaming] = nil
         @context[:end_barline] = nil
         @context[:part] = nil

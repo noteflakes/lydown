@@ -18,6 +18,10 @@ module Lydown::Rendering
       key = @event[:key]
       value = @event[:value]
       
+      unless SETTING_KEYS.include?(key)
+        raise Lydown, "Invalid setting (#{key})"
+      end
+      
       @work[key] = check_setting_value(key, value)
 
       case key
