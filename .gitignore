@@ -36,3 +36,4 @@ build/
 
 test*
 spec/examples/*.pdf
+music/*.pdf
