@@ -21,7 +21,7 @@
 <% if score_mode %>\set Staff.instrumentName = #"<%= title %>"<% end %>
   \relative c { 
     <% if clef %>
-        \clef <%= clef %>
+        \clef "<%= clef %>"
     <% end %>
     <%= beaming_mode %>
     <%= partial %>

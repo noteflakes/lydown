@@ -7,7 +7,7 @@
     \new Staff = SopranoStaff \with { } 
     \context Staff = SopranoStaff {
       \relative c {
-        \clef treble
+        \clef "treble"
         \autoBeamOff
         \time 4/4
         c8 c g' g a' a g4

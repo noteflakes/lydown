@@ -63,6 +63,8 @@ module Lydown::Rendering
         note = Lydown::Rendering::Accidentals.lilypond_note_name($1)
         mode = $2
         setting << "#{note} \\#{mode}"
+      when 'clef'
+        setting << "\"#{value}\""
       when 'beams'
         setting = (value == 'manual') ? '\autoBeamOff' : '\autoBeamOn'
       else

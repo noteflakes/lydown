@@ -28,7 +28,7 @@
     \new Staff = ViolinoIIStaff \with { } 
     \context Staff = ViolinoIIStaff {
       \relative c {
-        \clef treble
+        \clef "treble"
         \time 2/4
         \key bes \major
         g4 f8 ees d2

@@ -17,7 +17,7 @@
     \new Staff = VioloncelloStaff \with { } 
     \context Staff = VioloncelloStaff {
       \relative c {
-        \clef bass
+        \clef "bass"
         \time 3/4
         \key d \major
         d8 cis b a gis4

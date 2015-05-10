@@ -17,7 +17,7 @@
     \new Staff = ViolinoIStaff \with { } 
     \context Staff = ViolinoIStaff {
       \relative c {
-        \clef treble
+        \clef "treble"
         \time 3/4
         \key d \major
         a8 b cis d e4

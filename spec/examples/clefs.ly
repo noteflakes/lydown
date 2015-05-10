@@ -7,11 +7,11 @@
     \new Staff = Staff \with { } 
     \context Staff = Staff {
       \relative c {
-        \clef bass
+        \clef "bass"
         c4 d e f 
-        \clef alto
+        \clef "alto"
         g a b c
-        \clef treble
+        \clef "treble"
       }
     }
   }
