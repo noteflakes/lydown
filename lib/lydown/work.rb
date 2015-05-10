@@ -32,6 +32,7 @@ module Lydown
         @context[:partial] = nil
         @context[:beaming] = nil
         @context[:end_barline] = nil
+        @context[:part] = nil
         @context['process/duration_values'] = ['4']
         @context['process/last_value'] = nil
       when :part
@@ -154,14 +155,15 @@ module Lydown
     
     DEFAULT_BASENAMES = %w{work movement}
     
-    def process_directory(path)
+    def process_directory(path, recursive = true)
       # process work code
       process_lydown_file(File.join(path, 'work.ld'))
       
       # process movement specific code
       process_lydown_file(File.join(path, 'movement.ld'))
-      
-      Dir["#{path}/*"].each do |entry|
+
+      # Iterate over sorted directory entries
+      Dir["#{path}/*"].entries.sort.each do |entry|
         if File.file?(entry) && (entry =~ /\.ld$/)
           basename = File.basename(entry, '.*')
           unless DEFAULT_BASENAMES.include?(basename)
@@ -169,6 +171,11 @@ module Lydown
             lydown_code = part_code + LydownParser.parse(IO.read(entry))
             process(lydown_code)
           end
+        elsif File.directory?(entry) && recursive
+          basename = File.basename(entry)
+          # set movement
+          process([{type: :setting, key: 'movement', value: basename}])
+          process_directory(entry, false)
         end
       end
     end

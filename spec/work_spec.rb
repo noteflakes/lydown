@@ -84,5 +84,32 @@ RSpec.describe Lydown::Work do
     expect(ly).to eq(ex)
   end
   
-  
+  it "handles work with multiple movements, parts" do
+    work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'fullwork'))
+    
+    ly = work.to_lilypond(mode: :score).strip_whitespace
+    ex = load_example('fullwork.ly', strip: true)
+    expect(ly).to eq(ex)
+
+    ly = work.to_lilypond(movements: '01-intro', mode: :score).strip_whitespace
+    ex = load_example('fullwork_intro.ly', strip: true)
+    expect(ly).to eq(ex)
+
+    ly = work.to_lilypond(movements: '02-outro', mode: :score).strip_whitespace
+    ex = load_example('fullwork_outro.ly', strip: true)
+    expect(ly).to eq(ex)
+
+    ly = work.to_lilypond(movements: '01-intro', parts: 'violino1').strip_whitespace
+    ex = load_example('fullwork_intro_violino1.ly', strip: true)
+    expect(ly).to eq(ex)
+    
+    ly = work.to_lilypond(parts: 'violino2').strip_whitespace
+    ex = load_example('fullwork_violino2.ly', strip: true)
+    expect(ly).to eq(ex)
+    
+    ly = work.to_lilypond(parts: 'violoncello').strip_whitespace
+    ex = load_example('fullwork_violoncello.ly', strip: true)
+    expect(ly).to eq(ex)
+  end
+    
 end

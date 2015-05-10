@@ -1,13 +1,19 @@
 module Lydown::Rendering
   module Movement
-    def self.movement_title(name)
+    def self.movement_title(work, name)
       return nil if name.nil? || name.empty?
       
       if name =~ /^(?:([0-9])+([a-z]*))\-(.+)$/
-        "#{$1.to_i}#{$2}. #{$3.capitalize}"
+        title = "#{$1.to_i}#{$2}. #{$3.capitalize}"
       else
-        name
+        title = name
       end
+      
+      if work["movements/#{name}/parts"].empty?
+        title += " - tacet"
+      end
+      
+      title
     end
   end
 end
