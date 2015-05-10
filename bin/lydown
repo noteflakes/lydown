@@ -94,24 +94,16 @@ else
   end
   
   $options["output_filename"] ||= (filename =~ /^(.+)\.ld$/) ? $1 : filename
-
-  begin
-    source = IO.read(filename)
-  rescue
-    STDERR.puts "Failed to read file #{filename}"
-    exit 1
-  end
 end
 
 # translate lydown code to lilypond code
 ly = ''
 begin
-  lydown = LydownParser.parse(source, 
-    source_filename: $options['source_filename'], nice_error: true)
-  work = Lydown::Work.new
-  work.process(lydown)
+  work = Lydown::Work.new(path: $options['source_filename'], nice_error: true)
+  # work.process(lydown)
   ly = work.to_lilypond(mode: :score)
 rescue LydownError => e
+  STDERR.puts e.message
   exit 1
 rescue => e
   STDERR.puts "#{e.class}: #{e.message}\n#{e.backtrace.join("\n")}"
