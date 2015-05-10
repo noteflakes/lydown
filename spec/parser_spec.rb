@@ -26,4 +26,9 @@ RSpec.describe LydownParser do
     expect(stream[5]).to eq({type: :duration, value: '2'})
     expect(stream[6]).to eq({type: :note, raw: 'c', head: 'c'})
   end
+  
+  it "ignores whitespace at beginning of line" do
+    stream = LydownParser.parse('  a')
+    expect(stream).to eq([{type: :note, raw: 'a', head: 'a'}])
+  end
 end

@@ -23,7 +23,7 @@ grammar Lydown
     (!"\n" !"//" .)* <Setting::Value>
   end
   rule music
-    event* comment?
+    white_space? event* comment?
   end
   rule white_space
     [ \t]+

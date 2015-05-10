@@ -23,7 +23,7 @@ class LydownParser
     if opts[:nice_error]
       msg << "Unexpected character at line #{parser.failure_line} column #{parser.failure_column}:\n"
     else
-      msg << "#{parser.failure_reason}:"
+      msg << "#{parser.failure_reason}:\n"
     end
     msg << "  #{source.lines[parser.failure_line - 1]} #{' ' * parser.failure_column}^"
     
