@@ -31,4 +31,9 @@ RSpec.describe LydownParser do
     stream = LydownParser.parse('  a')
     expect(stream).to eq([{type: :note, raw: 'a', head: 'a'}])
   end
+  
+  it "correctly handles stream switching" do
+    verify_example('streams')
+    verify_example('streams_multipart', nil, mode: :score)
+  end
 end
