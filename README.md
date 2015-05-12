@@ -243,6 +243,16 @@ Key or time signatures can be changed on the fly:
     - time: 3/4
     c e g 2.c
 
+### Pickup bars
+
+[Pickup bars](http://www.lilypond.org/doc/v2.18/Documentation/notation/displaying-rhythms#upbeats) (anacrusis, upbeat) are defined with the pickup setting:
+
+    - time: 3/4
+    - pickup: 4
+        4g
+    c8cdcb4aaa
+    d8dedc4bb
+
 ### Inline lyrics
 
 Lyrics for vocal parts can be entered on separate lines prefixed by a > symbol:
@@ -252,55 +262,56 @@ Lyrics for vocal parts can be entered on separate lines prefixed by a > symbol:
 
 Text alignment follows the duration, beaming and slurring of the music, just like in lilypond. Sillables are expected to be separated by a dash. Melismas, i.e. a single sillable streched over multiple notes, is signified by one or more underscores.
 
-## <a name="settings"></a>Document settings
+### Stream switching
 
-Document settings are entered on separate lines prefixed with a dash:
+Lyrics can be entered in a block, before or after musical notation, by switching streams:
 
-    - clef: treble
-    - time: 4/4
-
-The following settings are recognized:
-
-    - clef:
-    - time:
-    - key:
-    - pickup: {a duration value for a pickup/upbeat/anacrusis}
-
-
+    8ccg'gaa4g
+    8ffeedd4c
+    =lyrics
+    Twin-kle twin-kle lit-tle star,
+    How I won-der what you are.
+    =music
+    8g'gffeed4
+    ...
 
 ## Multiple parts
 
-Things get a bit more exciting when multiple parts are present, such as in a piano score:
+Multiple parts can be entered in the same file by prefixing each part's content with a -part setting:
 
-    \version "2.18.2"
-    \score {
-      \new PianoStaff <<
-        \new Staff = "RH" \relative c' {
-          \key c major
-          \time 4/4
-          c'8c g' g a a g4 f8 f e e d d c4
-        }
-        \new Staff = "LH" \relative c {
-          \key c major
-          \clef "bass"
-          c4 e f e d8 b' c a f g c,4
-        }
-      >>
-    }
+    - part: violino1
+    8c'cg'gaa4g
+    - part: continuo
+    4cefe
+
+## Multiple movements
+
+For multi-movement works, prefix each movement with a -movement setting:
+
+    - movement: Adagio
+    ... 
+    - movement: Allegro
+    ...
+
+## Multiple voices
+
+[Multiple voices](http://www.lilypond.org/doc/v2.18/Documentation/notation/multiple-voices#single_002dstaff-polyphony) on the same staff can be easily entered using the following notation:
+
+    1: 8egfdeg4f
+    2: 4cded
+
+## Piano scores
+
+[Piano/keyboard scores](http://www.lilypond.org/doc/v2.18/Documentation/notation/common-notation-for-keyboards) can be created by using the <code>r/l</code> (right/left) prefixes:
+
+    r: 8cdeccdec
+    l: 4cgcg
     
-Notice the curly braces, and the repeated key declarations. The lydown equivalent is a bit simpler (and also easier to input):
+In order to jump between staves, you can use the special commands <code>\r, \l</code>
 
-    - time: 4/4
-    - key: c major
-    - part: piano-right
-    8c'cg'gaa4g 8ffeedd4c
-    - part: piano-left
-    4cefe 8db'cafg4c,
-
-To compile and this example use the following command:
-
-    lydown -o example1.lydown
-
+    r: 8<e'c'> \l g,f+g \r <g'' c'> \l e,,d+e \r
+    l: 1s
+    
 ## multi-part scores and part extraction
 
 As the example above shows, lydown supports multiple parts in the same file, but parts can also be written in separate files. This is useful for long pieces or those with a large number of parts.
