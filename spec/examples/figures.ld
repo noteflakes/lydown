@@ -1,0 +1,6 @@
+- part: continuo
+4a<6>r2r
+4b-rf+<6>r
+f!<42>re<7#>r
+e<6>rrd
+grf<42>r

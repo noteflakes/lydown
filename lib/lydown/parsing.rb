@@ -16,7 +16,7 @@ class LydownParser
       ast.to_stream
     end
   end
-  
+
   def self.format_parser_error(source, parser, opts)
     msg = opts[:source_filename] ? "#{opts[:source_filename]}: " : ""
     if opts[:nice_error]
@@ -25,7 +25,7 @@ class LydownParser
       msg << "#{parser.failure_reason}:\n"
     end
     msg << "  #{source.lines[parser.failure_line - 1]} #{' ' * parser.failure_column}^"
-    
+
     msg
   end
 end

@@ -8,7 +8,7 @@ grammar Lydown
     music_stream / lyrics_stream
   end
   rule music_stream
-    '=music' white_space? [\n] music ([\n] !stream_breaker music)* 
+    '=music' white_space? [\n] music ([\n] !stream_breaker music)*
   end
   rule lyrics_stream
     '=lyrics' white_space? [\n] lyrics_content ([\n] !stream_breaker lyrics_content)*
@@ -44,7 +44,7 @@ grammar Lydown
     [ \t]+
   end
   rule event
-    (duration / note / rest / phrasing / tie) white_space*
+    (duration / note / standalone_figures / rest / silence / phrasing / tie) white_space*
   end
   rule duration
     duration_value / duration_macro
@@ -68,26 +68,38 @@ grammar Lydown
     macro_event* <DurationMacroExpression>
   end
   rule macro_event
-    (duration / note_placeholder / rest / phrasing / tie) white_space*
+    (duration / note_placeholder / rest / silence / phrasing / tie) white_space*
   end
   rule note_placeholder
     [_@] expression*
   end
   rule note
-    note_head octave* accidental_flag? expression* <Note>
+    note_head octave* accidental_flag? figures? expression* <Note>
   end
   rule expression
     (expression_shorthand / expression_longhand) <Note::Expression>
   end
-  
+
   rule expression_shorthand
     [\_\.`]
   end
   rule expression_longhand
     '\\' [^\s\n]+
   end
+  rule figures # bass figures
+    '<' figures_component (white_space? figures_component)* '>'
+  end
+  rule figures_component
+    ('_' / [#bh] / ([1-9] [\+\-\!\\'`]*)) <FiguresComponent>
+  end
+  rule standalone_figures
+    duration_value? figures <StandAloneFigures>
+  end
   rule rest
     [rR] multiplier* <Rest>
+  end
+  rule silence
+    [s] multiplier* <Silence>
   end
   rule note_head
     [a-g] accidental* <Note::Head>
@@ -129,8 +141,7 @@ grammar Lydown
     '>' white_space* lyrics_content
   end
   rule lyrics_content
-    
+
     (!"\n" !"//" .)* <Lyrics>
   end
 end
-

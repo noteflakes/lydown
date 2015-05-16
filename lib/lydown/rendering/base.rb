@@ -10,5 +10,9 @@ module Lydown::Rendering
     def translate
       # do nothing by default
     end
+    
+    def next_event
+      @stream[@idx + 1]
+    end
   end
 end

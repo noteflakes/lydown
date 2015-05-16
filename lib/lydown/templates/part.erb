@@ -14,6 +14,8 @@
   end_barline = Lydown::Rendering::Staff.end_barline(self, movement)
 %>
 
+<% if part['figures'] %><<<% end %>
+
 \new Staff = <%= id %> \with {
 }
 
@@ -36,4 +38,8 @@
   <% end %>
 }
 
-    
+<% if part['figures'] %>
+  \figures { <%= part['figures'] %> }
+  >>
+<% end %>
+

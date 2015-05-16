@@ -21,7 +21,7 @@ def verify_example(name, result_name = nil, opts = {})
   work['end_barline'] = 'none'
   work.process(lydown)
   ly = work.to_lilypond(opts).strip_whitespace
-  
+
   ex = load_example("#{result_name || name}.ly", strip: true)
   expect(ly).to eq(ex)
   # expect {Lydown::Lilypond.compile(ly)}.not_to raise_error

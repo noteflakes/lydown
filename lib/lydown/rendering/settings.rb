@@ -27,7 +27,7 @@ module Lydown::Rendering
       case key
       when 'part'
         # when changing parts we repeat the last set time and key signature
-        render_setting('time', @work[:time])
+        render_setting('time', @work[:time]) unless @work[:time] == '4/4'
         key =  @work[:key]
         render_setting('key', key) unless key == 'c major'
 

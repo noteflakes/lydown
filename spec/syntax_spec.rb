@@ -12,7 +12,7 @@ RSpec.describe Lydown do
   it "correctly translates comments" do
     verify_example('comments')
   end
-    
+
   it "correctly translates time signature settings" do
     verify_example('time-signature')
   end
@@ -20,7 +20,7 @@ RSpec.describe Lydown do
   it "correctly translates time signature settings" do
     verify_example('key-signature')
   end
-    
+
   it "correctly translates pickup settings" do
     verify_example('pickup')
   end
@@ -33,10 +33,10 @@ RSpec.describe Lydown do
     lydown = LydownParser.parse('- accidentals: blah')
     work = Lydown::Work.new
     expect {work.process(lydown)}.to raise_error(LydownError)
-    
+
     verify_example('accidental-modes')
   end
-  
+
   it "correctly translate octave markers" do
     verify_example('octaves')
   end
@@ -64,4 +64,11 @@ RSpec.describe Lydown do
   it "correctly translates slurs" do
     verify_example('slurs')
   end
+
+  it "correctly translates inline bass figures" do
+    verify_example('figures')
+
+    verify_example('figures_bwv135')
+  end
+
 end

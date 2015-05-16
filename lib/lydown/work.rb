@@ -34,10 +34,14 @@ module Lydown
         @context[:end_barline] = nil
         @context[:part] = nil
         @context['process/duration_values'] = ['4']
+        @context['process/running_values'] = []
         @context['process/last_value'] = nil
+        @context['process/last_figures_value'] = nil
       when :part
         @context['process/duration_values'] = ['4']
+        @context['process/running_values'] = []
         @context['process/last_value'] = nil
+        @context['process/last_figures_value'] = nil
       end
     end
     
