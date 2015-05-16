@@ -3,12 +3,13 @@
 \book {
   \header {
   }
-  
+
   \bookpart {
     \score {
       \new StaffGroup <<
         \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBracket (SystemStartBrace violino1 violino2) )
-        \new Staff = ViolinoIStaff \with { } 
+        <<
+        \new Staff = ViolinoIStaff \with { }
         \context Staff = ViolinoIStaff {
           \set Staff.instrumentName = #"Violino I"
           \relative c {
@@ -17,8 +18,10 @@
             c'8 e g g4.
           }
         }
+        >>
 
-        \new Staff = ViolinoIIStaff \with { } 
+        <<
+        \new Staff = ViolinoIIStaff \with { }
         \context Staff = ViolinoIIStaff {
           \set Staff.instrumentName = #"Violino II"
           \relative c {
@@ -27,6 +30,7 @@
             r4. b'8 d g
           }
         }
+        >>
       >>
     }
   }

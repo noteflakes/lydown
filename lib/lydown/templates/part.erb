@@ -4,42 +4,44 @@
     title = Lydown::Rendering.part_title(name)
   end
   id = "#{title && title.gsub(' ', '')}Staff"
-  
+
   score_mode = self['render_opts/mode'] == :score
-  
+
   clef = Lydown::Rendering::Staff.clef(name)
   beaming_mode = Lydown::Rendering::Staff.beaming_mode(name)
   partial = self[:pickup] ? "\\partial #{self[:pickup]}" : ""
-  
+
   end_barline = Lydown::Rendering::Staff.end_barline(self, movement)
 %>
 
-<% if part['figures'] %><<<% end %>
+<<
 
 \new Staff = <%= id %> \with {
 }
 
 \context Staff = <%= id %> {
 <% if score_mode %>\set Staff.instrumentName = #"<%= title %>"<% end %>
-  \relative c { 
+  \relative c {
     <% if clef %>
         \clef "<%= clef %>"
     <% end %>
     <%= beaming_mode %>
     <%= partial %>
     <%= part['music'] %>
-    
+
     <% if end_barline %>
       \bar "<%= end_barline %>"
     <% end %>
   }
-  <% if part['lyrics'] %>
-    \addlyrics { <%= part['lyrics'] %> }
-  <% end %>
 }
 
-<% if part['figures'] %>
-  \figures { <%= part['figures'] %> }
-  >>
+<% if part['lyrics'] %>
+  \addlyrics {
+    <%= part['lyrics'] %>
+  }
 <% end %>
 
+  <% if part['figures'] %>
+    \figures { <%= part['figures'] %> }
+  <% end %>
+>>

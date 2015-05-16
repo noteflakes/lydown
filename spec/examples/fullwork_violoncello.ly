@@ -3,18 +3,19 @@
 \book {
   \header {
   }
-  
+
   \bookpart {
-    \header { 
+    \header {
       piece = \markup {
         \column {
           \fill-line {\bold \large "1. Intro"}
-          
+
         }
       }
     }
 
-    \new Staff = VioloncelloStaff \with { } 
+    <<
+    \new Staff = VioloncelloStaff \with { }
     \context Staff = VioloncelloStaff {
       \relative c {
         \clef "bass"
@@ -24,14 +25,15 @@
         \bar "|."
       }
     }
+    >>
   }
 
   \bookpart {
-    \header { 
+    \header {
       piece = \markup {
         \column {
           \fill-line {\bold \large "2. Outro - tacet"}
-          
+
         }
       }
     }

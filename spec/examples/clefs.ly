@@ -2,17 +2,19 @@
 \book {
   \header {
   }
-  
+
   \bookpart {
-    \new Staff = Staff \with { } 
+    <<
+    \new Staff = Staff \with { }
     \context Staff = Staff {
       \relative c {
         \clef "bass"
-        c4 d e f 
+        c4 d e f
         \clef "alto"
         g a b c
         \clef "treble"
       }
     }
+    >>
   }
 }

@@ -8,8 +8,8 @@ RSpec.describe Lydown do
     ly = work.to_lilypond(stream_path: 'movements//parts/soprano/lyrics')
     expect(ly.strip_whitespace).to eq(load_example('lyrics-basic-raw.ly').strip_whitespace)
   end
-  
-  it "Produces the correct lilypond code" do
+
+  it "Produces the correct lyrics code" do
     verify_example('lyrics-basic')
   end
 end

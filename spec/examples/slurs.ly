@@ -2,9 +2,10 @@
 \book {
   \header {
   }
-  
+
   \bookpart {
-    \new Staff = Staff \with { } 
+    <<
+    \new Staff = Staff \with { }
     \context Staff = Staff {
       \relative c {
         c8 d e( f) g a( b c)
@@ -12,5 +13,6 @@
         d16-. e( fis d) e-. fis( g ees)
       }
     }
+    >>
   }
 }

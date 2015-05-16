@@ -5,16 +5,17 @@
   }
 
   \bookpart {
-    \header { 
+    \header {
       piece = \markup {
         \column {
           \fill-line {\bold \large "1. Intro"}
-          
+
         }
       }
     }
 
-      \new Staff = Staff \with { } 
+      <<
+      \new Staff = Staff \with { }
       \context Staff = Staff {
         \relative c {
           \time 3/8
@@ -22,18 +23,20 @@
           c'8 ees g g4.
         }
       }
+      >>
   }
   \bookpart {
-    \header { 
+    \header {
       piece = \markup {
         \column {
           \fill-line {\bold \large "2. Outro"}
-          
+
         }
       }
     }
 
-      \new Staff = Staff \with { } 
+      <<
+      \new Staff = Staff \with { }
       \context Staff = Staff {
         \relative c {
           \time 4/4
@@ -41,5 +44,6 @@
           r4. b'8 dis gis
         }
       }
+      >>
   }
 }

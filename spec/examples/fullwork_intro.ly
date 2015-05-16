@@ -3,13 +3,13 @@
 \book {
   \header {
   }
-  
+
   \bookpart {
-    \header { 
+    \header {
       piece = \markup {
         \column {
           \fill-line {\bold \large "1. Intro"}
-          
+
         }
       }
     }
@@ -17,7 +17,8 @@
     \score {
       \new StaffGroup <<
         \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBracket violino1 violoncello )
-        \new Staff = ViolinoIStaff \with { } 
+        <<
+        \new Staff = ViolinoIStaff \with { }
         \context Staff = ViolinoIStaff {
           \set Staff.instrumentName = #"Violino I"
           \relative c {
@@ -28,8 +29,10 @@
             \bar "|."
           }
         }
+        >>
 
-        \new Staff = VioloncelloStaff \with { } 
+        <<
+        \new Staff = VioloncelloStaff \with { }
         \context Staff = VioloncelloStaff {
           \set Staff.instrumentName = #"Violoncello"
           \relative c {
@@ -40,6 +43,7 @@
             \bar "|."
           }
         }
+        >>
       >>
     }
   }

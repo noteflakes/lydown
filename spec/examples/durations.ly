@@ -3,9 +3,10 @@
 \book {
   \header {
   }
-  
+
   \bookpart {
-    \new Staff = Staff \with { } 
+    <<
+    \new Staff = Staff \with { }
     \context Staff = Staff {
       \relative c {
         c4 d8 e16 f32 g a4 b
@@ -15,5 +16,6 @@
         r16.. c32 r16 f r c r f
       }
     }
+    >>
   }
 }

@@ -70,5 +70,4 @@ RSpec.describe Lydown do
 
     verify_example('figures_bwv135')
   end
-
 end

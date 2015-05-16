@@ -3,18 +3,19 @@
 \book {
   \header {
   }
-  
+
   \bookpart {
-    \header { 
+    \header {
       piece = \markup {
         \column {
           \fill-line {\bold \large "1. Intro"}
-          
+
         }
       }
     }
 
-    \new Staff = ViolinoIStaff \with { } 
+    <<
+    \new Staff = ViolinoIStaff \with { }
     \context Staff = ViolinoIStaff {
       \relative c {
         \clef "treble"
@@ -24,5 +25,6 @@
         \bar "|."
       }
     }
+    >>
   }
 }

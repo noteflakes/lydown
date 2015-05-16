@@ -3,9 +3,10 @@
 \book {
   \header {
   }
-  
+
   \bookpart {
-    \new Staff = ViolinoIIStaff \with { } 
+    <<
+    \new Staff = ViolinoIIStaff \with { }
     \context Staff = ViolinoIIStaff {
       \relative c {
         \clef "treble"
@@ -13,5 +14,6 @@
         r4. b'8 d g
       }
     }
+    >>
   }
 }

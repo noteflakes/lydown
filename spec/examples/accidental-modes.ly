@@ -3,9 +3,10 @@
 \book {
   \header {
   }
-  
+
   \bookpart {
-    \new Staff = Staff \with { } 
+    <<
+    \new Staff = Staff \with { }
     \context Staff = Staff {
       \relative c {
         \key ees \major %{by default accidentals are relative to key signature%}
@@ -16,5 +17,6 @@
         c d ees f
       }
     }
+    >>
   }
 }

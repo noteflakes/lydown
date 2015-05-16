@@ -16,6 +16,6 @@ Gem::Specification.new do |s|
   s.files         = Dir["{lib}/**/*", "bin/*", "LICENSE", "README.md"]
 
   s.executables   = ['lydown']
-  
+
   s.add_dependency "treetop", "~> 1.6"
 end

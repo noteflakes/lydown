@@ -5,6 +5,7 @@
   }
 
   \bookpart {
+    <<
     \new Staff = Staff \with { }
     \context Staff = Staff {
       \relative c {
@@ -17,5 +18,6 @@
         c2.
       }
     }
+    >>
   }
 }

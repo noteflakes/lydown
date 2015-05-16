@@ -3,18 +3,19 @@
 \book {
   \header {
   }
-  
+
   \bookpart {
-    \header { 
+    \header {
       piece = \markup {
         \column {
           \fill-line {\bold \large "1. Intro"}
-          
+
         }
       }
     }
 
-    \new Staff = Staff \with { } 
+    <<
+    \new Staff = Staff \with { }
     \context Staff = Staff {
       \relative c {
         \time 3/8
@@ -22,5 +23,6 @@
         c'8 ees g g4.
       }
     }
+    >>
   }
 }

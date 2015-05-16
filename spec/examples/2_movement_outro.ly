@@ -3,18 +3,19 @@
 \book {
   \header {
   }
-  
+
   \bookpart {
-    \header { 
+    \header {
       piece = \markup {
         \column {
           \fill-line {\bold \large "2. Outro"}
-          
+
         }
       }
     }
 
-    \new Staff = Staff \with { } 
+    <<
+    \new Staff = Staff \with { }
     \context Staff = Staff {
       \relative c {
         \time 4/4
@@ -22,5 +23,6 @@
         r4. b'8 dis gis
       }
     }
+    >>
   }
 }

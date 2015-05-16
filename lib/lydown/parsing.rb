@@ -1,8 +1,10 @@
+require 'polyglot'
 require 'treetop'
 
 require 'lydown/parsing/nodes'
+require 'lydown/parsing/lydown.treetop'
 
-Treetop.load './lib/lydown/parsing/lydown'
+# Treetop.load 'lydown/parsing/lydown'
 
 class LydownParser
   def self.parse(source, opts = {})

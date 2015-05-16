@@ -3,9 +3,10 @@
 \book {
   \header {
   }
-  
+
   \bookpart {
-    \new Staff = Staff \with { } 
+    <<
+    \new Staff = Staff \with { }
     \context Staff = Staff {
       \relative c {
         \key d \major
@@ -20,5 +21,6 @@
         cis'! ees? g!8.
       }
     }
+    >>
   }
 }

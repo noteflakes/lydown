@@ -3,12 +3,13 @@
 \book {
   \header {
   }
-  
+
   \bookpart {
     \score {
       \new StaffGroup <<
         \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBracket soprano continuo )
-        \new Staff = SopranoStaff \with { } 
+        <<
+        \new Staff = SopranoStaff \with { }
         \context Staff = SopranoStaff {
           \set Staff.instrumentName = #"Soprano"
           \relative c {
@@ -18,8 +19,10 @@
             c'8 e g g4.
           }
         }
+        >>
 
-        \new Staff = ContinuoStaff \with { } 
+        <<
+        \new Staff = ContinuoStaff \with { }
         \context Staff = ContinuoStaff {
           \set Staff.instrumentName = #"Continuo"
           \relative c {
@@ -28,6 +31,7 @@
             r4. b'8 d g
           }
         }
+        >>
       >>
     }
   }
