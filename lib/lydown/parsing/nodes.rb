@@ -175,4 +175,10 @@ module Lydown::Parsing
       stream << {type: :lyrics, content: text_value}
     end
   end
+
+  module Barline
+    def to_stream(stream)
+      stream << {type: :barline, barline: text_value}
+    end
+  end
 end

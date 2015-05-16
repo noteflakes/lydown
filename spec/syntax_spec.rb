@@ -70,4 +70,8 @@ RSpec.describe Lydown do
 
     verify_example('figures_bwv135')
   end
+
+  it "correctly translates barlines" do
+    verify_example('barlines')
+  end
 end

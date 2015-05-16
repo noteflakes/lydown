@@ -336,4 +336,10 @@ module Lydown::Rendering
       @work['process/duration_macro'] = @event[:macro]
     end
   end
+
+  class Barline < Base
+    def translate
+      @work.emit(:music, "\\bar \"#{@event[:barline]}\" ")
+    end
+  end
 end

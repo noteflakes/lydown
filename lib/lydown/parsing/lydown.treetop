@@ -44,7 +44,12 @@ grammar Lydown
     [ \t]+
   end
   rule event
-    (duration / note / standalone_figures / rest / silence / phrasing / tie) white_space*
+    (barline / duration / note / standalone_figures / rest / silence / phrasing / tie) white_space*
+  end
+  rule barline
+    (':|][|:' / '[|:' / ':|]' / [\|\.\:]+) <Barline>
+    # ('|' / '.' / '||' / '.|' / '..' / '|.|' / '|.' /
+    #  '.|') <Barline>
   end
   rule duration
     duration_value / duration_macro
