@@ -5,13 +5,16 @@ grammar Lydown
     line ([\n] line)* <Root>
   end
   rule stream_switch
-    music_stream / lyrics_stream
+    music_stream / lyrics_stream / lyrics2_stream
   end
   rule music_stream
     '=music' white_space? [\n] music ([\n] !stream_breaker music)*
   end
   rule lyrics_stream
     '=lyrics' white_space? [\n] lyrics_content ([\n] !stream_breaker lyrics_content)*
+  end
+  rule lyrics2_stream
+    '=lyrics2' white_space? [\n] lyrics2_content ([\n] !stream_breaker lyrics2_content)*
   end
   rule stream_breaker
     stream_switch / stream_breaking_setting
@@ -146,7 +149,9 @@ grammar Lydown
     '>' white_space* lyrics_content
   end
   rule lyrics_content
-
     (!"\n" !"//" .)* <Lyrics>
+  end
+  rule lyrics2_content
+    (!"\n" !"//" .)* <Lyrics2>
   end
 end

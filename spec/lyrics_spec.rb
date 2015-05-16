@@ -12,4 +12,8 @@ RSpec.describe Lydown do
   it "Produces the correct lyrics code" do
     verify_example('lyrics-basic')
   end
+
+  it "Handles multiple stanzas" do
+    verify_example('lyrics-multiple-stanzas')
+  end
 end

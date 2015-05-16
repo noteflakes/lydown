@@ -35,11 +35,17 @@
   }
 }
 
-<% if part['lyrics'] %>
-  \addlyrics {
-    <%= part['lyrics'] %>
-  }
-<% end %>
+  <% if part['lyrics'] %>
+    \addlyrics {
+      <%= part['lyrics'] %>
+    }
+  <% end %>
+
+  <% if part['lyrics2'] %>
+    \addlyrics {
+      <%= part['lyrics2'] %>
+    }
+  <% end %>
 
   <% if part['figures'] %>
     \figures { <%= part['figures'] %> }
