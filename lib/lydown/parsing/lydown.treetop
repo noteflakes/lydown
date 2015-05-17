@@ -32,7 +32,7 @@ grammar Lydown
     [^\n]* <CommentContent>
   end
   rule setting
-    '-' white_space* setting_key ':' setting_value comment? <Setting>
+    white_space? '-' white_space* setting_key ':' setting_value comment? <Setting>
   end
   rule setting_key
     [a-z0-9_]+ <Setting::Key>
@@ -73,10 +73,13 @@ grammar Lydown
     '{' duration_macro__expression '}'
   end
   rule duration_macro__expression
-    macro_event* <DurationMacroExpression>
+    (macro_name / macro_event*) <DurationMacroExpression>
   end
   rule macro_event
     (duration / note_placeholder / rest / silence / phrasing / tie) white_space*
+  end
+  rule macro_name
+    [a-zA-Z_] [a-zA-Z0-9_]*
   end
   rule note_placeholder
     [_@] expression*

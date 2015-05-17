@@ -25,7 +25,8 @@ module Lydown::Parsing
     include Root
 
     def to_stream(stream)
-      @setting = {type: :setting}
+      level = (text_value =~ /^([\s]+)/) ? ($1.length / 2) : 0
+      @setting = {type: :setting, level: level}
       _to_stream(self, stream)
     end
 

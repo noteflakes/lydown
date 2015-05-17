@@ -333,7 +333,16 @@ module Lydown::Rendering
 
   class DurationMacro < Base
     def translate
-      @work['process/duration_macro'] = @event[:macro]
+      if @event[:macro] =~ /^[a-zA-Z_]/
+        macro = @work['macros'][@event[:macro]]
+        if macro
+          @work['process/duration_macro'] = macro[1, macro.size - 2]
+        else
+          raise LydownError, "Unknown macro #{@event[:macro]}"
+        end
+      else
+        @work['process/duration_macro'] = @event[:macro]
+      end
     end
   end
 

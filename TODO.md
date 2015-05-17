@@ -14,10 +14,6 @@
   => \\repeat volta 4 { c4 d e f | }
      \\alternative { { c2 e | } { f2 g | } } c1
 
-- unmetered music
-
-  -time: unmetered
-
 - support for full work processing in command line tool
 - support for movement filtering in command line tool
 - support for part filtering in command line tool

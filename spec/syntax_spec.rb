@@ -9,6 +9,10 @@ RSpec.describe Lydown do
     verify_example('duration-macros')
   end
 
+  it "correctly translates named macros" do
+    verify_example('named-macros')
+  end
+
   it "correctly translates comments" do
     verify_example('comments')
   end

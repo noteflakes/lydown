@@ -2,7 +2,7 @@ module Lydown::Rendering
   class Setting < Base
     SETTING_KEYS = [
       'key', 'time', 'pickup', 'clef', 'part', 'movement',
-      'accidentals', 'beams', 'end_barline'
+      'accidentals', 'beams', 'end_barline', 'macros'
     ]
 
     RENDERABLE_SETTING_KEYS = [
@@ -17,28 +17,41 @@ module Lydown::Rendering
     def translate
       key = @event[:key]
       value = @event[:value]
+      level = @event[:level] || 0
 
-      unless SETTING_KEYS.include?(key)
+      unless (level > 0) || SETTING_KEYS.include?(key)
         raise Lydown, "Invalid setting (#{key})"
       end
 
-      @work[key] = check_setting_value(key, value)
+      if level == 0
+        @work[key] = check_setting_value(key, value)
+        case key
+        when 'part'
+          # when changing parts we repeat the last set time and key signature
+          render_setting('time', @work[:time]) unless @work[:time] == '4/4'
+          key =  @work[:key]
+          render_setting('key', key) unless key == 'c major'
 
-      case key
-      when 'part'
-        # when changing parts we repeat the last set time and key signature
-        render_setting('time', @work[:time]) unless @work[:time] == '4/4'
-        key =  @work[:key]
-        render_setting('key', key) unless key == 'c major'
+          @work.reset_context(:part)
+        when 'movement'
+          @work.reset_context(:movement)
+        end
 
-        @work.reset_context(:part)
-      when 'movement'
-        @work.reset_context(:movement)
+        if RENDERABLE_SETTING_KEYS.include?(key)
+          render_setting(key, value)
+        end
+      else
+        # nested settings
+        l, path = 0, ''
+        while l < level
+          path << "#{@work['process/setting_levels'][l]}/"; l += 1
+        end
+        path << key
+        @work[path] = value
       end
 
-      if RENDERABLE_SETTING_KEYS.include?(key)
-        render_setting(key, value)
-      end
+      @work['process/setting_levels'] ||= {}
+      @work['process/setting_levels'][level] = key
     end
 
     def check_setting_value(key, value)
