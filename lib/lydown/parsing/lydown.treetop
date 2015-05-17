@@ -50,7 +50,7 @@ grammar Lydown
     (barline / duration / note / standalone_figures / rest / silence / phrasing / tie) white_space*
   end
   rule barline
-    (':|][|:' / '[|:' / ':|]' / [\|\.\:]+) <Barline>
+    ('?|' / ':|][|:' / '[|:' / ':|]' / [\|\.\:]+) <Barline>
     # ('|' / '.' / '||' / '.|' / '..' / '|.|' / '|.' /
     #  '.|') <Barline>
   end

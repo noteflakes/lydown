@@ -9,7 +9,7 @@
     \context Staff = Staff {
       \relative c {
         \cadenzaOn
-        c4 c d e | d d d d f f d | e c d
+        c4 c d e \bar "|" d d d d f f d \bar "|" e c d
       }
     }
     >>

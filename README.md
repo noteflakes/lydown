@@ -19,7 +19,7 @@ You can verify that lilypond is correctly installed by running the following com
 If everything's ok, you can proceed by installing lydown:
 
     gem install lydown
-    
+
 and verifying that it too works:
 
     lydown --version
@@ -78,11 +78,11 @@ For the sake of this tutorial, some familiarity with the concepts and syntax of 
 In lydown, durations are entered before the note to which they refer, and they stay valid for subsequent notes, until a new value is entered:
 
     4c8de2f => c4 d8 e f2
-    
+
 In addition to the usual values (1, 2, 4, 8, 16, 32 etc), lydown adds two shortcuts for commonly used values: 6 for 16th notes and 3 for 32th notes:
 
     8c6de3fefefede2f => c8 d16 e f32 e f e f e d e f2
-    
+
 Augmentation dots are entered like in lilypond:
 
     8.c6d 8.e6f 2g => c8. d16 e8. f16 g2
@@ -110,13 +110,13 @@ In lydown notes follow the key signature by default:
 
     - key: g major
     8g6fedcba2g => g8 fs16 e d c b a g2
-    
+
 The accidental mode can be changed by specifiying the manual accidental mode:
 
     - key: g major
     - accidentals: manual
     8g6f+edcba2g
-    
+
 In the default, automatic mode, when deviating from the key signature the accidental must be repeated for each note, regardless of barlines.
 
 In the [same manner as lilypond](http://www.lilypond.org/doc/v2.18/Documentation/notation/writing-pitches#accidentals), accidentals can be forced by following the note name and accidental with a ! (for a reminder), or ? (for a cautionary accidental in parentheses):
@@ -136,19 +136,24 @@ Like in lilypond's [relative mode](http://www.lilypond.org/doc/v2.18/Documentati
 Just like in lilypond, barlines are taken care of automatically according to the time signature. Final bar lines and repeat bar lines can be entered explicitly by using shorthand syntax:
 
     |: cege :|: cfaf :|
-    
+
+When entering unmetered music, an invisible barline can be added in order to provide line breaks:
+
+    -time: unmetered
+    cdef ?| gag
+
 ### Beams, slurs and ties
 
-Lydown uses automatic beaming as the default, except in the case of vocal parts (see [document settings](#settings)). Auto beaming can be 
+Lydown uses automatic beaming as the default, except in the case of vocal parts (see [document settings](#settings)). Auto beaming can be
 
 Beaming and sluring is similar to lilypond, except the beam/slur start comes before the note:
 
     8(cdef)g[6fe]4f => c8( d e f) g f16[ e] f4
-    
+
 a regular tie is written just like in lilypond:
 
     4g~6gfed2c => g4 ~ g16 f e d c2
-    
+
 Lydown also supports a shortened tie form, where the tied note is not repeated:
 
     4g6&fed2c => g4 ~ g16 f e d c2
@@ -158,22 +163,22 @@ Lydown also supports a shortened tie form, where the tied note is not repeated:
 Lilypond [shorthand articulation marks](http://www.lilypond.org/doc/v2.18/Documentation/notation/expressive-marks-attached-to-notes#articulations-and-ornamentations) can be entered after a backslash
 
     c\^ e\+ g\_ => c-^ e-+ g-_
-    
+
 Common articulation marks can be entered immediately after the note:
 
     // tenuto, staccato, staccatissimo
     c_e.g` => c-- e-. g-!
-    
+
 Other arbitrary lilypond articulations can be entered after a backslash:
 
     c\staccato e\mordent g\turn => c\staccato e\mordent g\turn
-    
+
 [Dynamic marks](http://www.lilypond.org/doc/v2.18/Documentation/notation/expressive-marks-attached-to-notes#dynamics) are entered before the note to which they apply:
 
     c\f eg
 
     \f cege \p cfaf => c\f e g e c\p f a f
-    
+
 Arbitrary expression marks can be entered as a string following a backslash (for placing it under the note) or a forward slash (for placing it above the note).
 
 ### Repeated articulation and rhythmic patterns: macros
@@ -183,7 +188,7 @@ An important feature of lydown is the macro, which facilitates rapid entry of re
 A common scenario is repeated articulation, for example a sequence of staccato notes:
 
     {.}cdefgabc => c-. d-. e-. f-. g-. a-. b-. c-.
-    
+
 A macro can also contain a fully qualified lilypond articulation specifier:
 
     {\tenuto}cege => c\tenuto e\tenuto g\tenuto e\tenuto
@@ -192,12 +197,12 @@ Rhythmic macros can be used for repeated rhythmic patterns. A common scenario is
 
     // The _ symbol denotes a note placeholder
     {8._6_}cdefgfed => c8. d16 e8. f16 g8. f16 e8. d16
-    
+
 A repeating diminution may also be expressed succintly:
 
     // The @ symbol denotes a repeated pitch
     {16_@@@}cfgf => c16 c c c f f f f g g g g f f f f
-    
+
 A macro can include both durations and articulation marks:
 
     {4_~6@(_._._.)}cdefgfed => c4 ~ c16 d-.( e-. f-.) g4 ~ g16 f-.( e-. d-.)
@@ -205,7 +210,7 @@ A macro can include both durations and articulation marks:
 A macro containing durations will remain valid until another duration or duration macro is encountered. A macro containing articulation only will be valid until another duration, macro or empty macro is encountered:
 
     6{.}gg{}aa => g16-. g-. a a
-    
+
 ### Named macros
 
 Macros can be defined with a name and reused:
@@ -289,7 +294,7 @@ Multiple parts can be entered in the same file by prefixing each part's content 
 For multi-movement works, prefix each movement with a -movement setting:
 
     - movement: Adagio
-    ... 
+    ...
     - movement: Allegro
     ...
 
@@ -306,12 +311,12 @@ For multi-movement works, prefix each movement with a -movement setting:
 
     r: 8cdeccdec
     l: 4cgcg
-    
+
 In order to jump between staves, you can use the special commands <code>\r, \l</code>
 
     r: 8<e'c'> \l g,f+g \r <g'' c'> \l e,,d+e \r
     l: 1s
-    
+
 ## multi-part scores and part extraction
 
 As the example above shows, lydown supports multiple parts in the same file, but parts can also be written in separate files. This is useful for long pieces or those with a large number of parts.
@@ -343,4 +348,4 @@ lydown -o -p violino1 score.lydown
 
 ## Adding a front cover
 
-When creating professional scores and parts, it is customary to add a cover page, with the title of the piece, the composer's name and other general information. Lydown includes a 
+When creating professional scores and parts, it is customary to add a cover page, with the title of the piece, the composer's name and other general information. Lydown includes a
