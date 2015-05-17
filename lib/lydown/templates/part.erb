@@ -12,6 +12,8 @@
   partial = self[:pickup] ? "\\partial #{self[:pickup]}" : ""
 
   end_barline = Lydown::Rendering::Staff.end_barline(self, movement)
+
+  cadenza = self[:time] == 'unmetered'
 %>
 
 <<

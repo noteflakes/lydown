@@ -339,7 +339,11 @@ module Lydown::Rendering
 
   class Barline < Base
     def translate
-      @work.emit(:music, "\\bar \"#{@event[:barline]}\" ")
+      if @event[:barline] == '|'
+        @work.emit(:music, "| ")
+      else
+        @work.emit(:music, "\\bar \"#{@event[:barline]}\" ")
+      end
     end
   end
 end

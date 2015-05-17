@@ -74,4 +74,8 @@ RSpec.describe Lydown do
   it "correctly translates barlines" do
     verify_example('barlines')
   end
+
+  it "correctly handles unmetered music" do
+    verify_example('unmetered')
+  end
 end

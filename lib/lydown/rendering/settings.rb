@@ -8,20 +8,20 @@ module Lydown::Rendering
     RENDERABLE_SETTING_KEYS = [
       'key', 'time', 'clef', 'beams'
     ]
-    
+
     ALLOWED_SETTING_VALUES = {
       'accidentals' => ['manual', 'auto'],
       'beams' => ['manual', 'auto']
     }
-    
+
     def translate
       key = @event[:key]
       value = @event[:value]
-      
+
       unless SETTING_KEYS.include?(key)
         raise Lydown, "Invalid setting (#{key})"
       end
-      
+
       @work[key] = check_setting_value(key, value)
 
       case key
@@ -40,7 +40,7 @@ module Lydown::Rendering
         render_setting(key, value)
       end
     end
-  
+
     def check_setting_value(key, value)
       if ALLOWED_SETTING_VALUES[key]
         unless ALLOWED_SETTING_VALUES[key].include?(value)
@@ -49,30 +49,41 @@ module Lydown::Rendering
       end
       value
     end
-    
+
     def render_setting(key, value)
-      setting = "\\#{key} "
+      setting = ""
       case key
       when 'time'
-        setting << value.sub(/[0-9]+$/) { |m| LILYPOND_DURATIONS[m] || m }
+        cadenza_mode = @work[:cadenza_mode]
+        should_cadence = value == 'unmetered'
+        @work[:cadenza_mode] = should_cadence
+
+        if should_cadence && !cadenza_mode
+          setting = "\\cadenzaOn "
+        elsif !should_cadence && cadenza_mode
+          setting = "\\cadenzaOff "
+        end
+
+        unless should_cadence
+          signature = value.sub(/[0-9]+$/) { |m| LILYPOND_DURATIONS[m] || m }
+          setting << "\\#{key} #{signature} "
+        end
       when 'key'
         unless value =~ /^([a-g][\+\-]*) (major|minor)$/
           raise LydownError, "Invalid key signature #{value.inspect}"
         end
-        
+
         note = Lydown::Rendering::Accidentals.lilypond_note_name($1)
         mode = $2
-        setting << "#{note} \\#{mode}"
+        setting = "\\#{key} #{note} \\#{mode} "
       when 'clef'
-        setting << "\"#{value}\""
+        setting = "\\#{key} \"#{value}\" "
       when 'beams'
-        setting = (value == 'manual') ? '\autoBeamOff' : '\autoBeamOn'
+        setting = (value == 'manual') ? '\autoBeamOff ' : '\autoBeamOn '
       else
-        setting << value
+        setting = "\\#{key} #{value} "
       end
-      
-      setting << ' '
-      
+
       @work.emit(:music, setting)
     end
   end

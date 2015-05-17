@@ -1,3 +1,23 @@
+- repeats:
+
+  {: 4cdec :} {: 4ef2g :}
+
+  => \\repeat volta 2 { c4 d e c } \\repeat volta 2 { e4 f g2 }
+
+  {: 8ccg'gaa4g :: 8ffeedd4g :: 8ffeedd4c :}
+
+  => \\repeat volta 2 { c8 c g' g a a g4 }
+     \\alternative { { f8 f e e d d g4 | } { f8 f e e d d c4 | } }
+
+  {X4: 4cdef :: 2ce :: 2fg :} 1c
+
+  => \\repeat volta 4 { c4 d e f | }
+     \\alternative { { c2 e | } { f2 g | } } c1
+
+- unmetered music
+
+  -time: unmetered
+
 - support for full work processing in command line tool
 - support for movement filtering in command line tool
 - support for part filtering in command line tool
