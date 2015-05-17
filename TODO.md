@@ -17,7 +17,7 @@
 - support for full work processing in command line tool
 - support for movement filtering in command line tool
 - support for part filtering in command line tool
-- support for default output directory (_pdf) in command line tool
+- support for default output directory (/pdf) in command line tool
 
 music features:
 

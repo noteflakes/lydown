@@ -336,7 +336,10 @@ module Lydown::Rendering
       if @event[:macro] =~ /^[a-zA-Z_]/
         macro = @work['macros'][@event[:macro]]
         if macro
-          @work['process/duration_macro'] = macro[1, macro.size - 2]
+          if macro =~ /^\{(.+)\}$/
+            macro = $1
+          end
+          @work['process/duration_macro'] = macro
         else
           raise LydownError, "Unknown macro #{@event[:macro]}"
         end
