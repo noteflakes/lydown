@@ -215,7 +215,8 @@ A macro containing durations will remain valid until another duration or duratio
 
 Macros can be defined with a name and reused:
 
-    - dotted: {8._6_}
+    - macros:
+      - dotted: 8._6_
     {dotted}gaba2g{dotted}abcb2a => g8. a16 b8. a16 g2 a8. b16 c8. b16 a2
 
 ### Clefs, key and time signatures
