@@ -308,6 +308,9 @@ module Lydown::Rendering
         else
           @event[:head] = "#{@event[:head]}#{@event[:multiplier]}*#{@work[:time]}"
         end
+        # reset the last value so the next note will be rendered with its value
+        @work['process/last_value'] = nil
+        @work['process/duration_values'] = []
       end
 
       add_note(@event)
