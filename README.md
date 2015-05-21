@@ -281,6 +281,11 @@ Lyrics can be entered in a block, before or after musical notation, by switching
     8g'gffeed4
     ...
 
+### Figured bass
+
+Figured bass is entered inline, following notes or even between notes, when
+multiple figures align with a single note.
+
 ## Multiple parts
 
 Multiple parts can be entered in the same file by prefixing each part's content with a -part setting:

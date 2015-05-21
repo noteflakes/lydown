@@ -98,7 +98,7 @@ grammar Lydown
     '\\' [^\s\n]+
   end
   rule figures # bass figures
-    '<' figures_component (white_space? figures_component)* '>'
+    '<' figures_component? (white_space? figures_component)* '>'
   end
   rule figures_component
     ('_' / [#bh] / ([1-9] [\+\-\!\\'`]*)) <FiguresComponent>

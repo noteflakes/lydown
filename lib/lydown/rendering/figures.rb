@@ -36,8 +36,12 @@ module Lydown::Rendering
     end
 
     def lilypond_figures(figures)
-      check_tenues(figures)
-      "<#{translate_figures(figures)}>"
+      if figures
+        check_tenues(figures)
+        "<#{translate_figures(figures)}>"
+      else
+        "s"
+      end
     end
 
     def check_tenues(figures)
@@ -49,16 +53,18 @@ module Lydown::Rendering
         return
       end
 
-      next_event[:tenue] = next_event[:figures].include?('_')
-      if next_event[:tenue] && !@event[:tenue]
-        @event[:figure_extenders_on] = true
-      elsif !next_event[:tenue] && @event[:tenue]
-        @event[:figure_extenders_off] = true
-      end
+      if next_event[:figures]
+        next_event[:tenue] = next_event[:figures].include?('_')
+        if next_event[:tenue] && !@event[:tenue]
+          @event[:figure_extenders_on] = true
+        elsif !next_event[:tenue] && @event[:tenue]
+          @event[:figure_extenders_off] = true
+        end
 
-      # transform underscores into figure components
-      next_event[:figures].each_with_index do |component, idx|
-        next_event[:figures][idx] = @event[:figures][idx] if component == '_'
+        # transform underscores into figure components
+        next_event[:figures].each_with_index do |component, idx|
+          next_event[:figures][idx] = @event[:figures][idx] if component == '_'
+        end
       end
     end
 
