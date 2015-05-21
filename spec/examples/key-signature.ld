@@ -2,5 +2,5 @@
 cdef
 - key: a minor
 gabc
-- key: e- major
+- key: e- major // only the f+ minor key signature will be rendered
 - key: f+ minor

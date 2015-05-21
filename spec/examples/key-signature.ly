@@ -12,7 +12,7 @@
         c4 d e f
         \key a \minor
         g a b c
-        \key ees \major
+        %{only the f+ minor key signature will be rendered%}
         \key fis \minor
       }
     }

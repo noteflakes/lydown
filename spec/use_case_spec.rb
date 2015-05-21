@@ -5,3 +5,9 @@ RSpec.describe Lydown do
     verify_example('use_cases/recitativo-continuo')
   end
 end
+
+RSpec.describe Lydown do
+  it "correctly handles multiple parts with multiple keys" do
+    verify_example('use_cases/multi-part-multi-key')
+  end
+end

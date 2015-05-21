@@ -82,6 +82,10 @@ module Lydown::Rendering
           setting << "\\#{key} #{signature} "
         end
       when 'key'
+        # If the next event is a key signature, no need to emit this one
+        e = next_event
+        return if e && (e[:type] == :setting) && (e[:key] == 'key')
+
         unless value =~ /^([a-g][\+\-]*) (major|minor)$/
           raise LydownError, "Invalid key signature #{value.inspect}"
         end

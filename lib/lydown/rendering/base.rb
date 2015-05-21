@@ -6,13 +6,19 @@ module Lydown::Rendering
       @stream = stream
       @idx = idx
     end
-    
+
     def translate
       # do nothing by default
     end
-    
+
     def next_event
-      @stream[@idx + 1]
+      idx = @idx + 1
+      while idx < @stream.size
+        e = @stream[idx]
+        return e if e && e[:type] != :comment
+        idx += 1
+      end
+      nil
     end
   end
 end
