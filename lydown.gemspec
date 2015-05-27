@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.version       = Lydown::VERSION
 
   s.summary       = "Lydown is a language for music notation"
-  s.description   = "Lydown "
+  s.description   = "Lydown is a language and tool for music notation"
   s.authors       = ["Sharon Rosner"]
   s.email         = 'ciconia@gmail.com'
 

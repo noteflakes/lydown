@@ -1,3 +1,23 @@
+- allow alternative order of accidentals and octave marks:
+
+  c+, = c,+
+
+- triplets/tuplets
+
+  8%cdefed2c // shorthand for triplets
+
+  => \tuplet 3/2 4 { c8 d e f e d } c2
+
+  8%5/4cdefg2a
+
+  => \tuplet 5/4 4 { c8 d e f g } a2
+
+- nested tuplets
+
+  8%5/4{8fef8%efg}
+
+  => \tuplet 5/4 { f8 e f \tuplet 3/2 { e[ f g] } }
+
 - repeats:
 
   {: 4cdec :} {: 4ef2g :}
@@ -32,10 +52,6 @@ music features:
   =figures
   4<6>s<8>
 
-- support for (s)ilences.
-
-  2s4ce
-
 - multiple voices
 
   1: 8r6rg8.e6f8gc,f6ed
@@ -47,6 +63,16 @@ music features:
     \\
     {d6 c d8 ...}
   >>
+
+- keyboard music:
+
+  r: ...
+  l: ...
+
+- organ music:
+
+
+
 
 - homophonic music (chords written on two lines)
 
