@@ -69,7 +69,10 @@ module Lydown::Parsing
 
     module Head
       def to_stream(note)
-        note[:head] = text_value
+        # remove octave marks from note head (this is only in case the order
+        # accidental-octave was reversed)
+        head = text_value.gsub(/[',]+/) {|m| note[:octave] = m; ''}
+        note[:head] = head
       end
     end
 

@@ -113,7 +113,7 @@ grammar Lydown
     [s] multiplier* <Silence>
   end
   rule note_head
-    [a-g] accidental* <Note::Head>
+    [a-g] octave* accidental* <Note::Head>
   end
   rule accidental
     [\+\-]+

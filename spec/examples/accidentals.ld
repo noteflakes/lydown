@@ -8,3 +8,5 @@ cdefga-
 bcdeff+gg+a+
 // accidental flags
 c+'!e? 8.g!
+// alternative accidental/octave order
+4g,-2a'''+4b+'

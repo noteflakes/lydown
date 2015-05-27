@@ -1,7 +1,3 @@
-- allow alternative order of accidentals and octave marks:
-
-  c+, = c,+
-
 - triplets/tuplets
 
   8%cdefed2c // shorthand for triplets

@@ -19,6 +19,8 @@
         bes c d ees f fis g gis a
         %{accidental flags%}
         cis'! ees? g!8.
+        %{alternative accidental/octave order%}
+        ges,4 a'''2 b'4
       }
     }
     >>
