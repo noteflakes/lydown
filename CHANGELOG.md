@@ -1,4 +1,12 @@
-## Version 0.3
+## Version 0.4 2015-05-27
+
+- Allow macro definition with or without curly braces
+- Use alto clef as default for gambas
+- Add support for empty inline figures, e.g. 4c8<><4>
+- Support for alternative order of accidentals, octave marks, e.g. c'+
+- Tuplets!
+
+## Version 0.3 2015-05-17
 
 - Bar lines
 - Fixed lyrics rendering in scores
