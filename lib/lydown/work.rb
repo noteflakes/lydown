@@ -35,6 +35,10 @@ module Lydown
         @context[:end_barline] = nil
         @context[:part] = nil
       end
+      if @context['process/tuplet_mode']
+        Lydown::Rendering::TupletDuration.emit_tuplet_end(self)
+      end
+
       # reset processing variables
       @context['process'] = {
         'duration_values' => ['4'],
@@ -50,7 +54,7 @@ module Lydown
     end
 
     # translate a lydown stream into lilypond
-    def process(lydown_stream)
+    def process(lydown_stream, opts = {})
       lydown_stream.each_with_index do |e, idx|
         if e[:type]
           Lydown::Rendering.translate(self, e, lydown_stream, idx)
@@ -58,6 +62,7 @@ module Lydown
           raise LydownError, "Invalid lydown stream event: #{e.inspect}"
         end
       end
+      reset_context(:part) unless opts[:no_reset]
     end
 
     def emit(stream_type, *content)

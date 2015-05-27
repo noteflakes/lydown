@@ -58,6 +58,25 @@ module Lydown::Parsing
     end
   end
 
+  module TupletValue
+    def to_stream(stream)
+      if text_value =~ /^(\d+)%((\d+)\/(\d+))?$/
+        value, fraction, group_length = $1, $2, $4
+        unless fraction
+          fraction = '3/2'
+          group_length = '2'
+        end
+
+        stream << {
+          type: :tuplet_duration,
+          value: value,
+          fraction: fraction,
+          group_length: group_length
+        }
+      end
+    end
+  end
+
   module Note
     include Root
 

@@ -169,7 +169,7 @@ module Lydown::Rendering
         @work['process/duration_macro'] = nil
 
         code = LydownParser.parse(@work['process/macro_group'])
-        @work.process(code)
+        @work.process(code, no_reset: true)
 
         # restore macro
         @work['process/duration_macro'] = macro
@@ -185,13 +185,40 @@ module Lydown::Rendering
 
   class Duration < Base
     def translate
+      # close tuplet braces
+      if @work['process/tuplet_mode']
+        TupletDuration.emit_tuplet_end(@work)
+        @work['process/tuplet_mode'] = nil
+      end
+
       value = @event[:value].sub(/^[0-9]+/) {|m| LILYPOND_DURATIONS[m] || m}
 
       if next_event && next_event[:type] == :stand_alone_figures
         @work['process/figures_duration_value'] = value
       else
         @work['process/duration_values'] = [value]
+        @work['process/tuplet_mode'] = nil
         @work['process/duration_macro'] = nil unless @work['process/macro_group']
+      end
+    end
+
+  end
+
+  class TupletDuration < Base
+    def self.emit_tuplet_end(work)
+      work.emit(:music, '} ')
+    end
+
+    def translate
+      if next_event && next_event[:type] == :stand_alone_figures
+        @work['process/figures_duration_value'] = "#{@event[:value]}*#{@event[:fraction]}"
+      else
+        @work['process/duration_values'] = [@event[:value]]
+        @work['process/last_value'] = nil
+        @work['process/tuplet_mode'] = true
+
+        group_value = @event[:value].to_i / @event[:group_length].to_i
+        @work.emit(:music, "\\tuplet #{@event[:fraction]} #{group_value} { ")
       end
     end
   end

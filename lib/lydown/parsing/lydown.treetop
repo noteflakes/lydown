@@ -55,7 +55,10 @@ grammar Lydown
     #  '.|') <Barline>
   end
   rule duration
-    duration_value / duration_macro
+    tuplet_value / duration_value / duration_macro
+  end
+  rule tuplet_value
+    number '%' (number '/' number)? <TupletValue>
   end
   rule duration_value
     number dots* multiplier? <DurationValue>

@@ -82,4 +82,8 @@ RSpec.describe Lydown do
   it "correctly handles unmetered music" do
     verify_example('unmetered')
   end
+
+  it "correctly translates tuplets" do
+    verify_example('tuplets')
+  end
 end

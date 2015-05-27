@@ -1,13 +1,3 @@
-- triplets/tuplets
-
-  8%cdefed2c // shorthand for triplets
-
-  => \tuplet 3/2 4 { c8 d e f e d } c2
-
-  8%5/4cdefg2a
-
-  => \tuplet 5/4 4 { c8 d e f g } a2
-
 - nested tuplets
 
   8%5/4{8fef8%efg}
