@@ -260,7 +260,7 @@ module Lydown::Rendering
       # look ahead and see if any beam or slur closing after note
       look_ahead_idx = @idx + 1
       while event = @stream[look_ahead_idx]
-        case @stream[@idx + 1][:type]
+        case event[:type]
         when :beam_close
           @event[:beam_close] = true
         when :slur_close
