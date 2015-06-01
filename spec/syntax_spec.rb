@@ -86,4 +86,8 @@ RSpec.describe Lydown do
   it "correctly translates tuplets" do
     verify_example('tuplets')
   end
+
+  it "correctly translates note markup" do
+    verify_example('note_markup')
+  end
 end

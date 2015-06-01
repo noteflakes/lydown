@@ -171,11 +171,15 @@ module Lydown::Parsing
   end
 
   module Rest
+    include Root
+    
     def to_stream(stream)
       rest = {type: :rest, raw: text_value, head: text_value[0]}
       if text_value =~ /^R(\*([0-9]+))?$/
         rest[:multiplier] = $2 || '1'
       end
+
+      _to_stream(self, rest)
 
       stream << rest
     end

@@ -176,6 +176,34 @@ module Lydown::Rendering
         @work['process/macro_group'] = nil
       end
     end
+
+    LILYPOND_EXPRESSIONS = {
+      '_' => '--',
+      '.' => '-.',
+      '`' => '-!'
+    }
+
+    def translate_expressions
+      return unless @event[:expressions]
+
+      @event[:expressions] = @event[:expressions].map do |expr|
+        if expr =~ /^(?:\\(_?))?"(.+)"$/
+          placement = ($1 == '_') ? '_' : '^'
+          "#{placement}\\markup { #{translate_string_expression($2)} }"
+        elsif expr =~ /^\\/
+          expr
+        elsif LILYPOND_EXPRESSIONS[expr]
+          LILYPOND_EXPRESSIONS[expr]
+        else
+          raise LydownError, "Invalid expression #{expr.inspect}"
+        end
+      end
+    end
+
+    def translate_string_expression(expr)
+      expr.gsub(/__([^_]+)__/) {|m| "\\bold { #{$1} }" }.
+           gsub(/_([^_]+)_/) {|m| "\\italic { #{$1} }" }
+    end
   end
 
   LILYPOND_DURATIONS = {
@@ -245,26 +273,6 @@ module Lydown::Rendering
 
       add_note(@event)
     end
-
-    LILYPOND_EXPRESSIONS = {
-      '_' => '--',
-      '.' => '-.',
-      '`' => '-!'
-    }
-
-    def translate_expressions
-      return unless @event[:expressions]
-
-      @event[:expressions] = @event[:expressions].map do |expr|
-        if expr =~ /^\\/
-          expr
-        elsif LILYPOND_EXPRESSIONS[expr]
-          LILYPOND_EXPRESSIONS[expr]
-        else
-          raise LydownError, "Invalid expression #{expr.inspect}"
-        end
-      end
-    end
   end
 
   class StandAloneFigures < Base
@@ -327,6 +335,8 @@ module Lydown::Rendering
     end
 
     def translate
+      translate_expressions
+
       if @event[:multiplier]
         value = full_bar_value(@work[:time])
         if value

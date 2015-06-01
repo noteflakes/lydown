@@ -91,7 +91,7 @@ grammar Lydown
     note_head octave* accidental_flag? figures? expression* <Note>
   end
   rule expression
-    (expression_shorthand / expression_longhand) <Note::Expression>
+    (expression_shorthand / expression_longhand / string) <Note::Expression>
   end
 
   rule expression_shorthand
@@ -99,6 +99,9 @@ grammar Lydown
   end
   rule expression_longhand
     '\\' [^\s\n]+
+  end
+  rule string
+    '"' ('\"' / !'"' .)* '"'
   end
   rule figures # bass figures
     '<' figures_component? (white_space? figures_component)* '>'
@@ -110,7 +113,10 @@ grammar Lydown
     duration_value? figures <StandAloneFigures>
   end
   rule rest
-    [rR] multiplier* <Rest>
+    [rR] multiplier* rest_expression* <Rest>
+  end
+  rule rest_expression
+    (expression_longhand / string) <Note::Expression>
   end
   rule silence
     [s] multiplier* <Silence>

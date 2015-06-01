@@ -1,3 +1,44 @@
+- support for full work processing in command line tool
+- support for movement filtering in command line tool
+- support for part filtering in command line tool
+- support for default output directory (/pdf) in command line tool
+
+- lilypond commands
+
+  \stemUp
+
+- include statements, both .ld and .ly files
+
+  ly files are included before the music startst sta
+
+- layout settings
+
+  - layout:
+    - paper: A4 landscape
+    - margins: 10mm // all sides
+    - margins: 1in 0.5in 1.5in 0.5in // all sides or top, right, bottom, left
+    - ragged_bottom: true
+    - ragged_last_bottom: true
+    - ragged_right: true
+    - ragged_last_right: true
+    - score_staff_size: 17
+    - part_staff_size: 20
+    - between-system-space: 18mm
+    // look at ripple _include files for more settings
+
+- default preface page
+
+- custom preface page (using include)
+
+- titles
+
+  - composer: Johann Sebastian Bach, Jr.
+  - title: Markus Passion BWV 247
+  - subtitle: Une reconstruction
+  - subsubtitle:
+  - copyright:
+  - tagline:
+
 - nested tuplets
 
   8%5/4{8fef8%efg}
@@ -20,13 +61,6 @@
   => \\repeat volta 4 { c4 d e f | }
      \\alternative { { c2 e | } { f2 g | } } c1
 
-- support for full work processing in command line tool
-- support for movement filtering in command line tool
-- support for part filtering in command line tool
-- support for default output directory (/pdf) in command line tool
-
-music features:
-
 - support for figures on separate line
 
   arb-
@@ -40,8 +74,7 @@ music features:
 
 - multiple voices
 
-  1: 8r6rg8.e6f8gc,f6ed
-  2: 6dc8d6&b8c6&b8c6&8.b
+  1: 8r6rg8.e6f8gc,f6ed 2: 6dc8d6&b8c6&b8c6&8.b u:
 
   //=>
   <<
