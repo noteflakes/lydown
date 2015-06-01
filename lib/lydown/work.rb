@@ -101,8 +101,11 @@ module Lydown
     def filter_context(opts = {})
       filtered = @context.deep_clone
 
-      # delete default movement if other movements are present
-      if filtered['movements'].size > 1
+      if filtered['movements'].nil? || filtered['movements'].size == 0
+        # no movements found, so no music
+        raise LydownError, "No music found"
+      elsif filtered['movements'].size > 1
+        # delete default movement if other movements are present
         filtered['movements'].delete('')
       end
 
