@@ -7,6 +7,7 @@ require 'lydown/rendering/music'
 require 'lydown/rendering/settings'
 require 'lydown/rendering/staff'
 require 'lydown/rendering/movement'
+require 'lydown/rendering/command'
 
 require 'yaml'
 

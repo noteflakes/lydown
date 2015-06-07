@@ -1,15 +1,7 @@
-- support for inline settings:
-
-  1g \time:3/4 2.g 
-
 - support for full work processing in command line tool
 - support for movement filtering in command line tool
 - support for part filtering in command line tool
 - support for default output directory (/pdf) in command line tool
-
-- lilypond commands
-
-  \stemUp
 
 - markup before note:
 

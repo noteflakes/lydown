@@ -265,6 +265,20 @@ Key or time signatures can be changed on the fly:
     c8cdcb4aaa
     d8dedc4bb
 
+### Lilypond Commands and inline settings
+
+Lilypond commands and settings can be entered inline as part of the note stream:
+
+  cd \key:"e- major" e \stemDown f
+  
+A useful shorthand is for one-time (<code>\once</code>) overrides, with an exclamation mark between the backslash and the command:
+
+  \!override:"NoteHead.color = #red"
+
+Multiple arguments can be given, separated by colons. Arguments need to be quoted only if they contain whitespace, or colons:
+
+  \!override:AccidentalSuggestion:"#'avoid-slur = #'outside"
+
 ### Inline lyrics
 
 Lyrics for vocal parts can be entered on separate lines prefixed by a > symbol:

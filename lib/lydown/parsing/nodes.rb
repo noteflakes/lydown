@@ -214,4 +214,42 @@ module Lydown::Parsing
       stream << {type: :barline, barline: text_value}
     end
   end
+  
+  module Command
+    include Root
+    def to_stream(stream)
+      cmd = {type: :command}
+      cmd[:once] = true if text_value =~ /^\\\!/
+      _to_stream(self, cmd)
+      stream << cmd
+    end
+    
+    SETTING_KEYS = %w{time key}
+    
+    module Key
+      def to_stream(cmd)
+        cmd[:key] = text_value
+        if SETTING_KEYS.include?(text_value)
+          cmd[:type] = :setting
+        end
+      end
+    end
+    
+    module Argument
+      def to_stream(cmd)
+        if text_value =~ /^"(.+)"$/
+          value = $1
+        else
+          value = text_value
+        end
+        
+        if cmd[:type] == :setting
+          cmd[:value] = value
+        else
+          cmd[:arguments] ||= []
+          cmd[:arguments] << value
+        end
+      end
+    end
+  end
 end

@@ -98,4 +98,8 @@ RSpec.describe Lydown do
   it "correctly translates note markup" do
     verify_example('note_markup')
   end
+
+  it "correctly translates inline commands" do
+    verify_example('commands')
+  end
 end
