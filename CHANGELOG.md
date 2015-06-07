@@ -1,3 +1,12 @@
+## Version 0.5 2015-06-07
+
+- Basic note markup
+- Fix simultaneous beam and slur
+- Repeating pitch using @
+- Ficta accidentals
+- Tempo setting
+- Inline commands and settings
+
 ## Version 0.4 2015-05-27
 
 - Allow macro definition with or without curly braces
