@@ -57,6 +57,10 @@ RSpec.describe Lydown do
     verify_example('clefs')
   end
 
+  it "correctly translates tempo settings" do
+    verify_example('tempo')
+  end
+
   it "correctly translates articulation shorthand" do
     verify_example('articulation')
   end

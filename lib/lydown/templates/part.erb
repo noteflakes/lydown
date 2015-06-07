@@ -18,6 +18,10 @@
 
 <<
 
+<% if self[:tempo] %>
+  \tempo "<%= self[:tempo] %>"
+<% end %>
+
 \new Staff = <%= id %> \with {
 }
 

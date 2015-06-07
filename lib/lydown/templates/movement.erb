@@ -36,7 +36,7 @@
         \set Score.barNumberVisibility = #all-bar-numbers-visible
         \bar ""
       <% end %>
-
+      
       <% parts.each do |n, p| %>
         <%= Lydown::Templates.render(:part, self, 
           name: n, part: p, movement: movement) %>

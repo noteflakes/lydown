@@ -1,7 +1,7 @@
 module Lydown::Rendering
   class Setting < Base
     SETTING_KEYS = [
-      'key', 'time', 'pickup', 'clef', 'part', 'movement',
+      'key', 'time', 'pickup', 'clef', 'part', 'movement', 'tempo',
       'accidentals', 'beams', 'end_barline', 'macros'
     ]
 
@@ -20,7 +20,7 @@ module Lydown::Rendering
       level = @event[:level] || 0
 
       unless (level > 0) || SETTING_KEYS.include?(key)
-        raise Lydown, "Invalid setting (#{key})"
+        raise LydownError, "Invalid setting (#{key})"
       end
 
       if level == 0

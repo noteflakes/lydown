@@ -28,6 +28,7 @@ module Lydown
       case mode
       when :work, :movement
         @context[:time] = '4/4'
+        @context[:tempo] = nil
         @context[:cadenza_mode] = nil
         @context[:key] = 'c major'
         @context[:pickup] = nil
