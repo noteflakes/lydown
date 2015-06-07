@@ -21,6 +21,11 @@
         cis'! ees? g!8.
         %{alternative accidental/octave order%}
         ges,4 a'''2 b'4
+        %{ficta%}
+        bes
+        \once \override AccidentalSuggestion #'avoid-slur = #'outside
+        \once \set suggestAccidentals = ##t
+        ces bes2
       }
     }
     >>

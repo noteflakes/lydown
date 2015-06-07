@@ -131,7 +131,7 @@ grammar Lydown
     [\,']+ <Note::Octave>
   end
   rule accidental_flag
-    [\!\?] <Note::AccidentalFlag>
+    [\!\?\^] <Note::AccidentalFlag>
   end
   rule phrasing
     beam_open / beam_close / slur_open / slur_close

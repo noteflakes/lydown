@@ -1,3 +1,5 @@
+- ficta accidentals
+
 - support for inline settings:
 
   1g \time:3/4 2.g 
