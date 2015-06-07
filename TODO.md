@@ -1,3 +1,11 @@
+- support for inline settings:
+
+  1g \time:3/4 2.g 
+
+- tempo indication:
+
+  - tempo: Allegretto
+
 - support for full work processing in command line tool
 - support for movement filtering in command line tool
 - support for part filtering in command line tool
@@ -7,9 +15,37 @@
 
   \stemUp
 
+- markup before note:
+
+  \\"_Jesus:_" cdef
+
+- markup/expressions over barlines:
+
+  8fe42c |\fermata
+
 - include statements, both .ld and .ly files
 
   ly files are included before the music startst sta
+
+- custom input modes
+  - homophonic explode mode: chords split into multiple staves, with automatic ties (for recitativo accompagnato).
+
+  2<adf+> ~ <bdg>
+
+- multipart entry mode:
+
+  - part: tenore, continuo
+  - key: g minor
+
+  4r8def+gad,
+  1f+<6>
+
+  b'bdb4gr
+  g
+
+- bar checks:
+
+  (3)cdefg
 
 - layout settings
 

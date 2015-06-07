@@ -60,7 +60,12 @@ module Lydown::Rendering
     def add_note(event)
       return add_macro_note(event) if @work['process/duration_macro']
 
-      @work['process/last_note_head'] = event[:head]
+      if @event[:head] == '@'
+        # replace repeating note head
+        @event[:head] = @work['process/last_note_head'] 
+      else
+        @work['process/last_note_head'] = event[:head]
+      end
 
       value = @work['process/duration_values'].first
       @work['process/duration_values'].rotate!
@@ -152,12 +157,12 @@ module Lydown::Rendering
       ]
 
       # replace place holder and repeaters in macro group with actual note
-      @work['process/macro_group'].gsub!(/[_@]/) do |match|
+      @work['process/macro_group'].gsub!(/[_∞]/) do |match|
         case match
         when '_'
           underscore_count += 1
           underscore_count == 1 ? lydown_note : match
-        when '@'
+        when '∞'
           underscore_count < 2 ? event[:head] : match
         end
       end
@@ -379,7 +384,9 @@ module Lydown::Rendering
           if macro =~ /^\{(.+)\}$/
             macro = $1
           end
-          @work['process/duration_macro'] = macro
+          # replace the repeating note placeholder with another sign in order to
+          # avoid mixing up with repeating notes from outside the macro
+          @work['process/duration_macro'] = macro.gsub('@', '∞')
         else
           raise LydownError, "Unknown macro #{@event[:macro]}"
         end

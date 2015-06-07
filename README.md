@@ -87,6 +87,12 @@ Augmentation dots are entered like in lilypond:
 
     8.c6d 8.e6f 2g => c8. d16 e8. f16 g2
     8..g 3g 4c => g8.. g32 c4
+    
+Notes can be repeated using the <code>@</code> placeholder:
+
+    4c@@@ => c4 c c c
+
+(The repeating note placeholder is useful when entering repeated notes with accidentals).
 
 ### Rests
 

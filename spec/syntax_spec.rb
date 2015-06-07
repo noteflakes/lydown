@@ -45,6 +45,10 @@ RSpec.describe Lydown do
     verify_example('octaves')
   end
 
+  it "correctly translate repeating pitch" do
+    verify_example('repeating_pitch')
+  end
+
   it "correctly translate full bar rests" do
     verify_example('full-bar-rests')
   end
