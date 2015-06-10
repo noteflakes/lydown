@@ -286,7 +286,17 @@ Lyrics for vocal parts can be entered on separate lines prefixed by a > symbol:
     4c[8de]4fd(4c[8de]2f)
     > Ly-down is the bomb__
 
-Text alignment follows the duration, beaming and slurring of the music, just like in lilypond. Sillables are expected to be separated by a dash. Melismas, i.e. a single sillable streched over multiple notes, is signified by one or more underscores.
+Or between notes using quotes:
+
+    4c[8de]4fd(4c[8de]2f) >"Ly-down is the bomb__"
+
+Text alignment follows the duration, beaming and slurring of the music, [just like in lilypond](http://www.lilypond.org/doc/v2.18/Documentation/notation/common-notation-for-vocal-music#automatic-syllable-durations). Sillables are expected to be separated by a dash. Melismas, i.e. a single sillable streched over multiple notes, is signified by one or more underscores.
+
+Multiple stanzas for the same music can be specified by including the stanza number in parens:
+
+    4cege1c
+    > Ly-down is the bomb.
+    >(2) Li-ly-pond is too.
 
 ### Stream switching
 
@@ -299,6 +309,13 @@ Lyrics can be entered in a block, before or after musical notation, by switching
     How I won-der what you are.
     =music
     8g'gffeed4
+    ...
+    
+Multiple lyrics stanzas can be written by including the stanza number in parens:
+
+    =lyrics(1) // optional, same as =lyrics
+    ...
+    =lyrics(2)
     ...
 
 ### Figured bass

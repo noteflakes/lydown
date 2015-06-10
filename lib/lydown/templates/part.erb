@@ -42,15 +42,11 @@
 }
 
   <% if part['lyrics'] %>
-    \addlyrics {
-      <%= part['lyrics'] %>
-    }
-  <% end %>
-
-  <% if part['lyrics2'] %>
-    \addlyrics {
-      <%= part['lyrics2'] %>
-    }
+    <% part['lyrics'].keys.sort.each do |idx| %>
+      \addlyrics {
+        <%= part['lyrics'][idx] %>
+      }
+    <% end %>
   <% end %>
 
   <% if part['figures'] %>

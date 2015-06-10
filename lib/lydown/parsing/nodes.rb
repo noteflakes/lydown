@@ -198,14 +198,47 @@ module Lydown::Parsing
   end
 
   module Lyrics
+    include Root
     def to_stream(stream)
-      stream << {type: :lyrics, content: text_value}
+      o = {type: :lyrics}
+      _to_stream(self, o)
+      stream << o
+    end
+    
+    module Content
+      def to_stream(o)
+        if o[:content]
+          o[:content] << ' ' << text_value
+        else
+          o[:content] = text_value
+        end
+      end
+    end
+    
+    module QuotedContent
+      def to_stream(o)
+        if text_value =~ /^"(.+)"$/
+          content = $1
+        else
+          raise LydownError, "Unexpected quoted lyrics content (#{text_value.inspect})"
+        end
+
+        if o[:content]
+          o[:content] << ' ' << content
+        else
+          o[:content] = content
+        end
+      end
     end
   end
-
-  module Lyrics2
-    def to_stream(stream)
-      stream << {type: :lyrics, stream: :lyrics2, content: text_value}
+  
+  module StreamIndex
+    def to_stream(o)
+      idx = (text_value =~ /\(([\d]+)\)/) && $1.to_i
+      if idx.nil?
+        raise LydownError, "Invalid stream index (#{text_value.inspect})"
+      end
+      o[:stream_index] = idx
     end
   end
 

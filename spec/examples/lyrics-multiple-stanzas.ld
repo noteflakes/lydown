@@ -4,6 +4,6 @@
 =lyrics
 Twin-kle twin-kle lit-tle star,
 How I won-der what you are.___
-=lyrics2
+=lyrics(2)
 When the blah blah shines up high,
 Then the blah blah blah blah sky.___

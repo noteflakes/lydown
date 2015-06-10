@@ -2,7 +2,10 @@ module Lydown::Rendering
   class Lyrics < Base
     def translate
       value = lilypond_lyrics(@event[:content])
-      @work.emit(@event[:stream] || :lyrics, value, ' ')
+      
+      # The lyrics index is used to provide multiple lyrics for the same music.
+      lyrics_idx = @event[:stream_index] || 1
+      @work.emit("lyrics/#{lyrics_idx}", value, ' ')
     end
 
     def lilypond_lyrics(lyrics)

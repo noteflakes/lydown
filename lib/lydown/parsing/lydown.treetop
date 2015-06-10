@@ -5,16 +5,13 @@ grammar Lydown
     line ([\n] line)* <Root>
   end
   rule stream_switch
-    music_stream / lyrics_stream / lyrics2_stream
+    music_stream / lyrics_stream
   end
   rule music_stream
     '=music' white_space? [\n] music ([\n] !stream_breaker music)*
   end
   rule lyrics_stream
-    '=lyrics' white_space? [\n] lyrics_content ([\n] !stream_breaker lyrics_content)*
-  end
-  rule lyrics2_stream
-    '=lyrics2' white_space? [\n] lyrics2_content ([\n] !stream_breaker lyrics2_content)*
+    '=lyrics' stream_idx? white_space? [\n] lyrics_content ([\n] !stream_breaker lyrics_content)* <Lyrics>
   end
   rule stream_breaker
     stream_switch / stream_breaking_setting
@@ -47,7 +44,7 @@ grammar Lydown
     [ \t]+
   end
   rule event
-    (inline_command / barline / duration / note / standalone_figures / rest / silence / phrasing / tie) white_space*
+    (inline_command / inline_lyrics / barline / duration / note / standalone_figures / rest / silence / phrasing / tie) white_space*
   end
   rule barline
     ('?|' / ':|][|:' / '[|:' / ':|]' / [\|\.\:]+) <Barline>
@@ -158,13 +155,19 @@ grammar Lydown
     '&' <ShortTie>
   end
   rule lyrics
-    '>' white_space* lyrics_content
+    '>' stream_idx? white_space* lyrics_content <Lyrics>
+  end
+  rule inline_lyrics
+    '>' stream_idx? lyrics_quoted_content <Lyrics>
+  end
+  rule stream_idx
+    '(' [\d] ')' <StreamIndex>
   end
   rule lyrics_content
-    (!"\n" !"//" .)* <Lyrics>
+    (!"\n" !"//" .)* <Lyrics::Content>
   end
-  rule lyrics2_content
-    (!"\n" !"//" .)* <Lyrics2>
+  rule lyrics_quoted_content
+    string <Lyrics::QuotedContent>
   end
   rule inline_command
     '\\' '!'? inline_command_key (':' inline_command_argument)* <Command>
