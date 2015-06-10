@@ -27,6 +27,15 @@
   
   <% if score_mode %>
     \score {
+      <% if self['empty_staves'] == 'hide' %>
+        \layout {
+          \context {
+            \RemoveEmptyStaffContext
+            \override VerticalAxisGroup #'remove-first = ##t
+          }
+        }      
+      <% end %>
+      
       \new StaffGroup <<
         \set StaffGroup.systemStartDelimiterHierarchy = <%= staff_hierarchy %>
   <% end %>

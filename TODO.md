@@ -1,3 +1,29 @@
+- voices and lyrics
+
+  1: 8cefd2c >"Bin ich's?"
+  2: 8g'4c8b2c >"Bin ich's?" u:
+
+- inline multiple lyrics
+  rcer >"Blah" >(2)"Bleh"
+
+- inline lyrics
+  rcer >"Bin ich's?"
+
+- multiple lyrics
+  
+  =lyrics
+  =lyrics(2)
+
+- a command line mode to create works and movements
+
+  lydown mvmt 07-choral 2flutes 2oboes 3strings 2gambas choir* continuo
+  
+- refactor binary script
+
+  - extract command_line behavior into lib/lydown/cli.rb
+  - put proofing mode into lib/lydown/cli/proof.rb
+  - put movement create mode into lib/lydown/cli/create_movement.rb
+
 - support for full work processing in command line tool
 - support for movement filtering in command line tool
 - support for part filtering in command line tool

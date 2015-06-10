@@ -2,7 +2,7 @@ module Lydown::Rendering
   class Setting < Base
     SETTING_KEYS = [
       'key', 'time', 'pickup', 'clef', 'part', 'movement', 'tempo',
-      'accidentals', 'beams', 'end_barline', 'macros'
+      'accidentals', 'beams', 'end_barline', 'macros', 'empty_staves'
     ]
 
     RENDERABLE_SETTING_KEYS = [
@@ -11,7 +11,8 @@ module Lydown::Rendering
 
     ALLOWED_SETTING_VALUES = {
       'accidentals' => ['manual', 'auto'],
-      'beams' => ['manual', 'auto']
+      'beams' => ['manual', 'auto'],
+      'empty_staves' => ['hide', 'show']
     }
 
     def translate

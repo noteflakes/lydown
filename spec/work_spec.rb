@@ -111,5 +111,8 @@ RSpec.describe Lydown::Work do
     ex = load_example('fullwork_violoncello.ly', strip: true)
     expect(ly).to eq(ex)
   end
-    
+   
+  it "handles empty staves setting" do
+    verify_example('empty_staves', nil, mode: :score)
+  end
 end
