@@ -1,3 +1,9 @@
+## Version 0.6 2015-06-10
+
+- empty_staves setting for hiding empty staves.
+- inline lyrics, multiple stanzas using number in parens.
+- multiple voices.
+
 ## Version 0.5 2015-06-07
 
 - Basic note markup
