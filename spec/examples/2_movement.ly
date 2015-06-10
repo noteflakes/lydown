@@ -18,9 +18,11 @@
       \new Staff = Staff \with { }
       \context Staff = Staff {
         \relative c {
-          \time 3/8
-          \key c \minor
-          c'8 ees g g4.
+          << \new Voice = "voice1" {
+            \time 3/8
+            \key c \minor
+            c'8 ees g g4.
+          } >>
         }
       }
       >>
@@ -39,9 +41,11 @@
       \new Staff = Staff \with { }
       \context Staff = Staff {
         \relative c {
-          \time 4/4
-          \key b \major
-          r4. b'8 dis gis
+          << \new Voice = "voice1" {
+            \time 4/4
+            \key b \major
+            r4. b'8 dis gis
+          } >>
         }
       }
       >>

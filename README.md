@@ -345,8 +345,13 @@ For multi-movement works, prefix each movement with a -movement setting:
 
 [Multiple voices](http://www.lilypond.org/doc/v2.18/Documentation/notation/multiple-voices#single_002dstaff-polyphony) on the same staff can be easily entered using the following notation:
 
-    1: 8egfdeg4f
-    2: 4cded
+    1: 8egfdeg4f 2: 4cded u: ...
+    
+the <code>u:<\code> command is used to return to single voice (_unisono_) mode.
+  
+Lyrics can be added for individual voices by using inline lyrics:
+
+    1: ceg >"yeah yeah yeah" 2: gbd >"no no no" u: ...
 
 ## Piano scores
 

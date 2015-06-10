@@ -8,11 +8,13 @@
     \new Staff = Staff \with { }
     \context Staff = Staff {
       \relative c {
-        \clef "bass"
-        c4 d e f
-        \clef "alto"
-        g a b c
-        \clef "treble"
+        << \new Voice = "voice1" {
+          \clef "bass"
+          c4 d e f
+          \clef "alto"
+          g a b c
+          \clef "treble"
+        } >>
       }
     }
     >>

@@ -285,4 +285,11 @@ module Lydown::Parsing
       end
     end
   end
+  
+  module VoiceSelector
+    def to_stream(stream)
+      voice = (text_value =~ /^([1234])/) && $1.to_i
+      stream << {type: :voice_select, voice: voice}
+    end
+  end
 end

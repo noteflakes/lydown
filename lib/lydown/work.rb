@@ -39,6 +39,10 @@ module Lydown
       if @context['process/tuplet_mode']
         Lydown::Rendering::TupletDuration.emit_tuplet_end(self)
       end
+      
+      if @context['process/voice_selector']
+        Lydown::Rendering::Voices.render_voices(self)
+      end
 
       # reset processing variables
       @context['process'] = {
@@ -66,16 +70,20 @@ module Lydown
       reset_context(:part) unless opts[:no_reset]
     end
 
-    def emit(stream_type, *content)
-      stream = current_stream(stream_type)
+    def emit(path, *content)
+      stream = current_stream(path)
 
       content.each {|c| stream << c}
     end
 
-    def current_stream(type)
-      movement = @context[:movement]
-      part = @context[:part]
-      path = "movements/#{movement}/parts/#{part}/#{type}"
+    def current_stream(subpath)
+      if @context['process/voice_selector']
+        path = "process/voices/#{@context['process/voice_selector']}/#{subpath}"
+      else
+        movement = @context[:movement]
+        part = @context[:part]
+        path = "movements/#{movement}/parts/#{part}/#{subpath}"
+      end
       @context[path] ||= ''
     end
 

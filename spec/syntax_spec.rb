@@ -102,4 +102,8 @@ RSpec.describe Lydown do
   it "correctly translates inline commands" do
     verify_example('commands')
   end
+
+  it "correctly handles multiple voices" do
+    verify_example('voices')
+  end
 end

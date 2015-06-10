@@ -10,24 +10,26 @@
     \context Staff = ContinuoStaff {
       \relative c {
         \clef "bass"
-        \time 3/4
-        \key a \minor
-        e2.
-        a2 g4
-        f2 e4
-        d2.
-        e ~
-        e ~
-        e ~
-        e2 r4
-        R2.*4
-        b'2.
-        c2 c4
-        b2 b4
-        a2. ~
-        a ~
-        a ~
-        a2 r4
+        << \new Voice = "voice1" {
+          \time 3/4
+          \key a \minor
+          e2.
+          a2 g4
+          f2 e4
+          d2.
+          e ~
+          e ~
+          e ~
+          e2 r4
+          R2.*4
+          b'2.
+          c2 c4
+          b2 b4
+          a2. ~
+          a ~
+          a ~
+          a2 r4
+        } >>
       }
     }
 

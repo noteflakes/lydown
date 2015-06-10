@@ -1,0 +1,9 @@
+<<
+  <% self['process/voices'].each do |voice, stream| %>
+    <% if voice != 'voice1' %> \new Voice = "<%= voice %>" <% end %> {
+      <%= Lydown::Rendering::VoiceSelect.voice_command(voice) %>
+      <%= stream['music'] %>
+    }
+  <% end %>
+>>
+\oneVoice 

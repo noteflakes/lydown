@@ -20,7 +20,9 @@
         \context Staff = Staff {
           \set Staff.instrumentName = #""
           \relative c {
-            c4 e g c
+            << \new Voice = "voice1" {
+              c4 e g c
+            } >>
           }
         }
         >>

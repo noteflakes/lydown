@@ -8,7 +8,9 @@
     \new Staff = Staff \with { }
     \context Staff = Staff {
       \relative c {
-        c4 e8 g c2
+        << \new Voice = "voice1" {
+          c4 e8 g c2
+        } >>
       }
     }
     >>

@@ -9,13 +9,14 @@
     \new Staff = Staff \with { }
     \context Staff = Staff {
       \relative c {
-        c1 \bar "|" d \bar "." e \bar "||" f \bar ".|"
-        g \bar ".." a \bar "|.|" b \bar "|."
+        << \new Voice = "voice1" {
+          c1 \bar "|" d \bar "." e \bar "||" f \bar ".|"
+          g \bar ".." a \bar "|.|" b \bar "|."
 
-        c \bar ".|:" d \bar ":..:" e \bar ":|.|:" f \bar ":|.:"
-        g \bar ":.|.:" a \bar "[|:" b \bar ":|][|:"
-        c \bar ":|]" d \bar ":|." e \bar ":|:" f \bar ":|" g \bar "" a
-
+          c \bar ".|:" d \bar ":..:" e \bar ":|.|:" f \bar ":|.:"
+          g \bar ":.|.:" a \bar "[|:" b \bar ":|][|:"
+          c \bar ":|]" d \bar ":|." e \bar ":|:" f \bar ":|" g \bar "" a
+        } >>
       }
     }
     >>

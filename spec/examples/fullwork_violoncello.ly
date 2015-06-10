@@ -19,9 +19,11 @@
     \context Staff = VioloncelloStaff {
       \relative c {
         \clef "bass"
-        \time 3/4
-        \key d \major
-        d8 cis b a gis4
+        << \new Voice = "voice1" {
+          \time 3/4
+          \key d \major
+          d8 cis b a gis4
+        } >>
         \bar "|."
       }
     }

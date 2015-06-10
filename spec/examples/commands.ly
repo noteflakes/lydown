@@ -8,12 +8,14 @@
     \new Staff = Staff \with { }
     \context Staff = Staff {
       \relative c {
-        \key c \major
-        c4 d \key ees \major ees f
-        g \stemUp aes 
-        \once \override AccidentalSuggestion #'avoid-slur = #'outside 
-        \once \set suggestAccidentals = ##t
-        b
+        << \new Voice = "voice1" {
+          \key c \major
+          c4 d \key ees \major ees f
+          g \stemUp aes 
+          \once \override AccidentalSuggestion #'avoid-slur = #'outside 
+          \once \set suggestAccidentals = ##t
+          b
+        } >>
         
       }
     }

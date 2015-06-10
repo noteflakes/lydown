@@ -33,8 +33,12 @@
     <% end %>
     <%= beaming_mode %>
     <%= partial %>
-    <%= part['music'] %>
-
+    
+    <<
+      \new Voice = "voice1" {
+        <%= part['music'] %>
+      }
+    >>
     <% if end_barline %>
       \bar "<%= end_barline %>"
     <% end %>
@@ -42,11 +46,14 @@
 }
 
   <% if part['lyrics'] %>
-    <% part['lyrics'].keys.sort.each do |idx| %>
-      \addlyrics {
-        <%= part['lyrics'][idx] %>
-      }
+    <% part['lyrics'].each_key do |voice| %>
+      <% part['lyrics'][voice].keys.sort.each do |idx| %>
+        \new Lyrics \lyricsto "<%= voice %>" {
+          <%= part['lyrics'][voice][idx] %>
+        }
+      <% end %>
     <% end %>
+  
   <% end %>
 
   <% if part['figures'] %>

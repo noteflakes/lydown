@@ -8,6 +8,7 @@ require 'lydown/rendering/settings'
 require 'lydown/rendering/staff'
 require 'lydown/rendering/movement'
 require 'lydown/rendering/command'
+require 'lydown/rendering/voices'
 
 require 'yaml'
 

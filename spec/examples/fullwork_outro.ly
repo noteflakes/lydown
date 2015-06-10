@@ -23,9 +23,11 @@
           \set Staff.instrumentName = #"Violino I"
           \relative c {
             \clef "treble"
-            \time 2/4
-            \key bes \major
-            ees4 f8 g a2
+            << \new Voice = "voice1" {
+              \time 2/4
+              \key bes \major
+              ees4 f8 g a2
+            } >>
             \bar "|."
           }
         }
@@ -37,9 +39,11 @@
           \set Staff.instrumentName = #"Violino II"
           \relative c {
             \clef "treble"
-            \time 2/4
-            \key bes \major
-            g4 f8 ees d2
+            << \new Voice = "voice1" {
+              \time 2/4
+              \key bes \major
+              g4 f8 ees d2
+            } >>
             \bar "|."
           }
         }

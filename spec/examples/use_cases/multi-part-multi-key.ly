@@ -9,8 +9,10 @@
     \context Staff = ViolinoIStaff {
       \relative c {
         \clef "treble"
-        \key fis \minor fis1
-        \key d \minor f
+        << \new Voice = "voice1" {
+          \key fis \minor fis1
+          \key d \minor f
+        } >>
       }
     }
     >>
@@ -20,8 +22,10 @@
     \context Staff = ContinuoStaff {
       \relative c {
         \clef "bass"
-        \key fis \minor cis1
-        \key d \minor c
+        << \new Voice = "voice1" {
+          \key fis \minor cis1
+          \key d \minor c
+        } >>
       }
     }
     >>

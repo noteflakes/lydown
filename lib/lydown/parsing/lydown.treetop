@@ -44,7 +44,8 @@ grammar Lydown
     [ \t]+
   end
   rule event
-    (inline_command / inline_lyrics / barline / duration / note / standalone_figures / rest / silence / phrasing / tie) white_space*
+    (inline_command / inline_lyrics / voice_selector / barline / duration / 
+      note / standalone_figures / rest / silence / phrasing / tie) white_space*
   end
   rule barline
     ('?|' / ':|][|:' / '[|:' / ':|]' / [\|\.\:]+) <Barline>
@@ -177,5 +178,8 @@ grammar Lydown
   end
   rule inline_command_argument
     (string / [^\s\t\n\:]+) <Command::Argument>
+  end
+  rule voice_selector
+    [1234u] ':' <VoiceSelector>
   end
 end
