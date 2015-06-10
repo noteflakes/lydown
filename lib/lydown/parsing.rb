@@ -26,7 +26,7 @@ class LydownParser
     else
       msg << "#{parser.failure_reason}:\n"
     end
-    msg << "  #{source.lines[parser.failure_line - 1]} #{' ' * parser.failure_column}^"
+    msg << "  #{source.lines[parser.failure_line - 1].chomp}\n #{' ' * parser.failure_column}^"
 
     msg
   end
