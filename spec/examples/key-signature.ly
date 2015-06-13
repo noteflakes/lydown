@@ -15,6 +15,12 @@
           g a b c
           %{only the f+ minor key signature will be rendered%}
           \key fis \minor
+          a b cis
+          %{shorthand notation%}
+          \key f \major
+          a bes c
+          \key ees \minor
+          aes bes ces
         } >>
       }
     }

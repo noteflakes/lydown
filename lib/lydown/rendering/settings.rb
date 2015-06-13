@@ -25,7 +25,8 @@ module Lydown::Rendering
       end
 
       if level == 0
-        @work[key] = check_setting_value(key, value)
+        value = check_setting_value(key, value)
+        @work[key] = value
         case key
         when 'part'
           # when changing parts we repeat the last set time and key signature
@@ -56,7 +57,13 @@ module Lydown::Rendering
     end
 
     def check_setting_value(key, value)
-      if ALLOWED_SETTING_VALUES[key]
+      if key == 'key'
+        # process shorthand notation
+        if value =~ /^([a-gA-G])[\+\-]*$/
+          mode = $1.downcase == $1 ? 'minor' : 'major'
+          value = "#{value.downcase} #{mode}"
+        end
+      elsif ALLOWED_SETTING_VALUES[key]
         unless ALLOWED_SETTING_VALUES[key].include?(value)
           raise LydownError, "Invalid value for setting #{key}: #{value.inspect}"
         end

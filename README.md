@@ -245,6 +245,11 @@ In the case of key signatures, accidentals will follow the lydown syntax:
 
     - key: b- major
     - key: f+ minor
+    
+Key signatures can also be specified using shorthand notation (upper case for major, lower case for minor):
+
+    - key: B- // b flat major
+    - key: f+ // f sharp minor
 
 The default key signature is C major, and the default time signature is 4/4.
 
@@ -254,7 +259,7 @@ Key or time signatures can be changed on the fly:
     4c e g b
     - time: 3/4
     c e g 2.c
-
+    
 ### Pickup bars
 
 [Pickup bars](http://www.lilypond.org/doc/v2.18/Documentation/notation/displaying-rhythms#upbeats) (anacrusis, upbeat) are defined with the pickup setting:
@@ -269,7 +274,7 @@ Key or time signatures can be changed on the fly:
 
 Lilypond commands and settings can be entered inline as part of the note stream:
 
-  cd \key:"e- major" e \stemDown f
+  cd \key:E- e \stemDown f
   
 A useful shorthand is for one-time (<code>\once</code>) overrides, with an exclamation mark between the backslash and the command:
 
