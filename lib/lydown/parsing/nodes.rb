@@ -257,7 +257,7 @@ module Lydown::Parsing
       stream << cmd
     end
     
-    SETTING_KEYS = %w{time key}
+    SETTING_KEYS = %w{time key clef}
     
     module Key
       def to_stream(cmd)
