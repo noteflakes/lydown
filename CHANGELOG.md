@@ -1,3 +1,10 @@
+## Version 0.6.1 2015-06-13
+
+- Fix using lyrics with multiple voices.
+- When lyrics are used for multiple voices, lyrics for voice 1 and 3 are positioned above the staff.
+- Fix inline clef changing.
+- Add support for shorthand notation for key signature (upper case for major, lower case for minor).
+
 ## Version 0.6 2015-06-10
 
 - empty_staves setting for hiding empty staves.
