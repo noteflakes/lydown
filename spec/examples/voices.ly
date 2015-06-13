@@ -31,17 +31,23 @@
         >>
       }
     }
-    \new Lyrics \lyricsto "voice1" {
-      Bin ich's?
-      Nein ja nein ja
+    \new Lyrics \with { alignAboveContext = "Staff" } {
+      \lyricsto "voice1" {
+        Bin ich's?
+        Nein ja nein ja
+      }
     }
 
-    \new Lyrics \lyricsto "voice2" {
-      Ja ja!
+    \new Lyrics {
+      \lyricsto "voice2" {
+        Ja ja!
+      }
     }
 
-    \new Lyrics \lyricsto "voice2" {
-      Nei nei
+    \new Lyrics {
+       \lyricsto "voice2" {
+         Nei nei
+       }
     }
     >>
   }

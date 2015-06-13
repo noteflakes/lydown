@@ -14,9 +14,11 @@
         } >>
       }
     }
-    \new Lyrics \lyricsto "voice1"  {
-      Twin -- kle twin -- kle lit -- tle star,
-      How I won -- der what you are. __ _ _
+    \new Lyrics {
+      \lyricsto "voice1"  {
+        Twin -- kle twin -- kle lit -- tle star,
+        How I won -- der what you are. __ _ _
+      }
     }
     >>
   }
