@@ -2,8 +2,13 @@
   title = nil
   if name && (name != '')
     title = Lydown::Rendering.part_title(name)
+    voice_prefix = "#{name}_"
+  else
+    title = nil
+    voice_prefix = nil
   end
-  id = "#{title && title.gsub(' ', '')}Staff"
+  staff_id = "#{title && title.gsub(' ', '')}Staff"
+  
 
   score_mode = self['render_opts/mode'] == :score
 
@@ -22,20 +27,20 @@
   \tempo "<%= self[:tempo] %>"
 <% end %>
 
-\new Staff = <%= id %> \with {
+\new Staff = <%= staff_id %> \with {
 }
 
-\context Staff = <%= id %> {
+\context Staff = <%= staff_id %> {
 <% if score_mode %>\set Staff.instrumentName = #"<%= title %>"<% end %>
   \relative c {
     <% if clef %>
         \clef "<%= clef %>"
     <% end %>
-    <%= beaming_mode %>
     <%= partial %>
     
     <<
-      \new Voice = "voice1" {
+      \new Voice = "<%= voice_prefix %>voice1" {
+        <%= beaming_mode %>
         <%= part['music'] %>
       }
     >>
@@ -46,10 +51,18 @@
 }
 
   <% if part['lyrics'] %>
+    <% multi_voice = part['lyrics'].size > 1 %>
     <% part['lyrics'].each_key do |voice| %>
+      <% above_staff = multi_voice && ['voice1', 'voice3'].include?(voice) %>
       <% part['lyrics'][voice].keys.sort.each do |idx| %>
-        \new Lyrics \lyricsto "<%= voice %>" {
-          <%= part['lyrics'][voice][idx] %>
+        \new Lyrics 
+        <% if above_staff %>
+          \with { alignAboveContext = "<%= staff_id %>" }
+        <% end %>
+        {
+          \lyricsto "<%= voice_prefix %><%= voice %>" {
+            <%= part['lyrics'][voice][idx] %>
+          }
         }
       <% end %>
     <% end %>

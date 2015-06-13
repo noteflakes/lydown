@@ -10,7 +10,7 @@
     \context Staff = ContinuoStaff {
       \relative c {
         \clef "bass"
-        << \new Voice = "voice1" {
+        << \new Voice = "continuo_voice1" {
           a4 r r2
           bes4 r fis r
           f! r e r

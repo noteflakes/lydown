@@ -15,7 +15,7 @@
           \relative c {
             \clef "treble"
             \autoBeamOff
-            << \new Voice = "voice1" {
+            << \new Voice = "soprano_voice1" {
               \time 3/8
               c'8 e g g4.
             } >>
@@ -29,7 +29,7 @@
           \set Staff.instrumentName = #"Continuo"
           \relative c {
             \clef "bass"
-            << \new Voice = "voice1" {
+            << \new Voice = "continuo_voice1" {
               \time 3/8
               r4. b'8 d g
             } >>

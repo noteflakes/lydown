@@ -41,7 +41,7 @@ module Lydown
       end
       
       if @context['process/voice_selector']
-        Lydown::Rendering::Voices.render_voices(self)
+        Lydown::Rendering::VoiceSelect.render_voices(self)
       end
 
       # reset processing variables

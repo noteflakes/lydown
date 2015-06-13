@@ -10,7 +10,7 @@
     \context Staff = ViolinoIStaff {
       \relative c {
         \clef "treble"
-        << \new Voice = "voice1" {
+        << \new Voice = "violino1_voice1" {
           \time 3/8
           c'8 e g g4.
         } >>

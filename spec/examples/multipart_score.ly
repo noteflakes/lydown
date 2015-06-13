@@ -14,7 +14,7 @@
           \set Staff.instrumentName = #"Violino I"
           \relative c {
             \clef "treble"
-            << \new Voice = "voice1" {
+            << \new Voice = "violino1_voice1" {
               \time 3/8
               c'8 e g g4.
             } >>
@@ -28,7 +28,7 @@
           \set Staff.instrumentName = #"Violino II"
           \relative c {
             \clef "treble"
-            << \new Voice = "voice1" {
+            << \new Voice = "violino2_voice1" {
               \time 3/8
               r4. b'8 d g
             } >>

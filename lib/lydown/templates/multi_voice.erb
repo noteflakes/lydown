@@ -1,9 +1,16 @@
 <<
+  <% beaming_mode = Lydown::Rendering::Staff.beaming_mode(part) %>
+  <% voice_prefix = part.nil? || (part == "") ? nil : "#{part}_" %>
+
   <% self['process/voices'].each do |voice, stream| %>
-    <% if voice != 'voice1' %> \new Voice = "<%= voice %>" <% end %> {
-      <%= Lydown::Rendering::VoiceSelect.voice_command(voice) %>
-      <%= stream['music'] %>
-    }
+    <% if voice != 'voice1' %>
+      \new Voice = "<%= voice_prefix %><%= voice %>"
+    <% end %> 
+      {
+        <%= beaming_mode %>
+        <%= Lydown::Rendering::VoiceSelect.voice_command(voice) %>
+        <%= stream['music'] %>
+      }
   <% end %>
 >>
 \oneVoice 

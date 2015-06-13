@@ -10,7 +10,7 @@
     \context Staff = ContinuoStaff {
       \relative c {
         \clef "bass"
-        << \new Voice = "voice1" {
+        << \new Voice = "continuo_voice1" {
           \time 3/4
           \key a \minor
           e2.

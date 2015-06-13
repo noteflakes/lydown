@@ -9,7 +9,7 @@
     \context Staff = ViolinoIStaff {
       \relative c {
         \clef "treble"
-        << \new Voice = "voice1" {
+        << \new Voice = "violino1_voice1" {
           \key fis \minor fis1
           \key d \minor f
         } >>
@@ -22,7 +22,7 @@
     \context Staff = ContinuoStaff {
       \relative c {
         \clef "bass"
-        << \new Voice = "voice1" {
+        << \new Voice = "continuo_voice1" {
           \key fis \minor cis1
           \key d \minor c
         } >>

@@ -11,13 +11,13 @@
         \clef "treble"
         \autoBeamOff
         
-        << \new Voice = "voice1" {
+        << \new Voice = "soprano_voice1" {
           c8 c g' g a' a g4
           f8 f e e d d c4 d8[ e f e] d2
         } >>
       }
     }
-    \new Lyrics \lyricsto "voice1" {
+    \new Lyrics \lyricsto "soprano_voice1" {
       Twin -- kle twin -- kle lit -- tle star,
       How I won -- der what you are. __ _ _
     }
