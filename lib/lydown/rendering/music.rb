@@ -360,6 +360,7 @@ EOF
 
       if @event[:multiplier]
         value = full_bar_value(@work[:time])
+        @work['process/duration_macro'] = nil unless @work['process/macro_group']
         if value
           @event[:rest_value] = "#{value}*#{@event[:multiplier]}"
           @event[:head] = "#{@event[:head]}#{@event[:rest_value]}"

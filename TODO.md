@@ -1,3 +1,14 @@
+- footnote syntax:
+
+  cd [^"Is this note connected to the one before?"] d
+  
+  // override position (default is 0 . 1.5)
+  cd [^"Is this note connected to the one before?"(-1 . 2)] d
+  
+  // Change the footnote number/sign (and string escaping)
+  cd [^*"Is this \"note\" connected to the one before?"] d
+  
+
 - a command line mode to create works and movements
 
   lydown mvmt 07-choral 2flutes 2oboes 3strings 2gambas choir* continuo

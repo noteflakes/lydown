@@ -10,6 +10,7 @@
       \relative c {
         << \new Voice = "voice1" {
           a8. g16[ f8] ees'
+          c c c c d d d d R1*1
         } >>
       }
     }
