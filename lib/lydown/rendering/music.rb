@@ -221,8 +221,9 @@ EOF
     end
 
     def translate_string_expression(expr)
-      expr.gsub(/__([^_]+)__/) {|m| "\\bold { #{$1} }" }.
-           gsub(/_([^_]+)_/) {|m| "\\italic { #{$1} }" }
+      expr.unescape.
+          gsub(/__([^_]+)__/) {|m| "\\bold { #{$1} }" }.
+          gsub(/_([^_]+)_/) {|m| "\\italic { #{$1} }" }
     end
   end
 

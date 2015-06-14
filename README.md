@@ -284,6 +284,10 @@ Multiple arguments can be given, separated by colons. Arguments need to be quote
 
   \!override:AccidentalSuggestion:"#'avoid-slur = #'outside"
 
+Some lilypond command arguments are expected to be quoted. Quotes can be escaped by prefixing them with a backslash:
+
+  \footnote:"#'(-1 . 1)":"\"slurred?\""
+
 ### Inline lyrics
 
 Lyrics for vocal parts can be entered on separate lines prefixed by a > symbol:

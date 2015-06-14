@@ -1,8 +1,3 @@
-- voices and lyrics
-
-  1: 8cefd2c >"Bin ich's?"
-  2: 8g'4c8b2c >"Bin ich's?" u:
-
 - a command line mode to create works and movements
 
   lydown mvmt 07-choral 2flutes 2oboes 3strings 2gambas choir* continuo

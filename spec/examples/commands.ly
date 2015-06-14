@@ -15,6 +15,7 @@
           \once \override AccidentalSuggestion #'avoid-slur = #'outside 
           \once \set suggestAccidentals = ##t
           b
+          \footnote #'(-0.5 . 2) "lié?" c ees
         } >>
         
       }

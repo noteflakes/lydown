@@ -271,7 +271,7 @@ module Lydown::Parsing
     module Argument
       def to_stream(cmd)
         if text_value =~ /^"(.+)"$/
-          value = $1
+          value = $1.unescape
         else
           value = text_value
         end
