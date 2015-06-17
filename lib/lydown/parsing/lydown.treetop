@@ -45,7 +45,7 @@ grammar Lydown
   end
   rule event
     (inline_command / inline_lyrics / voice_selector / barline / duration / 
-      note / standalone_figures / rest / silence / phrasing / tie) white_space*
+      chord / note / standalone_figures / rest / silence / phrasing / tie) white_space*
   end
   rule barline
     ('?|' / ':|][|:' / '[|:' / ':|]' / [\|\.\:]+) <Barline>
@@ -87,6 +87,9 @@ grammar Lydown
   end
   rule note
     note_head octave* accidental_flag? figures? expression* <Note>
+  end
+  rule chord
+    '<' note white_space* (note white_space*)* '>' expression* <Chord>
   end
   rule expression
     (expression_shorthand / expression_longhand / string) <Note::Expression>

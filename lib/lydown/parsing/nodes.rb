@@ -114,6 +114,16 @@ module Lydown::Parsing
       end
     end
   end
+  
+  module Chord
+    include Root
+    
+    def to_stream(stream)
+      chord = {type: :chord, notes: []}
+      _to_stream(self, chord[:notes])
+      stream << chord
+    end
+  end
 
   module FiguresComponent
     def to_stream(note)

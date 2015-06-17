@@ -106,4 +106,8 @@ RSpec.describe Lydown do
   it "correctly handles multiple voices" do
     verify_example('voices')
   end
+
+  it "correctly handles chords" do
+    verify_example('chords')
+  end
 end
