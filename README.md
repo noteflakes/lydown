@@ -94,6 +94,10 @@ Notes can be repeated using the <code>@</code> placeholder:
 
 (The repeating note placeholder is useful when entering repeated notes with accidentals).
 
+Chords are written using angled brackets, like in lilypond:
+
+    (2<fd>4<ge>) => <f d>2( <g e>4)
+
 ### Rests
 
 Normal rests are written [like in lilypond](http://www.lilypond.org/doc/v2.18/Documentation/notation/writing-rests#rests):

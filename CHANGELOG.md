@@ -1,3 +1,9 @@
+## Version 0.6.2 2015-06-17
+
+- Add support for escaped quotes in commands and note markup.
+- Fix full bar rests after duration macro.
+- Add support for chords.
+
 ## Version 0.6.1 2015-06-13
 
 - Fix using lyrics with multiple voices.
