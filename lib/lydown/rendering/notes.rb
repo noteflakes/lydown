@@ -32,11 +32,16 @@ module Lydown::Rendering
     def self.calc_accidentals_map(accidentals)
       accidentals.inject({}) { |h, a| h[a[0]] = (a[1] == '+') ? 1 : -1; h}
     end
+    
+    ACCIDENTAL_VALUES = {
+      '+' => 1,
+      '-' => -1
+    }
 
     def self.lilypond_note_name(note, key_signature = 'c major')
       value = 0
       # accidental value from note
-      note = note.gsub(/[\-\+]/) { |c| value += (c == '+') ? 1 : -1; '' }
+      note = note.gsub(/[\-\+]/) { |c| value += ACCIDENTAL_VALUES[c]; '' }
       # add key signature value
       value += accidentals_for_key_signature(key_signature)[note] || 0
 
