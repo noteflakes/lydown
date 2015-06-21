@@ -34,14 +34,22 @@ module Lydown::Rendering
     end
 
     def translate
+      # close tuplet braces
+      if @work['process/tuplet_mode']
+        TupletDuration.emit_tuplet_end(@work)
+        @work['process/tuplet_mode'] = nil
+      end
+
       if next_event && next_event[:type] == :stand_alone_figures
         @work['process/figures_duration_value'] = "#{@event[:value]}*#{@event[:fraction]}"
       else
-        @work['process/duration_values'] = [@event[:value]]
+        value = LILYPOND_DURATIONS[@event[:value]] || @event[:value]
+
+        @work['process/duration_values'] = [value]
         @work['process/last_value'] = nil
         @work['process/tuplet_mode'] = true
-
-        group_value = @event[:value].to_i / @event[:group_length].to_i
+        
+        group_value = value.to_i / @event[:group_length].to_i
         @work.emit(:music, "\\tuplet #{@event[:fraction]} #{group_value} { ")
       end
     end
