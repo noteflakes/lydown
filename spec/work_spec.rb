@@ -115,4 +115,13 @@ RSpec.describe Lydown::Work do
   it "handles empty staves setting" do
     verify_example('empty_staves', nil, mode: :score)
   end
+  
+  it "preserves common settings (work, movement files) between parts and movements" do
+    work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'fullwork_settings'))
+    
+    ly = work.to_lilypond(mode: :score).strip_whitespace
+    ex = load_example('fullwork_settings.ly', strip: true)
+    expect(ly).to eq(ex)
+
+  end
 end

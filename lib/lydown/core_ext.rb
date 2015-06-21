@@ -11,13 +11,16 @@ class Hash
   end
 
   def deep_merge!(hash)
-    hash.keys.each do |key|
-      if hash[key].is_a? Hash and self[key].is_a? Hash
-        self[key] = self[key].deep_merge!(hash[key])
-        next
+    unless self.hash == hash.hash
+      hash.each do |key, value|
+        svalue = self.old_get(key)
+      
+        if (value.is_a? Hash) && (svalue.is_a? Hash)
+          old_set(key, svalue.deep_merge(value))
+        else
+          old_set(key, value)
+        end
       end
-
-      self[key] = hash[key]
     end
 
     self.deep = true
@@ -95,6 +98,10 @@ class Hash
   def deep!
     @deep = true
     self
+  end
+  
+  def is_deep?
+    !!@deep
   end
 end
 

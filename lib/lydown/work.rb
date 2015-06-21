@@ -26,7 +26,7 @@ module Lydown
 
     def reset_context(mode)
       case mode
-      when :work, :movement
+      when :work
         @context[:time] = '4/4'
         @context[:tempo] = nil
         @context[:cadenza_mode] = nil
@@ -34,6 +34,8 @@ module Lydown
         @context[:pickup] = nil
         @context[:beaming] = nil
         @context[:end_barline] = nil
+        @context[:part] = nil
+      when :movement
         @context[:part] = nil
       end
       if @context['process/tuplet_mode']
@@ -84,7 +86,7 @@ module Lydown
         part = @context[:part]
         path = "movements/#{movement}/parts/#{part}/#{subpath}"
       end
-      @context[path] ||= ''
+      @context[path] ||= (subpath == :settings) ? {} : ''
     end
 
     def to_lilypond(opts = {})
@@ -157,6 +159,39 @@ module Lydown
     def []=(path, value)
       context[path] = value
     end
+    
+    # Helper method to preserve context while processing a file or directory.
+    # This method is called with a block. After the block is executed, the 
+    # context is restored.
+    def preserve_context
+      old_context = @context
+      new_context = old_context.deep_merge({})
+      @context = new_context
+      yield
+    ensure
+      @context = old_context
+      if new_context['movements']
+        if @context['movements']
+          @context['movements'].deep_merge! new_context['movements']
+        else
+          @context['movements'] = new_context['movements']
+        end
+        if @context['movements/01-intro/parts/violino1/settings'] && @context['movements/01-intro/parts/violino1/settings'].keys.include?('pickup')
+        end
+      end
+    end
+    
+    def set_part_context(part)
+      movement = @context[:movement]
+      path = "movements/#{movement}/parts/#{part}/settings"
+
+      settings = {}.deep!
+      settings[:pickup] = @context[:pickup]
+      settings[:key] = @context[:key]
+      settings[:tempo] = @context[:tempo]
+      
+      @context[path] = settings
+    end
 
     def process_work_files
       path = @context[:path]
@@ -174,32 +209,34 @@ module Lydown
     DEFAULT_BASENAMES = %w{work movement}
 
     def process_directory(path, recursive = true)
-      # process work code
-      process_lydown_file(File.join(path, 'work.ld'))
+      preserve_context do
+        # process work code
+        process_lydown_file(File.join(path, 'work.ld'))
+        # process movement specific code
+        process_lydown_file(File.join(path, 'movement.ld'))
 
-      # process movement specific code
-      process_lydown_file(File.join(path, 'movement.ld'))
-
-      # Iterate over sorted directory entries
-      Dir["#{path}/*"].entries.sort.each do |entry|
-        if File.file?(entry) && (entry =~ /\.ld$/)
-          basename = File.basename(entry, '.*')
-          unless DEFAULT_BASENAMES.include?(basename)
-            part_code = [{type: :setting, key: 'part', value: basename}]
-            lydown_code = part_code + LydownParser.parse(IO.read(entry))
-            process(lydown_code)
+        # Iterate over sorted directory entries
+        Dir["#{path}/*"].entries.sort.each do |entry|
+          if File.file?(entry) && (entry =~ /\.ld$/)
+            part = File.basename(entry, '.*')
+            unless DEFAULT_BASENAMES.include?(part)
+              preserve_context do
+                process_lydown_file(entry, [
+                  {type: :setting, key: 'part', value: part}
+                ])
+              end
+            end
+          elsif File.directory?(entry) && recursive
+            movement = File.basename(entry)
+            process([{type: :setting, key: 'movement', value: movement}])
+            process_directory(entry, false)
           end
-        elsif File.directory?(entry) && recursive
-          basename = File.basename(entry)
-          # set movement
-          process([{type: :setting, key: 'movement', value: basename}])
-          process_directory(entry, false)
         end
       end
     end
 
-    def process_lydown_file(path)
-      process LydownParser.parse(IO.read(path)) if File.file?(path)
+    def process_lydown_file(path, prefix = [])
+      process(prefix + LydownParser.parse(IO.read(path))) if File.file?(path)
     end
   end
 end

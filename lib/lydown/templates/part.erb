@@ -11,20 +11,26 @@
   
 
   score_mode = self['render_opts/mode'] == :score
+  
+  part['settings'] ||= {
+    'pickup' => @context[:pickup],
+    'key' => @context[:key],
+    'tempo' => @context[:tempo]
+  }.deep!
 
   clef = Lydown::Rendering::Staff.clef(name)
   beaming_mode = Lydown::Rendering::Staff.beaming_mode(name)
-  partial = self[:pickup] ? "\\partial #{self[:pickup]}" : ""
-
+  partial = part['settings'][:pickup] ? "\\partial #{part['settings'][:pickup]}" : ""
+  
   end_barline = Lydown::Rendering::Staff.end_barline(self, movement)
 
-  cadenza = self[:time] == 'unmetered'
+  cadenza = part['settings'][:time] == 'unmetered'
 %>
 
 <<
 
-<% if self[:tempo] %>
-  \tempo "<%= self[:tempo] %>"
+<% if part['settings'][:tempo] %>
+  \tempo "<%= part['settings'][:tempo] %>"
 <% end %>
 
 \new Staff = <%= staff_id %> \with {

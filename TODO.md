@@ -1,3 +1,5 @@
+- future feature: accept and parse accidentals #ßh (and the corresponding unicode musical characters).
+
 - footnote syntax:
 
   cd [^"Is this note connected to the one before?"] d
@@ -13,7 +15,7 @@
 
   lydown mvmt 07-choral 2flutes 2oboes 3strings 2gambas choir* continuo
   
-- refactor binary script
+- refactor binary script (using _Thor_?)
 
   - extract command_line behavior into lib/lydown/cli.rb
   - put proofing mode into lib/lydown/cli/proof.rb
