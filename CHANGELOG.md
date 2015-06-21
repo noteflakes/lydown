@@ -1,3 +1,8 @@
+## Version 0.6.3 2015-06-22
+
+- Preserve settings in work.ld and movement.ld when processing files in subdirectories.
+- Fix 16th note tuplets.
+
 ## Version 0.6.2 2015-06-17
 
 - Add support for escaped quotes in commands and note markup.
