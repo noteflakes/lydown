@@ -1,4 +1,9 @@
-## Version 0.6.3 2015-06-22
+## Version 0.6.4 2015-06-22
+
+- Add support for grace notes (\grace, \appoggiatura, \acciaccatura).
+
+
+## Version 0.6.3 2015-06-21
 
 - Preserve settings in work.ld and movement.ld when processing files in subdirectories.
 - Fix 16th note tuplets.
