@@ -44,7 +44,7 @@ grammar Lydown
     [ \t]+
   end
   rule event
-    (inline_command / inline_lyrics / voice_selector / barline / duration / 
+    (inline_command / inline_lyrics / voice_selector / barline / grace_duration / duration / 
       chord / note / standalone_figures / rest / silence / phrasing / tie) white_space*
   end
   rule barline
@@ -54,6 +54,12 @@ grammar Lydown
   end
   rule duration
     tuplet_value / duration_value / duration_macro
+  end
+  rule grace_duration
+    '$' grace_duration_type* number <GraceDuration>
+  end
+  rule grace_duration_type
+    [\/\^]
   end
   rule tuplet_value
     number '%' (number '/' number)? <TupletValue>

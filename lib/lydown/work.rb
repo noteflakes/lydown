@@ -41,6 +41,9 @@ module Lydown
       if @context['process/tuplet_mode']
         Lydown::Rendering::TupletDuration.emit_tuplet_end(self)
       end
+      if @context['process/grace_mode']
+        Lydown::Rendering::Grace.emit_grace_end(self)
+      end
       
       if @context['process/voice_selector']
         Lydown::Rendering::VoiceSelect.render_voices(self)

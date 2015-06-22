@@ -77,6 +77,20 @@ module Lydown::Parsing
     end
   end
 
+  module GraceDuration
+    GRACE_KIND = {
+      nil => :grace,
+      '/' => :acciaccatura,
+      '^' => :appoggiatura
+    }
+    
+    def to_stream(stream)
+      if text_value =~ /^\$([\/\^])?(\d+)$/
+        stream << {type: :grace, value: $2, kind: GRACE_KIND[$1]}
+      end
+    end
+  end
+
   module Note
     include Root
 

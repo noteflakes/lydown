@@ -15,6 +15,11 @@ module Lydown::Rendering
         @work['process/tuplet_mode'] = nil
       end
 
+      if @work['process/grace_mode']
+        Grace.emit_grace_end(@work)
+        @work['process/grace_mode'] = nil
+      end
+
       value = @event[:value].sub(/^[0-9]+/) {|m| LILYPOND_DURATIONS[m] || m}
 
       if next_event && next_event[:type] == :stand_alone_figures
@@ -52,6 +57,28 @@ module Lydown::Rendering
         group_value = value.to_i / @event[:group_length].to_i
         @work.emit(:music, "\\tuplet #{@event[:fraction]} #{group_value} { ")
       end
+    end
+  end
+  
+  class Grace < Base
+    def self.emit_grace_end(work)
+      work.emit(:music, '} ')
+    end
+    
+    def translate
+      # close tuplet braces
+      if @work['process/grace_mode']
+        Grace.emit_grace_end(@work)
+        @work['process/grace_mode'] = nil
+      end
+
+      value = LILYPOND_DURATIONS[@event[:value]] || @event[:value]
+
+      @work['process/duration_values'] = [value]
+      @work['process/last_value'] = nil
+      @work['process/grace_mode'] = true
+      
+      @work.emit(:music, "\\#{@event[:kind]} { ")
     end
   end
 

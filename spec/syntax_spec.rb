@@ -110,4 +110,8 @@ RSpec.describe Lydown do
   it "correctly handles chords" do
     verify_example('chords')
   end
+
+  it "correctly handles grace notes" do
+    verify_example('grace_notes')
+  end
 end

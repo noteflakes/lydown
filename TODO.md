@@ -119,17 +119,6 @@
   =figures
   4<6>s<8>
 
-- multiple voices
-
-  1: 8r6rg8.e6f8gc,f6ed 2: 6dc8d6&b8c6&b8c6&8.b u:
-
-  //=>
-  <<
-    {r8 r6 g ...}
-    \\
-    {d6 c d8 ...}
-  >>
-
 - keyboard music:
 
   r: ...
@@ -151,13 +140,9 @@
       { c4 d8 e ...}
     >>
 
-- chords
-
-  1<ace>2<ace>4<face>8.<ac>6<gce>
-  // with expression
-  1<ace>\prall\fermata 2<ace>.^ 4<face>... 8.<ac>\+\- 6<gce>\fermata\turn
-
 - grace notes
+
+  8r$/6cd8e6[dc][ba][ge]8frd
 
   $6gab4c //=> \grace {g16 a b} 4c
   $^8d4c //=> \appoggiatura d8 c4
