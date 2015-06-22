@@ -217,7 +217,7 @@ EOF
         event[:head], event[:octave], event[:accidental_flag],
         lydown_phrasing_close(event),
         event[:figures] ? "<#{event[:figures].join}>" : '',
-        event[:expressions] ? event[:expressions].join : ''
+        event[:expressions] ? event[:expressions].join + ' ' : ''
       ]
 
       # replace place holder and repeaters in macro group with actual note

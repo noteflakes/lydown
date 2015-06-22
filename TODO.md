@@ -10,6 +10,23 @@
   // Change the footnote number/sign (and string escaping)
   cd [^*"Is this \"note\" connected to the one before?"] d
   
+- instead of command line modes, or in addition, an interactive mode:
+
+  BWV247 sharon$ lydown
+  Working directory: ~/repo/music/bach/BWV247
+  > add mvmt 21-aria 2violins 2gambas alto continuo # add movement
+  OK
+  > watch 21-aria # watch directory
+  ...
+  ^C
+  > cd 21-aria # go into subdirectory
+  > watch # watch current directory
+  ...
+  ^C
+  > score # compile and open score PDF
+  > parts # compile and open part PDFs
+  > gamba1 # compile and open gamba1 part
+  > midi # compile and play midi
 
 - a command line mode to create works and movements
 

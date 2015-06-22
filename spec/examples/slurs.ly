@@ -12,6 +12,8 @@
           c8 d e( f) g a( b c)
 
           d16-. e( fis d) e-. fis( g ees)
+          
+          d(\p c) d( b)
         } >>
       }
     }
