@@ -20,7 +20,7 @@ def verify_example(name, result_name = nil, opts = {})
   work = Lydown::Work.new
   work['end_barline'] = 'none'
   work.process(lydown)
-  ly = work.to_lilypond(opts).strip_whitespace
+  ly = work.to_lilypond(opts.merge(no_lib: true)).strip_whitespace
 
   ex = load_example("#{result_name || name}.ly", strip: true)
   expect(ly).to eq(ex)

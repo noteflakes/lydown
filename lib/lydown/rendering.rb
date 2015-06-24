@@ -46,3 +46,5 @@ module Lydown::Rendering
     end
   end
 end
+
+LY_LIB_DIR = File.join(File.dirname(__FILE__), 'rendering')

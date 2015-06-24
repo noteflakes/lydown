@@ -123,6 +123,9 @@ parts:
   viola-da-gamba2:
     clef: bass
     midi_instrument: viola
+  gamba:
+    clef: alto
+    midi_instrument: viola
   gamba1:
     clef: alto
     midi_instrument: viola
@@ -174,11 +177,11 @@ parts:
     midi_instrument: flute
 score:
   order:
-    - [flauto1, flauto2, flauto3, flute1, flute2, flute3]
-    - [oboe1, oboe2, oboe3]
-    - [violino1, violino2, violino3, violin1, violin2, violin3]
+    - [flute, flauto1, flauto2, flauto3, flute1, flute2, flute3]
+    - [oboe, oboe1, oboe2, oboe3]
+    - [violino, violino1, violino2, violino3, violin1, violin2, violin3]
     - viola
-    - [gamba1, gamba2]
+    - [gamba, gamba1, gamba2]
     - [soprano, alto, tenore, basso]
     - [soprano1, alto1, tenore1, basso1]
     - [soprano2, alto2, tenore2, basso2]

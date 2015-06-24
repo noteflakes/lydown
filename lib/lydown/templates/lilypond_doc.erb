@@ -1,5 +1,9 @@
 \version "2.18.2"
 
+<% unless self['render_opts']['no_lib'] %>
+\include "<%= File.join(LY_LIB_DIR, 'lib.ly') %>"
+<% end %>
+
 <% if self['layout'] %>
 \layout {
 }
