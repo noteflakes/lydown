@@ -1,3 +1,10 @@
+## Version 0.6.5 2015-06-24
+
+- Include a "standard" [lilypond lib](https://github.com/ciconia/lydown/blob/master/lib/lydown/rendering/lib.ly) in rendered lilypond code.
+- Add support for partial rendering of duration macros. This allows the user to abandon the duration macro without writing a complete group, e.g. <code>{8____}cd4e<\code>
+- Add support for commands while using duration macros.
+- Fix usage of notes with expressions in duration macros.
+
 ## Version 0.6.4 2015-06-22
 
 - Add support for grace notes (\grace, \appoggiatura, \acciaccatura).
