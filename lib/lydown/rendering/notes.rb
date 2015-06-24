@@ -245,6 +245,16 @@ EOF
         @work['process/macro_group'] = nil
       end
     end
+    
+    def add_macro_event(code)
+      case @work['process/macro_group']
+      when nil
+        @work['process/macro_group'] = @work['process/duration_macro'].clone
+        @work['process/macro_group'].insert(0, " #{code} ")
+      when /_/
+        @work['process/macro_group'].sub!(/([_∞])/, " #{code} \\0")
+      end
+    end
 
     LILYPOND_EXPRESSIONS = {
       '_' => '--',

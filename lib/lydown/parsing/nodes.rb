@@ -275,7 +275,7 @@ module Lydown::Parsing
   module Command
     include Root
     def to_stream(stream)
-      cmd = {type: :command}
+      cmd = {type: :command, raw: text_value}
       cmd[:once] = true if text_value =~ /^\\\!/
       _to_stream(self, cmd)
       stream << cmd

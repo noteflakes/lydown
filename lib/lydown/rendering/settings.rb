@@ -1,5 +1,7 @@
 module Lydown::Rendering
   class Setting < Base
+    include Notes
+    
     SETTING_KEYS = [
       'key', 'time', 'pickup', 'clef', 'part', 'movement', 'tempo',
       'accidentals', 'beams', 'end_barline', 'macros', 'empty_staves'
@@ -16,6 +18,11 @@ module Lydown::Rendering
     }
 
     def translate
+      # if setting while doing a macro, insert it into the current macro group
+      if @work['process/duration_macro'] && @event[:raw]
+        return add_macro_event(@event[:raw])
+      end
+      
       key = @event[:key]
       value = @event[:value]
       level = @event[:level] || 0

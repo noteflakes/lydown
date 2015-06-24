@@ -12,6 +12,9 @@
           a8. g16[ f8] ees'
           c c c c d d d d R1*1
           d16(\p c) d( b)
+          
+          %{command in the middle of a macro group%}
+          e8 \clef "bass" e,, e e' e d16 c
         } >>
       }
     }
