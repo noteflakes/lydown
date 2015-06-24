@@ -15,6 +15,9 @@
           
           %{command in the middle of a macro group%}
           e8 \clef "bass" e,, e e' e d16 c
+
+          %{partial macro group%}
+          b8 c16 d4( e)
         } >>
       }
     }

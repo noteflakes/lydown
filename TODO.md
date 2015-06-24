@@ -1,11 +1,3 @@
-- commands, other stuff, while doing macro durations:
-
-  {8_____6__} e \clef:bass e,,ee'edc
-  
-- partial macro groups
-
-   {8____} cd6ef => c8 d e16 f
-
 - future feature: accept and parse accidentals #ßh (and the corresponding unicode musical characters).
 
 - footnote syntax:

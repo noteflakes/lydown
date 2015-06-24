@@ -48,6 +48,8 @@ module Lydown
       if @context['process/voice_selector']
         Lydown::Rendering::VoiceSelect.render_voices(self)
       end
+      
+      Lydown::Rendering::Notes.cleanup_duration_macro(self)
 
       # reset processing variables
       @context['process'] = {

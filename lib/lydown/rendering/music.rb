@@ -9,6 +9,8 @@ module Lydown::Rendering
 
   class Duration < Base
     def translate
+      Notes.cleanup_duration_macro(@work)
+
       # close tuplet braces
       if @work['process/tuplet_mode']
         TupletDuration.emit_tuplet_end(@work)
@@ -39,6 +41,8 @@ module Lydown::Rendering
     end
 
     def translate
+      Notes.cleanup_duration_macro(@work)
+
       # close tuplet braces
       if @work['process/tuplet_mode']
         TupletDuration.emit_tuplet_end(@work)
@@ -226,6 +230,8 @@ module Lydown::Rendering
 
   class DurationMacro < Base
     def translate
+      Notes.cleanup_duration_macro(@work)
+      
       if @event[:macro] =~ /^[a-zA-Z_]/
         macro = @work['macros'][@event[:macro]]
         if macro

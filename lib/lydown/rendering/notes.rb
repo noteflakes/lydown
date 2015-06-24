@@ -233,17 +233,38 @@ EOF
 
       # if group is complete, compile it just like regular code
       unless @work['process/macro_group'].include?('_')
-        # stash macro, in order to compile macro group
+        code = LydownParser.parse(@work['process/macro_group'])
+
+        # stash macro
         macro = @work['process/duration_macro']
         @work['process/duration_macro'] = nil
+        @work['process/macro_group'] = nil
 
-        code = LydownParser.parse(@work['process/macro_group'])
         @work.process(code, no_reset: true)
 
         # restore macro
         @work['process/duration_macro'] = macro
-        @work['process/macro_group'] = nil
       end
+    end
+    
+    # emits the current macro group up to the first placeholder character.
+    # this method is called 
+    def self.cleanup_duration_macro(work)
+      return unless work['process/macro_group']
+      
+      # truncate macro group up until first placeholder
+      group = work['process/macro_group'].sub(/_.*$/, '')
+      
+      # stash macro, in order to compile macro group
+      macro = work['process/duration_macro']
+      work['process/duration_macro'] = nil
+      work['process/macro_group'] = nil
+
+      code = LydownParser.parse(group)
+      work.process(code, no_reset: true)
+
+      # restore macro
+      work['process/duration_macro'] = macro
     end
     
     def add_macro_event(code)
