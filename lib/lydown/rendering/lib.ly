@@ -30,3 +30,20 @@ dalsegnoadlib = {
   \once \override Score.RehearsalMark #'font-size = #-2
   \mark \markup { \musicglyph #"scripts.segno" ad lib }
 }
+
+editF = \markup { \center-align \concat { \bold { \italic ( }
+  \dynamic f \bold { \italic ) } } }
+editP = \markup { \center-align \concat { \bold { \italic ( }
+  \dynamic p \bold { \italic ) } } }
+editPP = \markup { \center-align \concat { \bold { \italic ( }
+  \dynamic pp \bold { \italic ) } } }
+  
+doux = \markup { \center-align \bold { \italic doux }}
+fort = \markup { \center-align \bold { \italic fort }}
+
+ten = \markup { \italic ten. }
+
+ficta = {
+  \once \override AccidentalSuggestion #'avoid-slur = #'outside
+  \once \set suggestAccidentals = ##t
+}

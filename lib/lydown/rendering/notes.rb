@@ -131,19 +131,14 @@ module Lydown::Rendering
       @work.emit(event[:stream] || :music, lilypond_chord(event, notes, options))
     end
     
-    FICTA_CODE = <<EOF
-      \\once \\override AccidentalSuggestion #'avoid-slur = #'outside
-      \\once \\set suggestAccidentals = ##t 
-EOF
-
     def lilypond_note(event, options = {})
       head = Accidentals.translate_note_name(@work, event[:head])
       if options[:head_only]
         head
       else
-        if event[:accidental_flag] == '^'
-          accidental_flag = ''
-          prefix =  FICTA_CODE
+        if event[:accidental_flag] =~ /\^/
+          accidental_flag = event[:accidental_flag].gsub('^', '')
+          prefix = '\ficta '
         else
           accidental_flag = event[:accidental_flag]
           prefix = ''

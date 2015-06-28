@@ -24,9 +24,7 @@
           ges,4 a'''2 b'4
           %{ficta%}
           bes
-          \once \override AccidentalSuggestion #'avoid-slur = #'outside
-          \once \set suggestAccidentals = ##t
-          ces bes2
+          \ficta ces bes2 \ficta g!4
         } >>
       }
     }

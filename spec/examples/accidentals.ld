@@ -11,4 +11,4 @@ c+'!e? 8.g!
 // alternative accidental/octave order
 4g,-2a'''+4b+'
 // ficta
-4bc-^2b
+4bc-^2b 4g!^
