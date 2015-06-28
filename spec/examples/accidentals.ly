@@ -25,6 +25,18 @@
           %{ficta%}
           bes
           \ficta ces bes2 \ficta g!4
+
+          \key d \major
+          dis des fisis f f
+          
+          \key bes \major
+          dis e eeses e
+          
+          \key fis \minor
+          fisis
+          
+          \key ees \major
+          eeses
         } >>
       }
     }

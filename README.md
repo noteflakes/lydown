@@ -112,14 +112,18 @@ Full bar rests are [similar to lilypond](http://www.lilypond.org/doc/v2.18/Docum
 
 ### Accidentals
 
-Accidentals are entered using + and -
+Accidentals can be entered using + and -
 
-    8cgb-c2a => c8 g bb c a2
+    8cgb-c2a => c8 g bes c a2
+
+But can also be entered using the characters # for sharp, ß for flat and h for natural:
+
+    c#dßeh => cis des e
 
 In lydown notes follow the key signature by default:
 
     - key: g major
-    8g6fedcba2g => g8 fs16 e d c b a g2
+    ff#fhfßd#bß => fis fisis f f dis bes
 
 The accidental mode can be changed by specifiying the manual accidental mode:
 

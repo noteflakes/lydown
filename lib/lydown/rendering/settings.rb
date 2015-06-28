@@ -69,7 +69,7 @@ module Lydown::Rendering
     def check_setting_value(key, value)
       if key == 'key'
         # process shorthand notation
-        if value =~ /^([a-gA-G])[\+\-]*$/
+        if value =~ /^([a-gA-G])[\+\-#ß]*$/
           mode = $1.downcase == $1 ? 'minor' : 'major'
           value = "#{value.downcase} #{mode}"
         end
@@ -104,7 +104,7 @@ module Lydown::Rendering
         e = next_event
         return if e && (e[:type] == :setting) && (e[:key] == 'key')
 
-        unless value =~ /^([a-g][\+\-]*) (major|minor)$/
+        unless value =~ /^([A-Ga-g][\+\-#ß]*) (major|minor)$/
           raise LydownError, "Invalid key signature #{value.inspect}"
         end
 

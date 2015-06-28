@@ -110,7 +110,7 @@ grammar Lydown
   rule string
     '"' ('\"' / !'"' .)* '"'
   end
-  rule figures # bass figures
+  rule figures
     '<' figures_component? (white_space? figures_component)* '>'
   end
   rule figures_component
@@ -132,7 +132,7 @@ grammar Lydown
     [a-g@] octave* accidental* <Note::Head>
   end
   rule accidental
-    [\+\-]+
+    [\+\-#ßh]+
   end
   rule octave
     [\,']+ <Note::Octave>

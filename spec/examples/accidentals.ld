@@ -12,3 +12,11 @@ c+'!e? 8.g!
 4g,-2a'''+4b+'
 // ficta
 4bc-^2b 4g!^
+- key: D
+d#dßf#fhfß
+- key: Bß
+d#eheße#
+- key: f#
+f#
+- key: Eß
+eß

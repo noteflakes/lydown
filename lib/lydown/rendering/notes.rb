@@ -11,7 +11,13 @@ module Lydown::Rendering
       KEY_ACCIDENTALS[signature] ||= calc_accidentals_for_key_signature(signature)
     end
 
+    SIGNATURE_ACCIDENTAL_TRANSLATION = {
+      '#' => '+',
+      'ß' => '-'
+    }
+
     def self.calc_accidentals_for_key_signature(signature)
+      signature = signature.gsub(/[#ß]/) {|c| SIGNATURE_ACCIDENTAL_TRANSLATION[c]}
       unless signature =~ /^([a-g][\+\-]*) (major|minor)$/
         raise "Invalid key signature #{signature.inspect}"
       end
@@ -35,13 +41,19 @@ module Lydown::Rendering
     
     ACCIDENTAL_VALUES = {
       '+' => 1,
-      '-' => -1
+      '-' => -1,
+      '#' => 1,
+      'ß' => -1
     }
 
     def self.lilypond_note_name(note, key_signature = 'c major')
+      # if the natural sign (h) is used, no need to calculate the note name
+      return $1 if note =~ /([a-g])h/
+        
       value = 0
       # accidental value from note
-      note = note.gsub(/[\-\+]/) { |c| value += ACCIDENTAL_VALUES[c]; '' }
+      note = note.gsub(/[\-\+#ß]/) { |c| value += ACCIDENTAL_VALUES[c]; '' }
+        
       # add key signature value
       value += accidentals_for_key_signature(key_signature)[note] || 0
 

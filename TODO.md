@@ -1,5 +1,3 @@
-- future feature: accept and parse accidentals #ßh (and the corresponding unicode musical characters).
-
 - footnote syntax:
 
   cd [^"Is this note connected to the one before?"] d
