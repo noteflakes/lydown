@@ -1,12 +1,26 @@
 - footnote syntax:
 
-  cd [^"Is this note connected to the one before?"] d
+  cd ["Is this note connected to the one before?"] e
   
   // override position (default is 0 . 1.5)
-  cd [^"Is this note connected to the one before?"(-1 . 2)] d
+  cd ["Is this note connected to the one before?"(-1 . 2)] e
   
-  // Change the footnote number/sign (and string escaping)
-  cd [^*"Is this \"note\" connected to the one before?"] d
+  // Change the footnote number/sign, string escaping
+  cd [*:"Is this \"note\" connected to the one before?"] e
+  
+  // footnote references, and footnotes at end of doc (or apart from music)
+  cd [^] e
+  ...
+  // some markup
+  ["Is this _place_ free?"]
+  
+- repeated chords
+
+  4<ce>2@
+
+- paralell chords
+
+  {_@^8} 8cd2e8@f
   
 - instead of command line modes, or in addition, an interactive mode:
 

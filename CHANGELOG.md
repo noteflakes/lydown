@@ -1,3 +1,9 @@
+## Version 0.7.0 2015-06-30
+
+- Major refactor of command line code. The lydown command now correctly takes into account parts and movements filters, and correctly generates an output file even if there is a subdirectory with the same name.
+- Accept accidentals characters #ßh, to allow for a more natural feel.
+- Allow usage of ficta for cautionary/courtesy accidental.
+
 ## Version 0.6.5 2015-06-24
 
 - Include a "standard" [lilypond lib](https://github.com/ciconia/lydown/blob/master/lib/lydown/rendering/lib.ly) in rendered lilypond code.
