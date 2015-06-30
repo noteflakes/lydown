@@ -18,8 +18,7 @@ module Lydown
     def initialize(opts = {})
       @context = {}.deep!
       reset_context(:work)
-
-      opts.each {|k, v| @context[k] = v}
+      @context[:options] = opts.deep_clone
 
       process_work_files if opts[:path]
     end
@@ -199,7 +198,7 @@ module Lydown
     end
 
     def process_work_files
-      path = @context[:path]
+      path = @context[:options][:path]
       path += '.ld' if File.file?(path + '.ld')
 
       if File.file?(path)
@@ -219,12 +218,16 @@ module Lydown
         process_lydown_file(File.join(path, 'work.ld'))
         # process movement specific code
         process_lydown_file(File.join(path, 'movement.ld'))
-
+        
+        part_filter = @context[:options][:parts]
+        mvmt_filter = @context[:options][:movements]
+        
         # Iterate over sorted directory entries
         Dir["#{path}/*"].entries.sort.each do |entry|
           if File.file?(entry) && (entry =~ /\.ld$/)
             part = File.basename(entry, '.*')
-            unless DEFAULT_BASENAMES.include?(part)
+            skip = part_filter && !part_filter.include?(part)
+            unless DEFAULT_BASENAMES.include?(part) || skip
               preserve_context do
                 process_lydown_file(entry, [
                   {type: :setting, key: 'part', value: part}
@@ -233,8 +236,11 @@ module Lydown
             end
           elsif File.directory?(entry) && recursive
             movement = File.basename(entry)
-            process([{type: :setting, key: 'movement', value: movement}])
-            process_directory(entry, false)
+            skip = mvmt_filter && !mvmt_filter.include?(movement)
+            unless skip
+              process([{type: :setting, key: 'movement', value: movement}])
+              process_directory(entry, false)
+            end
           end
         end
       end
