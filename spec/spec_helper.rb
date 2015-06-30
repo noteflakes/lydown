@@ -26,3 +26,15 @@ def verify_example(name, result_name = nil, opts = {})
   expect(ly).to eq(ex)
   # expect {Lydown::Lilypond.compile(ly)}.not_to raise_error
 end
+
+require 'fileutils'
+
+# Install hooks to create and delete tmp directory
+RSpec.configure do |config|
+  config.before(:all) do
+    FileUtils.mkdir('spec/tmp') rescue nil
+  end
+  config.after(:all) do
+    FileUtils.rmdir('spec/tmp') rescue nil
+  end
+end

@@ -18,7 +18,7 @@ RSpec.describe Lydown::Work do
     work = Lydown::Work.new
     work.process(lydown_code)
     ly = work.to_lilypond(no_lib: true)
-    expect {Lydown::Lilypond.compile(ly, output_filename: 'test')}.not_to raise_error
+    expect {Lydown::Lilypond.compile(ly, output_filename: 'spec/tmp/test')}.not_to raise_error
   end
 
   it "handles multiple parts" do
