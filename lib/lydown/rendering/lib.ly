@@ -47,3 +47,20 @@ ficta = {
   \once \override AccidentalSuggestion #'avoid-slur = #'outside
   \once \set suggestAccidentals = ##t
 }
+
+%{
+  http://www.lilypond.org/doc/v2.18/Documentation/snippets/editorial-annotations#editorial-annotations-adding-links-to-objects
+%}
+#(define (add-link url-strg)
+  (lambda (grob)
+    (let* ((stil (ly:grob-property grob 'stencil)))
+      (if (ly:stencil? stil)
+        (begin
+          (let* (
+             (x-ext (ly:stencil-extent stil X))
+             (y-ext (ly:stencil-extent stil Y))
+             (url-expr (list 'url-link url-strg `(quote ,x-ext) `(quote ,y-ext)))
+             (new-stil (ly:stencil-add (ly:make-stencil url-expr x-ext y-ext) stil)))
+          (ly:grob-set-property! grob 'stencil new-stil)))
+        #f))))
+        
