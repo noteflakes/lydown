@@ -29,14 +29,14 @@
 
 <<
 
-<% if part['settings'][:tempo] %>
-  \tempo "<%= part['settings'][:tempo] %>"
-<% end %>
-
 \new Staff = <%= staff_id %> \with {
 }
 
 \context Staff = <%= staff_id %> {
+  <% if part['settings'][:tempo] %>
+    \tempo "<%= part['settings'][:tempo] %>"
+  <% end %>
+
 <% if score_mode %>\set Staff.instrumentName = #"<%= title %>"<% end %>
   \relative c {
     <% if clef %>
