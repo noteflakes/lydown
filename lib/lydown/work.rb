@@ -231,7 +231,7 @@ module Lydown
               preserve_context do
                 process_lydown_file(entry, [
                   {type: :setting, key: 'part', value: part}
-                ])
+                ], line_range: @context[:options][:line_range])
               end
             end
           elsif File.directory?(entry) && recursive
@@ -245,9 +245,47 @@ module Lydown
         end
       end
     end
+    
+    SKIP_ON = "\\set:\"Score.skipTypesetting = ##t\""
+    SHOW_BAR_NUMBERS = "\\set:\"Score.barNumberVisibility = #all-bar-numbers-visible\" |"
+    SKIP_OFF = "\\set:\"Score.skipTypesetting = ##f\""
+    
+    HIGHLIGHT = "\\large \\override:\"NoteHead.color = #red\""
+    NORMAL = "\\large \\override:\"NoteHead.color = #black\""
+    
+    def insert_skip_markers(content, range)
+      unless range.first.nil?
+        lines = content.lines
+        start = range.first - 2; start = 0 if start < 0
+        stop = range.last + 2; stop = lines.size if stop > lines.size
+        
+        lines.insert(stop, "| #{SKIP_ON}")
+        lines.insert(range.last + 1, NORMAL)
+        if start > 0
+          lines.insert(range.first, HIGHLIGHT)
+          lines.insert(start, SHOW_BAR_NUMBERS)
+          lines.insert(start, NORMAL)
+          lines.insert(start, SKIP_OFF)
+          lines.insert(0, SKIP_ON)
+        else
+          lines.insert(0, SHOW_BAR_NUMBERS)
+        end
+        
+        lines.join("\n")
+      else
+        content
+      end
+    end
 
-    def process_lydown_file(path, prefix = [])
-      process(prefix + LydownParser.parse(IO.read(path))) if File.file?(path)
+    def process_lydown_file(path, prefix = [], opts = {})
+      return unless File.file?(path)
+
+      content = IO.read(path)
+      if opts[:line_range]
+        content = insert_skip_markers(content, opts[:line_range])
+      end
+      
+      process(prefix + LydownParser.parse(content))
     end
   end
 end

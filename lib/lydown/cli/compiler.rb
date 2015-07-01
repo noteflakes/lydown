@@ -68,6 +68,11 @@ module Lydown::CLI::Compiler
 
       if opts[:open_target]
         filename = "#{opts[:output_target]}.#{opts[:format]}"
+        
+        unless File.file?(filename)
+          filename = "#{opts[:output_target]}-page1.#{opts[:format]}"
+        end
+        
         system("open #{filename}")
       end
     end

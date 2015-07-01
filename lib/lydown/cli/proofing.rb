@@ -5,6 +5,8 @@ module Lydown::CLI::Proofing
     def start_proofing(opts)
       source = opts[:source_filename]
       
+      Lydown::CLI::Diff.fill_cache(source)
+      
       puts "Proof mode: #{source} -> #{opts[:output_filename]}"
       last_proof_path = nil
 
@@ -31,7 +33,7 @@ module Lydown::CLI::Proofing
           end
         end
       end
-      
+       
       trap("INT") {return}
       dw.start
       loop {sleep 1000}
@@ -70,15 +72,26 @@ module Lydown::CLI::Proofing
       else
         mvt = nil
       end
+      
+      opts = {}.deep!
+      opts[:movements] = [mvt]
       if opts[:score_only]
-        {movements: [mvt], mode: :score}
+        opts[:mode] = :score
       else
-        {movements: [mvt], parts: [part], mode: :part}
+        opts[:parts] = [part]
+        opts[:mode] = part
+        opts[:line_range] = Lydown::CLI::Diff.diff_line_range(path)
       end
+      
+      opts
     end
     
     def process(opts)
-      Lydown::CLI::Compiler.process(opts)
+      if opts[:line_range] == (nil..nil)
+        puts "No change detected"
+      else
+        Lydown::CLI::Compiler.process(opts)
+      end
     end
   end
 end

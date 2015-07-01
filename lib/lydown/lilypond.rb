@@ -21,10 +21,28 @@ module Lydown
         tmp_target = Tempfile.new('lydown').path
         opts[:output_filename] = tmp_target
         invoke(source, opts)
-        FileUtils.cp(tmp_target + ext, target)
+        
+        if File.file?(tmp_target + ext)
+          FileUtils.cp(tmp_target + ext, target)
+        else
+          copy_pages(tmp_target, target, ext)
+        end
       rescue => e
         puts e.message
         p e.backtrace
+      end
+      
+      def copy_pages(source, target, ext)
+        page = 1
+        loop do
+          source_fn = source + "-page#{page}" + ext
+          break unless File.file?(source_fn)
+          
+          target_fn = target.dup.insert(target.index(/\.[^\.]+$/), "-page#{page}")
+          
+          FileUtils.cp(source_fn, target_fn)
+          page += 1
+        end
       end
       
       def invoke(source, opts = {})
