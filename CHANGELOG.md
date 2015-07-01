@@ -1,3 +1,8 @@
+## Version 0.7.1 2015-07-02
+
+- Implement proof mode, watching files in subdirectories, and rendering the actual code that was changed.
+- Fix tempo rendering in part mode.
+
 ## Version 0.7.0 2015-06-30
 
 - Major refactor of command line code. The lydown command now correctly takes into account parts and movements filters, and correctly generates an output file even if there is a subdirectory with the same name.

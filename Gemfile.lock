@@ -23,5 +23,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  diff-lcs (= 1.2.5)
   rspec (= 3.2.0)
   treetop (= 1.6.2)
