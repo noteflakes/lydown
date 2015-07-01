@@ -60,6 +60,7 @@ opts = OptionParser.new do |opts|
   end
   
   opts.on("-P", "--proof", "Start proofing mode") do
+    $options[:open_target] = true
     $options[:proof_mode] = true
   end
   
