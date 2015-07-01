@@ -13,7 +13,7 @@ help = <<HELP
 Lydown is not lilypond
 HELP
 
-$options = {'format' => 'pdf'}
+$options = {'format' => 'pdf'}.deep!
 opts = OptionParser.new do |opts|
   opts.banner = help
 
@@ -23,64 +23,63 @@ opts = OptionParser.new do |opts|
   end
   
   opts.on("-p", "--parts PART", "Parts (comma-separated)") do |v|
-    $options["parts"] = v.split(',')
+    $options[:parts] = v.split(',')
   end
   
   opts.on("-m", "--mvts MVT", "Movements (comma-separated)") do |v|
-    $options["movements"] = v.split(',')
+    $options[:movements] = v.split(',')
   end
   
   opts.on("--no-score", "Do not generate secore") do
-    $options["no_score"] = true
+    $options[:no_score] = true
   end
   
   opts.on("-s", "--score", "Generate only score, no parts") do
-    $options["score_only"] = true
+    $options[:score_only] = true
   end
   
   opts.on("-V", "--vocal", "Generate only vocal score") do
-    $options["vocal_only"] = true
+    $options[:vocal_only] = true
   end
   
   opts.on("--ly", "Generate Lilypond file") do
-    $options["format"] = 'ly'
+    $options[:format] = 'ly'
   end
   
   opts.on("--pdf", "Generate PDF file") do
-    $options["format"] = 'pdf'
+    $options[:format] = 'pdf'
   end
 
   opts.on("--png", "Generate PNG file") do
-    $options["format"] = 'png'
+    $options[:format] = 'png'
   end
 
   opts.on("-M", "--midi", "Generate midi file") do
-    $options["format"] = 'midi'
-    $options["score_only"] = true # implied
+    $options[:format] = 'midi'
+    $options[:score_only] = true # implied
   end
   
   opts.on("-P", "--proof", "Start proofing mode") do
-    $options["proof_mode"] = true
+    $options[:proof_mode] = true
   end
   
   opts.on("-O", "--open", "Open PDF/Midi file after processing") do
-    $options["open_target"] = true
+    $options[:open_target] = true
   end
 
   opts.on("-o", "--output FILE", "Filename for output") do |v|
-    $options["output_filename"] = v
+    $options[:output_filename] = v
   end
 
   opts.on("-W", "--work", "Create new work") do
-    $options["gen"] = :work
+    $options[:gen] = :work
   end
 end
 
 opts.parse!
-$options.deep!
 
-if $options["gen"]
-  # Ripple.generate($options["gen"], ARGV)
+if $options[:gen]
+  # Ripple.generate($options[:gen], ARGV)
   exit
 end
 
@@ -91,26 +90,36 @@ if ARGV[0] == '-'
   
   # the output defaults to a file named lydown expect if the format is ly.
   # In that case the output will be sent to STDOUT.
-  $options["output_filename"] ||= 'lydown' unless $options["format"] == 'ly'
+  $options[:output_filename] ||= 'lydown' unless $options[:format] == 'ly'
 else
   filename = ARGV[0] || '.'
-  $options['source_filename'] = filename
+  $options[:source_filename] = filename
   if (filename !~ /\.ld$/) and File.file?(filename + ".ld")
     filename += ".ld"
   end
   
-  $options["output_filename"] ||= (filename =~ /^(.+)\.ld$/) ? $1 : filename
+  unless $options[:output_filename]
+    if filename == '.'
+      $options[:output_filename] = File.basename(FileUtils.pwd)
+    else
+      $options[:output_filename] = (filename =~ /^(.+)\.ld$/) ? $1 : filename
+    end
+  end
 end
 
-# compile score
-unless $options[:no_score] || $options[:parts]
-  Lydown::CLI::Compiler.process($options.merge(mode: :score, parts: nil))
-end
+if $options[:proof_mode]
+  Lydown::CLI::Proofing.start_proofing($options)
+else
+  # compile score
+  unless $options[:no_score] || $options[:parts]
+    Lydown::CLI::Compiler.process($options.merge(mode: :score, parts: nil))
+  end
 
-# compile parts
-unless $options[:score_only] || !$options[:parts]
-  parts = $options[:parts]
-  parts.each do |p|
-    Lydown::CLI::Compiler.process($options.merge(mode: :part, parts: p))
+  # compile parts
+  unless $options[:score_only] || !$options[:parts]
+    parts = $options[:parts]
+    parts.each do |p|
+      Lydown::CLI::Compiler.process($options.merge(mode: :part, parts: p))
+    end
   end
 end

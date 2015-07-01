@@ -45,9 +45,6 @@
   lydown mvmt 07-choral 2flutes 2oboes 3strings 2gambas choir* continuo
   
 - refactor binary script (using _Thor_?)
-
-  - extract command_line behavior into lib/lydown/cli.rb
-  - put proofing mode into lib/lydown/cli/proof.rb
   - put movement create mode into lib/lydown/cli/create_movement.rb
 
 - support for full work processing in command line tool

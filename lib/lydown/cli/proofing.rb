@@ -1,0 +1,84 @@
+require 'directory_watcher'
+
+module Lydown::CLI::Proofing
+  class << self
+    def start_proofing(opts)
+      source = opts[:source_filename]
+      
+      puts "Proof mode: #{source} -> #{opts[:output_filename]}"
+      last_proof_path = nil
+
+      watch_directory(source, opts)
+    end
+    
+    def watch_directory(source, opts)
+      dw = DirectoryWatcher.new(File.expand_path(source))
+      dw.interval = 0.25
+      dw.glob = ["#{source}/**/*.ld"]
+
+      dw.reset(true)
+      dw.add_observer do |*args|
+        t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
+        args.each do |e|
+          if e.type = :modified
+            path = File.expand_path(e.path)
+            if path =~ /^#{File.expand_path(source)}\/(.+)/
+              path = $1
+            end
+            puts "[#{t}] Changed: #{path}"
+            last_proof_path = e.path unless File.basename(e.path) == 'movement.ld'
+            process(opts.deep_merge opts_for_path(last_proof_path, opts)) if last_proof_path
+          end
+        end
+      end
+      
+      trap("INT") {return}
+      dw.start
+      loop {sleep 1000}
+    ensure
+      dw.stop
+    end
+    
+    def globs(path)
+      Dir.chdir(path) do
+        dirs = Dir['*'].select { |x| File.directory?(x) }
+        # exclude _ly, _pdf, _midi dirs
+        # ['ly_dir', 'pdf_dir', 'midi_dir'].map {|d| $config[d]}.each do |d|
+        #   if d =~ /^\.\/(.*)/
+        #     dirs -= [$1]
+        #   end
+        # end
+      end
+    
+      dirs = dirs.map { |x| "#{x}/**/*" }
+      dirs
+    end
+    
+    def opts_for_path(path, opts)
+      path = path.gsub('/./', '/')
+      part = File.basename(path, '.*')
+      base = opts[:source_filename] || '.'
+      if base == '.'
+        base = File.expand_path(base)
+      end
+      dir = File.dirname(path)
+      if dir =~ /^\.\/(.+)$/
+        dir = $1
+      end
+      if dir =~ /#{base}\/([^\/]+)/
+        mvt = $1
+      else
+        mvt = nil
+      end
+      if opts[:score_only]
+        {movements: [mvt], mode: :score}
+      else
+        {movements: [mvt], parts: [part], mode: :part}
+      end
+    end
+    
+    def process(opts)
+      Lydown::CLI::Compiler.process(opts)
+    end
+  end
+end

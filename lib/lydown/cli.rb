@@ -4,3 +4,4 @@ module Lydown
 end
 
 require 'lydown/cli/compiler'
+require 'lydown/cli/proofing'
