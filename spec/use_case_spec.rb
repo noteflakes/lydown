@@ -10,4 +10,8 @@ RSpec.describe Lydown do
   it "correctly handles multiple parts with multiple keys" do
     verify_example('use_cases/multi-part-multi-key')
   end
+
+  it "correctly handles duration macros with rests" do
+    verify_example('use_cases/macros-with-rests')
+  end
 end
