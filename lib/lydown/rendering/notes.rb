@@ -106,6 +106,10 @@ module Lydown::Rendering
       else
         @work['process/last_value'] = value
       end
+      
+      if event[:line] && @work['options/proof_mode']
+        @work.emit(event[:stream] || :music, "%{#{event[:line]}:#{event[:column]}%}")
+      end
 
       code = lilypond_note(event, options.merge(value: value))
       @work.emit(event[:stream] || :music, code)
@@ -219,7 +223,9 @@ module Lydown::Rendering
       @work['process/macro_group'] ||= @work['process/duration_macro'].clone
       underscore_count = 0
 
-      lydown_note = "%s%s%s%s%s%s%s" % [
+      lydown_note = "{%d:%d}%s%s%s%s%s%s%s" % [
+        event[:line] || 0,
+        event[:column] || 0,
         lydown_phrasing_open(event),
         event[:head], event[:octave], event[:accidental_flag],
         lydown_phrasing_close(event),
@@ -240,7 +246,10 @@ module Lydown::Rendering
 
       # if group is complete, compile it just like regular code
       unless @work['process/macro_group'].include?('_')
-        code = LydownParser.parse(@work['process/macro_group'])
+        code = LydownParser.parse(@work['process/macro_group'], {
+          filename: event[:filename],
+          source:   event[:source]
+        })
 
         # stash macro
         macro = @work['process/duration_macro']

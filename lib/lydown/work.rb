@@ -285,7 +285,10 @@ module Lydown
         content = insert_skip_markers(content, opts[:line_range])
       end
       
-      process(prefix + LydownParser.parse(content))
+      process(prefix + LydownParser.parse(content, {
+        filename: File.expand_path(path),
+        source: content
+      }))
     end
   end
 end

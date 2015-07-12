@@ -15,7 +15,10 @@ class LydownParser
       STDERR.puts error_msg
       raise LydownError, error_msg
     else
-      ast.to_stream
+      stream = []
+      # insert source ref event into stream if we have a filename ref
+      stream << {type: :source_ref}.merge(opts) if opts[:filename]
+      ast.to_stream(stream, opts)
     end
   end
 

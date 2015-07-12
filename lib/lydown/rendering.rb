@@ -10,6 +10,7 @@ require 'lydown/rendering/staff'
 require 'lydown/rendering/movement'
 require 'lydown/rendering/command'
 require 'lydown/rendering/voices'
+require 'lydown/rendering/source_ref'
 
 require 'yaml'
 

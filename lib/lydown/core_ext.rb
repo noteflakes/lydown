@@ -137,6 +137,29 @@ class String
       end
     }
   end
+  
+  def calculate_line_indexes
+    i = -1
+    indexes = {0 => 0}
+    line = 1
+    while i = index("\n", i + 1)
+      indexes[line] = i + 1 # first character after line break
+      line += 1
+    end
+    indexes
+  end
+  
+  def find_line_and_column(index)
+    @line_indexes ||= calculate_line_indexes
+    line = @line_indexes.reverse_each {|l, i| break l if i <= index}
+    
+    # return line and column
+    if line.nil?
+      [nil, nil]
+    else
+      [(line + 1), (index - @line_indexes[line] + 1)]
+    end
+  end
 end
 
 class Fixnum

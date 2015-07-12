@@ -11,7 +11,8 @@ grammar Lydown
     '=music' white_space? [\n] music ([\n] !stream_breaker music)*
   end
   rule lyrics_stream
-    '=lyrics' stream_idx? white_space? [\n] lyrics_content ([\n] !stream_breaker lyrics_content)* <Lyrics>
+    '=lyrics' stream_idx? white_space? [\n] lyrics_content 
+      ([\n] !stream_breaker lyrics_content)* <Lyrics>
   end
   rule stream_breaker
     stream_switch / stream_breaking_setting
@@ -29,7 +30,8 @@ grammar Lydown
     [^\n]* <CommentContent>
   end
   rule setting
-    white_space? '-' white_space* setting_key ':' setting_value comment? <Setting>
+    white_space? '-' white_space* setting_key ':' setting_value 
+      comment? <Setting>
   end
   rule setting_key
     [a-z0-9_]+ <Setting::Key>
@@ -44,13 +46,12 @@ grammar Lydown
     [ \t]+
   end
   rule event
-    (inline_command / inline_lyrics / voice_selector / barline / grace_duration / duration / 
-      chord / note / standalone_figures / rest / silence / phrasing / tie) white_space*
+    (inline_command / inline_lyrics / voice_selector / barline / source_ref / 
+      grace_duration / duration / chord / note / standalone_figures / rest / 
+      silence / phrasing / tie) white_space*
   end
   rule barline
     ('?|' / ':|][|:' / '[|:' / ':|]' / [\|\.\:]+) <Barline>
-    # ('|' / '.' / '||' / '.|' / '..' / '|.|' / '|.' /
-    #  '.|') <Barline>
   end
   rule duration
     tuplet_value / duration_value / duration_macro
@@ -83,7 +84,8 @@ grammar Lydown
     (macro_name / macro_event*) <DurationMacroExpression>
   end
   rule macro_event
-    (duration / note_placeholder / rest / silence / phrasing / tie) white_space*
+    (duration / note_placeholder / rest / silence / 
+      phrasing / tie) white_space*
   end
   rule macro_name
     [a-zA-Z_] [a-zA-Z0-9_]*
@@ -191,4 +193,13 @@ grammar Lydown
   rule voice_selector
     [1234u] ':' <VoiceSelector>
   end
+  rule source_ref
+  '{' source_line ':' source_column '}' <SourceRef>
+  end
+  rule source_line
+    [\d]+ <SourceRef::Line>
+  end
+  rule source_column
+    [\d]+ <SourceRef::Column>
+  end  
 end

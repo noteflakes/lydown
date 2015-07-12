@@ -1,3 +1,8 @@
+- source refs
+  - spec line_and_column calculation
+  - spec source refs when processing multiple files
+  - spec source refs for chords
+
 - footnote syntax:
 
   cd ["Is this note connected to the one before?"] e
