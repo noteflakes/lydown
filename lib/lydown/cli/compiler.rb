@@ -72,7 +72,8 @@ module Lydown::CLI::Compiler
         unless File.file?(filename)
           filename = "#{opts[:output_target]}-page1.#{opts[:format]}"
         end
-        
+
+        # Mac OSX specific probably
         system("open #{filename}")
       end
     end
