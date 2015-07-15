@@ -1,3 +1,9 @@
+## Version 0.7.2 2015-07-15
+
+- Better proof mode: point and click to go to lydown source.
+- Better proof mode: output file always opened in the foreground.
+- Better proof mode: always render to end of file.
+
 ## Version 0.7.1 2015-07-02
 
 - Implement proof mode, watching files in subdirectories, and rendering the actual code that was changed.
