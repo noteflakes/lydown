@@ -20,16 +20,18 @@ module Lydown::CLI::Proofing
 
       dw.reset(true)
       dw.add_observer do |*args|
-        t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
         args.each do |e|
           if e.type = :modified
             path = File.expand_path(e.path)
             if path =~ /^#{File.expand_path(source)}\/(.+)/
               path = $1
             end
-            puts "[#{t}] Changed: #{path}"
             last_proof_path = e.path unless File.basename(e.path) == 'movement.ld'
-            process(opts.deep_merge opts_for_path(last_proof_path, opts)) if last_proof_path
+            if last_proof_path
+              file_opts = opts.deep_merge opts_for_path(last_proof_path, opts)
+              file_opts[:base_path] = path
+              process(file_opts)
+            end
           end
         end
       end
@@ -81,9 +83,9 @@ module Lydown::CLI::Proofing
     end
     
     def process(opts)
-      if opts[:line_range] == (nil..nil)
-        puts "No change detected"
-      else
+      if opts[:line_range] != (nil..nil)
+        t = Time.now.strftime("%H:%M:%S")
+        puts "[#{t}] Changed: #{opts[:base_path]} (lines #{opts[:line_range].inspect})"
         Lydown::CLI::Compiler.process(opts)
       end
     end
