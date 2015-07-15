@@ -3,7 +3,7 @@ module Lydown::Rendering
   # for notes in a macro group
   class SourceRef < Base
     def translate
-      return unless @work['options/proof_mode']
+      return # unless @work['options/proof_mode']
 
       fn = @event[:filename]
       if fn && fn != @work['process/last_filename']

@@ -1,3 +1,5 @@
+require 'escape_utils'
+
 class Hash
   # Merges self with another hash, recursively.
   #
@@ -159,6 +161,10 @@ class String
     else
       [(line + 1), (index - @line_indexes[line] + 1)]
     end
+  end
+  
+  def uri_escape
+    EscapeUtils.escape_uri(self)
   end
 end
 

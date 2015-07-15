@@ -51,7 +51,7 @@ RSpec.describe LydownParser do
       filename: filename, source: source, line: 1, column: 9, head: 'c'})
   end
   
-  it "correctly preserves source positions for duration macros" do
+  it "inserts point-and-click links in proof mode" do
     filename = 'simple_macro.ld'
     source = load_example(filename)
     
@@ -84,8 +84,10 @@ RSpec.describe LydownParser do
     work['options'][:proof_mode] = true
     work.process(stream)
     
+    link_pre = "\\once \\override NoteHead.after-line-breaking =\n            #(add-link \"txmt://open?url=file:///Users/sharon/repo/lydown/simple_macro.ld&line=%d&column=%d\")"
+    
     expect(work.context['movements//parts//music']).to eq(
-      "%{::#{full_filename}%} %{1:8%}c4 %{1:9%}e8 %{1:10%}g %{1:11%}c4 %{1:12%}g8 %{1:13%}e %{1:15%}c1 "
+      "#{link_pre % [1, 8]} c4 #{link_pre % [1, 9]} e8 #{link_pre % [1, 10]} g #{link_pre % [1, 11]} c4 #{link_pre % [1, 12]} g8 #{link_pre % [1, 13]} e #{link_pre % [1, 15]} c1 "
     )
   end
   

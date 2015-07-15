@@ -108,7 +108,8 @@ module Lydown::Rendering
       end
       
       if event[:line] && @work['options/proof_mode']
-        @work.emit(event[:stream] || :music, "%{#{event[:line]}:#{event[:column]}%}")
+        @work.emit(event[:stream] || :music, note_event_url_link(event))
+        # @work.emit(event[:stream] || :music, "%{#{event[:line]}:#{event[:column]}%}")
       end
 
       code = lilypond_note(event, options.merge(value: value))
@@ -320,6 +321,21 @@ module Lydown::Rendering
       expr.unescape.
           gsub(/__([^_]+)__/) {|m| "\\bold { #{$1} }" }.
           gsub(/_([^_]+)_/) {|m| "\\italic { #{$1} }" }
+    end
+    
+    TEXTMATE_URL = "txmt://open?url=file://%s&line=%d&column=%d"
+    
+    ADD_LINK_COMMAND = '\once \override NoteHead.after-line-breaking =
+            #(add-link "%s") '
+    
+    def note_event_url_link(event)
+      url = TEXTMATE_URL % [
+        File.expand_path(event[:filename]).uri_escape,
+        event[:line],
+        event[:column]
+      ]
+      
+      ADD_LINK_COMMAND % [url]
     end
   end
 end
