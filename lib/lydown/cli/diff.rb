@@ -42,7 +42,10 @@ module Lydown::CLI::Diff
       
       set_cached_content(path, new_version)
       
-      (first + 1)..(last + 1)
+      first += 1 if first
+      last += 1 if last
+      
+      first..last
     rescue => e
       STDERR << e.message
       STDERR << e.backtrace.join("\n")
