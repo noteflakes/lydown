@@ -49,9 +49,9 @@ module Lydown
         # Run lilypond, pipe source into its STDIN, and capture its STDERR
         cmd = 'lilypond -lERROR '
         cmd << "-o #{opts[:output_filename]} "
+        cmd << "-dno-point-and-click "
         cmd << "--#{opts[:format]} " if opts[:format]
         cmd << '-s - 2>&1'
-        # cmd << "-s #{ly_path} 2>&1"
         
         err_info = ''
         IO.popen(cmd, 'r+') do |f|
