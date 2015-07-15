@@ -38,15 +38,18 @@ RSpec.describe LydownParser do
 
     expect(stream[0]).to eq({type: :source_ref, filename: filename, 
       source: source})
-    expect(stream[1]).to eq({type: :duration, value: '4'})
+    expect(stream[1]).to eq({type: :duration, value: '4', 
+      filename: filename, source: source, line: 1, column: 1})
     expect(stream[2]).to eq({type: :note, raw: 'c', 
       filename: filename, source: source, line: 1, column: 2, head: 'c'})
-    expect(stream[3]).to eq({type: :duration, value: '8'})
+    expect(stream[3]).to eq({type: :duration, value: '8',
+      filename: filename, source: source, line: 1, column: 4})
     expect(stream[4]).to eq({type: :note, raw: 'e', 
       filename: filename, source: source, line: 1, column: 5, head: 'e'})
     expect(stream[5]).to eq({type: :note, raw: 'g',
       filename: filename, source: source, line: 1, column: 6, head: 'g'})
-    expect(stream[6]).to eq({type: :duration, value: '2'})
+    expect(stream[6]).to eq({type: :duration, value: '2',
+      filename: filename, source: source, line: 1, column: 8})
     expect(stream[7]).to eq({type: :note, raw: 'c',
       filename: filename, source: source, line: 1, column: 9, head: 'c'})
   end
@@ -64,7 +67,8 @@ RSpec.describe LydownParser do
 
     expect(stream[0]).to eq({type: :source_ref, filename: filename, 
       source: source})
-    expect(stream[1]).to eq({type: :duration_macro, macro: '4_8__'})
+    expect(stream[1]).to eq({type: :duration_macro, macro: '4_8__',
+      filename: filename, source: source, line: 1, column: 2})
     expect(stream[2]).to eq({type: :note, raw: 'c', 
       filename: filename, source: source, line: 1, column: 8, head: 'c'})
     expect(stream[3]).to eq({type: :note, raw: 'e', 

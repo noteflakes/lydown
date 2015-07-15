@@ -44,12 +44,6 @@ module Lydown::CLI::Proofing
     def globs(path)
       Dir.chdir(path) do
         dirs = Dir['*'].select { |x| File.directory?(x) }
-        # exclude _ly, _pdf, _midi dirs
-        # ['ly_dir', 'pdf_dir', 'midi_dir'].map {|d| $config[d]}.each do |d|
-        #   if d =~ /^\.\/(.*)/
-        #     dirs -= [$1]
-        #   end
-        # end
       end
     
       dirs = dirs.map { |x| "#{x}/**/*" }

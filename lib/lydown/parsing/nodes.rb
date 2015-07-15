@@ -16,16 +16,15 @@ module Lydown::Parsing
       stream
     end
     
-    
-    
     def event_hash(stream, opts, hash = {})
       if source = opts[:source]
         last = stream.last
-        if last && last[:type] == :source_ref
+        if last && last[:type] == :source_ref && last[:line]
           line, column = last[:line], last[:column]
         else
           line, column = source.find_line_and_column(interval.first)
         end
+
         hash.merge({
           filename: opts[:filename],
           source: source,
@@ -49,14 +48,16 @@ module Lydown::Parsing
 
     def to_stream(stream, opts)
       level = (text_value =~ /^([\s]+)/) ? ($1.length / 2) : 0
-      @setting = {type: :setting, level: level}
+      @setting = event_hash(stream, opts, {
+        type: :setting, level: level
+      })
       _to_stream(self, stream, opts)
     end
-
+    
     def setting
       @setting
     end
-
+    
     def emit_setting(stream)
       stream << @setting
     end
@@ -76,12 +77,18 @@ module Lydown::Parsing
   end
 
   module DurationValue
+    include Root
+    
     def to_stream(stream, opts)
-      stream << {type: :duration, value: text_value}
+      stream << event_hash(stream, opts, {
+        type: :duration, value: text_value
+      })
     end
   end
 
   module TupletValue
+    include Root
+    
     def to_stream(stream, opts)
       if text_value =~ /^(\d+)%((\d+)\/(\d+))?$/
         value, fraction, group_length = $1, $2, $4
@@ -90,17 +97,19 @@ module Lydown::Parsing
           group_length = '2'
         end
 
-        stream << {
+        stream << event_hash(stream, opts, {
           type: :tuplet_duration,
           value: value,
           fraction: fraction,
           group_length: group_length
-        }
+        })
       end
     end
   end
 
   module GraceDuration
+    include Root
+    
     GRACE_KIND = {
       nil => :grace,
       '/' => :acciaccatura,
@@ -109,7 +118,9 @@ module Lydown::Parsing
     
     def to_stream(stream, opts)
       if text_value =~ /^\$([\/\^])?(\d+)$/
-        stream << {type: :grace, value: $2, kind: GRACE_KIND[$1]}
+        stream << event_hash(stream, opts, {
+          type: :grace, value: $2, kind: GRACE_KIND[$1]
+        })
       end
     end
   end
@@ -118,7 +129,9 @@ module Lydown::Parsing
     include Root
 
     def to_stream(stream, opts)
-      note = event_hash(stream, opts, {type: :note, raw: text_value})
+      note = event_hash(stream, opts, {
+        type: :note, raw: text_value
+      })
       _to_stream(self, note, opts)
       stream << note
     end
@@ -156,7 +169,9 @@ module Lydown::Parsing
     include Root
     
     def to_stream(stream, opts)
-      chord = {type: :chord, notes: []}
+      chord = event_hash(stream, opts, {
+        type: :chord, notes: []
+      })
       _to_stream(self, chord[:notes], opts)
       stream << chord
     end
@@ -221,7 +236,9 @@ module Lydown::Parsing
     include Root
     
     def to_stream(stream, opts)
-      rest = {type: :rest, raw: text_value, head: text_value[0]}
+      rest = event_hash(stream, opts, {
+        type: :rest, raw: text_value, head: text_value[0]
+      })
       if text_value =~ /^R(\*([0-9]+))?$/
         rest[:multiplier] = $2 || '1'
       end
@@ -233,14 +250,22 @@ module Lydown::Parsing
   end
 
   module Silence
+    include Root
+    
     def to_stream(stream, opts)
-      stream << {type: :silence, raw: text_value, head: text_value[0]}
+      stream << event_hash(stream, opts, {
+        type: :silence, raw: text_value, head: text_value[0]
+      })
     end
   end
 
   module DurationMacroExpression
+    include Root
+    
     def to_stream(stream, opts)
-      stream << {type: :duration_macro, macro: text_value}
+      stream << event_hash(stream, opts, {
+        type: :duration_macro, macro: text_value
+      })
     end
   end
 
@@ -297,8 +322,11 @@ module Lydown::Parsing
   
   module Command
     include Root
+    
     def to_stream(stream, opts)
-      cmd = {type: :command, raw: text_value}
+      cmd = event_hash(stream, opts, {
+        type: :command, raw: text_value
+      })
       cmd[:once] = true if text_value =~ /^\\\!/
       _to_stream(self, cmd, opts)
       stream << cmd

@@ -11,6 +11,7 @@ require 'lydown/rendering/movement'
 require 'lydown/rendering/command'
 require 'lydown/rendering/voices'
 require 'lydown/rendering/source_ref'
+require 'lydown/rendering/skipping'
 
 require 'yaml'
 
