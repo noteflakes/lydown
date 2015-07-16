@@ -1,126 +1,81 @@
 #!/usr/bin/env ruby
 
 require 'rubygems'
+require 'thor'
+
 require 'lydown'
 require 'lydown/version'
 require 'lydown/cli'
-require 'optparse'
 
-trap("INT") {exit}
-trap("TERM") {exit}
-
-help = <<HELP
-Lydown is not lilypond
-HELP
-
-$options = {'format' => 'pdf'}.deep!
-opts = OptionParser.new do |opts|
-  opts.banner = help
-
-  opts.on("-v", "--version", "Display current version") do
-    puts "lydown " + Lydown::VERSION
-    exit 0
-  end
-  
-  opts.on("-p", "--parts PART", "Parts (comma-separated)") do |v|
-    $options[:parts] = v.split(',')
-  end
-  
-  opts.on("-m", "--mvts MVT", "Movements (comma-separated)") do |v|
-    $options[:movements] = v.split(',')
-  end
-  
-  opts.on("--no-score", "Do not generate secore") do
-    $options[:no_score] = true
-  end
-  
-  opts.on("-s", "--score", "Generate only score, no parts") do
-    $options[:score_only] = true
-  end
-  
-  opts.on("-V", "--vocal", "Generate only vocal score") do
-    $options[:vocal_only] = true
-  end
-  
-  opts.on("--ly", "Generate Lilypond file") do
-    $options[:format] = 'ly'
-  end
-  
-  opts.on("--pdf", "Generate PDF file") do
-    $options[:format] = 'pdf'
+class LydownCLI < Thor
+  desc "version", "show Lydown version"
+  def version
+    puts "Lydown version #{Lydown::VERSION}"
+    exit!(0)
   end
 
-  opts.on("--png", "Generate PNG file") do
-    $options[:format] = 'png'
-  end
+  desc "compile [PATH]", "compile the lydown source at PATH"
+  method_option :format, aliases: '-f', 
+    default: 'pdf', desc: 'Set output format (pdf/png/ly)', 
+    enum: %w{pdf png ly}
+  method_option :parts, aliases: '-p',
+    desc: 'Compile only the specified parts (comma separated)'
+  method_option :movements, aliases: '-m',
+    desc: 'Compile only the specified movements (comma separated)'
+  method_option :score_only, aliases: '-s',
+    desc: 'Compile score only'
+  method_option :parts_only, aliases: '-n',
+    desc: 'Compile parts only'
+  method_option :output, aliases: '-o',
+    desc: 'Set output path'
+  method_option :open_target, aliases: '-O',
+    desc: 'Open output file after compilation'
+  def compile(*args)
+    opts = Lydown::CLI::Support.copy_options(options)
+    opts[:path] = args.first || '.'
+    Lydown::CLI::Support.detect_filename(opts)
 
-  opts.on("-M", "--midi", "Generate midi file") do
-    $options[:format] = 'midi'
-    $options[:score_only] = true # implied
-  end
-  
-  opts.on("-P", "--proof", "Start proofing mode") do
-    $options[:open_target] = true
-    $options[:proof_mode] = true
-  end
-  
-  opts.on("-O", "--open", "Open PDF/Midi file after processing") do
-    $options[:open_target] = true
-  end
+    opts[:parts] = opts[:parts].split(',') if opts[:parts]
+    opts[:movements] = opts[:movements].split(',') if opts[:movements]
+      
+    # compile score
+    unless opts[:parts_only] || opts[:parts]
+      Lydown::CLI::Compiler.process(opts.merge(mode: :score, parts: nil))
+    end
 
-  opts.on("-o", "--output FILE", "Filename for output") do |v|
-    $options[:output_filename] = v
-  end
-
-  opts.on("-W", "--work", "Create new work") do
-    $options[:gen] = :work
-  end
-end
-
-opts.parse!
-
-if $options[:gen]
-  # Ripple.generate($options[:gen], ARGV)
-  exit
-end
-
-source = ''
-if ARGV[0] == '-'
-  # read source from stdin
-  source = STDIN.read
-  
-  # the output defaults to a file named lydown expect if the format is ly.
-  # In that case the output will be sent to STDOUT.
-  $options[:output_filename] ||= 'lydown' unless $options[:format] == 'ly'
-else
-  filename = ARGV[0] || '.'
-  $options[:source_filename] = filename
-  if (filename !~ /\.ld$/) and File.file?(filename + ".ld")
-    filename += ".ld"
-  end
-  
-  unless $options[:output_filename]
-    if filename == '.'
-      $options[:output_filename] = File.basename(FileUtils.pwd)
-    else
-      $options[:output_filename] = (filename =~ /^(.+)\.ld$/) ? $1 : filename
+    # compile parts
+    unless opts[:score_only] || !opts[:parts]
+      parts = opts[:parts]
+      parts.each do |p|
+        Lydown::CLI::Compiler.process(opts.merge(mode: :part, parts: p))
+      end
     end
   end
+  
+  desc "proof [PATH]", "start proofing mode on source at PATH"
+  method_option :format, aliases: '-f', 
+    default: 'pdf', desc: 'Set output format (pdf/png/ly)', 
+    enum: %w{pdf png ly}
+  def proof(*args)
+    opts = Lydown::CLI::Support.copy_options(options)
+    opts[:path] = args.first || '.'
+    opts[:proof_mode] = true
+    opts[:open_target] = true
+    
+    Lydown::CLI::Support.detect_filename(opts)
+    Lydown::CLI::Proofing.start_proofing(opts)
+  end
+  
+  def method_missing(method, *args)
+    args = ["compile", method.to_s] + args
+    self.class.start(args)
+  end
+  
+  default_task :compile
+
+  # Allow default task with test as path (should we be doing this for other 
+  # Object instance methods?)
+  undef_method(:test)
 end
 
-if $options[:proof_mode]
-  Lydown::CLI::Proofing.start_proofing($options)
-else
-  # compile score
-  unless $options[:no_score] || $options[:parts]
-    Lydown::CLI::Compiler.process($options.merge(mode: :score, parts: nil))
-  end
-
-  # compile parts
-  unless $options[:score_only] || !$options[:parts]
-    parts = $options[:parts]
-    parts.each do |p|
-      Lydown::CLI::Compiler.process($options.merge(mode: :part, parts: p))
-    end
-  end
-end
+LydownCLI.start(ARGV)
