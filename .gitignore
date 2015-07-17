@@ -36,5 +36,8 @@ build/
 
 test*
 spec/examples/*.pdf
+spec/examples/*.png
 music/*.pdf
+music/*.png
 *.pdf
+*.png
