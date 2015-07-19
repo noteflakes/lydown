@@ -47,11 +47,12 @@ module Lydown::Translation::Ripple
   class Note < Root
     def translate(stream, opts)
       check_line_break(stream, opts)
-      note = {}
+      note = {expressions: []}
       _translate(self, note, opts)
-      stream << "%s%s" % [
+      stream << "%s%s%s" % [
         note[:duration],
-        note[:head]
+        note[:head],
+        note[:expressions].join
       ]
     end
     
@@ -70,6 +71,12 @@ module Lydown::Translation::Ripple
     class Duration < Root
       def translate(note, opts)
         note[:duration] = text_value
+      end
+    end
+    
+    class Expression < Root
+      def translate(note, opts)
+        note[:expressions] << text_value
       end
     end
   end
