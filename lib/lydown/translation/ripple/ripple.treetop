@@ -7,7 +7,7 @@ grammar Ripple
   
   rule event
     relative_cmd / curly_brace / key_signature / time_signature /
-    full_rest / note / phrasing
+    full_rest / note / phrasing / named_macro / stop_macro
   end
   
   rule relative_cmd
@@ -71,6 +71,14 @@ grammar Ripple
   end
   
   rule phrasing
-    [\(\)\[\]] <Phrasing>
+    [\(\)\[\]\~] <Phrasing>
+  end
+  
+  rule named_macro
+    '$' [a-z0-9]+ <NamedMacro>
+  end
+  
+  rule stop_macro
+    '$$'
   end
 end

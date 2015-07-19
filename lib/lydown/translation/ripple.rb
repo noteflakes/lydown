@@ -16,11 +16,10 @@ class RippleParser
     ast
   end
 
-  def self.translate(source)
-    context = {source: source}
+  def self.translate(source, opts)
     ast = parse(source)
     stream = ''
-    ast.translate(stream, context)
+    ast.translate(stream, opts.merge(source: source))
   end
 
   def self.format_parser_error(source, parser, opts)

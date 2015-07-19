@@ -122,4 +122,26 @@ module Lydown::Translation::Ripple
       stream << text_value
     end
   end
+  
+  class NamedMacro < Root
+    def translate(stream, opts)
+      check_line_break(stream, opts)
+      macro_name = text_value.sub('$', '')
+      if opts[:macros][macro_name]
+        stream << "{#{translate_macro(opts[:macros][macro_name])}}"
+      else
+        raise LydownError, "Could not find named macro #{macro_name}"
+      end
+    end
+
+    PLACE_HOLDERS = {
+      '#' => '_',
+      '@' => '@'
+    }
+    
+    def translate_macro(macro)
+      macro.gsub(/([#@])([0-9\.]*)/) {|m| "#{$2}#{PLACE_HOLDERS[$1]}"}.
+        gsub(' ', '')
+    end
+  end
 end

@@ -5,4 +5,12 @@ RSpec.describe Lydown::Translation do
     ld = Lydown::Translation.process(ripple: load_example('translation_simple.rpl'))
     expect(ld).to eq(load_example('translation_simple.ld'))
   end
+
+  it "translates named macros" do
+    ld = Lydown::Translation.process(
+      ripple: load_example('translation_macros.rpl'),
+      macros: {'m1' => '#6. #3', 'm5' => '#4 ~ @6. #3 #6. #3'}
+    )
+    expect(ld).to eq(load_example('translation_macros.ld'))
+  end
 end

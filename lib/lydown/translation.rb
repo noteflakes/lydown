@@ -3,7 +3,7 @@ module Lydown
     def self.process(source)
       code = ''
       if source[:ripple]
-        RippleParser.translate(source[:ripple])
+        RippleParser.translate(source[:ripple], source)
       end
     end
   end
