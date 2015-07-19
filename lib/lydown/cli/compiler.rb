@@ -1,5 +1,3 @@
-require 'lydown'
-
 module Lydown::CLI::Compiler
   class << self
     def output_filename(opts)

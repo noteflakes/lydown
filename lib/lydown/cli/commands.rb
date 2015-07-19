@@ -63,7 +63,15 @@ module Lydown::CLI
       Lydown::CLI::Support.detect_filename(opts)
       Lydown::CLI::Proofing.start_proofing(opts)
     end
-  
+    
+    desc "translate [PATH]", "translate source at PATH into lydown code"
+    def translate(*args)
+      opts = Lydown::CLI::Support.copy_options(options)
+      opts[:path] = args.first || '.'
+    
+      Lydown::CLI::Translation.process(opts)
+    end
+    
     def method_missing(method, *args)
       args = ["compile", method.to_s] + args
       self.class.start(args)

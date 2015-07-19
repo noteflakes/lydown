@@ -59,6 +59,18 @@ module Lydown::Rendering
 
       note + (value >= 0 ? 'is' * value : 'es' * -value)
     end
+    
+    def self.chromatic_to_diatonic(note, key_signature = 'c major')
+      note =~ /([a-g])([\+\-]*)/
+      diatonic_note = $1
+      chromatic_value = $2.count('+') - $2.count('-')
+      
+      key_accidentals = accidentals_for_key_signature(key_signature)
+      diatonic_value = key_accidentals[diatonic_note] || 0
+      value = chromatic_value - diatonic_value
+      
+      "#{diatonic_note}#{value >= 0 ? '+' * value : '-' * -value}"
+    end
 
     # Takes into account the accidentals mode
     def self.translate_note_name(work, note)

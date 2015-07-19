@@ -1,0 +1,76 @@
+grammar Ripple
+  include Lydown::Translation::Ripple
+
+  rule events
+    event ([\s]* event)* <Root>
+  end
+  
+  rule event
+    relative_cmd / curly_brace / key_signature / time_signature /
+    full_rest / note / phrasing
+  end
+  
+  rule relative_cmd
+    '\relative' [\s]+ relative_cmd_note
+  end
+  
+  rule relative_cmd_note
+    [a-g] accidental? octave* <RelativeCommand>
+  end
+  
+  rule curly_brace
+    [\{\}]
+  end
+  
+  rule key_signature
+    '\key' [\s]+ note_head [\s+] key_mode <KeySignature>
+  end
+  
+  rule key_mode
+    '\major' / '\minor' <KeySignature::Mode>
+  end
+  
+  rule note
+    note_head duration? expression* <Note>
+  end
+  
+  rule note_head
+    [a-gr] accidental octave* accidental_flag? <Note::Head>
+  end
+  
+  rule octave
+    [,']+
+  end
+  
+  rule accidental
+    ('s' / 'es')*
+  end
+  
+  rule accidental_flag
+    [\!\?]+
+  end
+  
+  rule duration
+    [0-9]+ '.'* <Note::Duration>
+  end
+  
+  rule expression
+    '\\'
+  end
+
+  rule time_signature
+    '\time' [\s]+ time_signature_content
+  end
+  
+  rule time_signature_content
+    [0-9\/]+ <TimeSignature>
+  end
+  
+  rule full_rest
+    'R' [0-9]+ '*' [0-9]+ <FullRest>
+  end
+  
+  rule phrasing
+    [\(\)\[\]] <Phrasing>
+  end
+end

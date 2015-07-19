@@ -4,8 +4,6 @@ require 'treetop'
 require 'lydown/parsing/nodes'
 require 'lydown/parsing/lydown.treetop'
 
-# Treetop.load 'lydown/parsing/lydown'
-
 class LydownParser
   def self.parse(source, opts = {})
     parser = self.new
