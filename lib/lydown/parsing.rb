@@ -15,8 +15,11 @@ class LydownParser
     else
       stream = []
       # insert source ref event into stream if we have a filename ref
-      stream << {type: :source_ref}.merge(opts) if opts[:filename]
       ast.to_stream(stream, opts)
+      if opts[:filename] && !stream.empty?
+        stream.unshift({type: :source_ref}.merge(opts))
+      end
+      stream
     end
   end
 

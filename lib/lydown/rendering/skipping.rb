@@ -37,7 +37,7 @@ module Lydown::Rendering
     # returns index of first event at or after specified line
     def find_line_idx(stream, line, last = false)
       if last
-        stream.reverse_each do |e| 
+        stream.reverse_each do |e|
           return stream.index(e) if e[:line] && e[:line] <= line
         end
         nil

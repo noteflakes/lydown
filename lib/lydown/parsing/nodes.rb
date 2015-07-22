@@ -35,6 +35,10 @@ module Lydown::Parsing
         hash
       end
     end
+    
+    def add_event(stream, opts, type)
+      stream << event_hash(stream, opts, {type: type})
+    end
   end
 
   module CommentContent
@@ -188,7 +192,9 @@ module Lydown::Parsing
     include Root
 
     def to_stream(stream, opts)
-      note = {type: :stand_alone_figures}
+      note = event_hash(stream, opts, {
+        type: :stand_alone_figures
+      })
       _to_stream(self, note, opts)
       stream << note
     end
@@ -196,39 +202,45 @@ module Lydown::Parsing
 
   module Phrasing
     module BeamOpen
+      include Root
       def to_stream(stream, opts)
-        stream << {type: :beam_open}
+        add_event(stream, opts, :beam_open)
       end
     end
 
     module BeamClose
+      include Root
       def to_stream(stream, opts)
-        stream << {type: :beam_close}
+        add_event(stream, opts, :beam_close)
       end
     end
 
     module SlurOpen
+      include Root
       def to_stream(stream, opts)
-        stream << {type: :slur_open}
+        add_event(stream, opts, :slur_open)
       end
     end
 
     module SlurClose
+      include Root
       def to_stream(stream, opts)
-        stream << {type: :slur_close}
+        add_event(stream, opts, :slur_close)
       end
     end
   end
 
   module Tie
+    include Root
     def to_stream(stream, opts)
-      stream << {type: :tie}
+      stream << event_hash(stream, opts, {type: :tie})
     end
   end
 
   module ShortTie
+    include Root
     def to_stream(stream, opts)
-      stream << {type: :short_tie}
+      stream << event_hash(stream, opts, {type: :short_tie})
     end
   end
 
@@ -315,8 +327,12 @@ module Lydown::Parsing
   end
 
   module Barline
+    include Root
     def to_stream(stream, opts)
-      stream << {type: :barline, barline: text_value}
+      stream << event_hash(stream, opts, {
+        type: :barline, 
+        barline: text_value
+      })
     end
   end
   

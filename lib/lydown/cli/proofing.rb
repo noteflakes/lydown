@@ -14,14 +14,16 @@ module Lydown::CLI::Proofing
     end
     
     def watch_directory(source, opts)
-      dw = DirectoryWatcher.new(File.expand_path(source))
+      dw = DirectoryWatcher.new(
+        File.expand_path(source),
+        glob: ["**/*.ld"],
+        pre_load: true
+      )
       dw.interval = 0.25
-      dw.glob = ["#{source}/**/*.ld"]
 
-      dw.reset(true)
       dw.add_observer do |*args|
         args.each do |e|
-          if e.type = :modified
+          if e.type == :modified
             path = File.expand_path(e.path)
             if path =~ /^#{File.expand_path(source)}\/(.+)/
               path = $1

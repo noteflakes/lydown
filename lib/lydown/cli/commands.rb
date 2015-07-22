@@ -4,6 +4,8 @@ module Lydown::CLI
   class Commands < Thor
     desc "version", "show Lydown version"
     def version
+      require 'lydown/version'
+      
       puts "Lydown version #{Lydown::VERSION}"
       exit!(0)
     end
@@ -26,6 +28,8 @@ module Lydown::CLI
     method_option :open_target, aliases: '-O',
       desc: 'Open output file after compilation'
     def compile(*args)
+      require 'lydown'
+      
       opts = Lydown::CLI::Support.copy_options(options)
       opts[:path] = args.first || '.'
       Lydown::CLI::Support.detect_filename(opts)
@@ -55,6 +59,8 @@ module Lydown::CLI
       default: 'pdf', desc: 'Set output format (pdf/png/ly)', 
       enum: %w{pdf png ly}
     def proof(*args)
+      require 'lydown'
+
       opts = Lydown::CLI::Support.copy_options(options)
       opts[:path] = args.first || '.'
       opts[:proof_mode] = true
@@ -66,6 +72,8 @@ module Lydown::CLI
     
     desc "translate [PATH]", "translate source at PATH into lydown code"
     def translate(*args)
+      require 'lydown'
+
       opts = Lydown::CLI::Support.copy_options(options)
       opts[:path] = args.first || '.'
     

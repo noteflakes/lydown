@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'lydown'
-require 'lydown/version'
 require 'lydown/cli'
 
 Lydown::CLI::Commands.start(ARGV)
