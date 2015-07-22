@@ -1,3 +1,6 @@
+## Version 0.8.1 2015-07-22
+- Fix proofing.
+
 ## Version 0.8.0 2015-07-22
 - Refactor command line tool. The lydown command now accepts subcommands:
   compile (default), version, translate.
