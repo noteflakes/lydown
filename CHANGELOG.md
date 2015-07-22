@@ -1,3 +1,8 @@
+## Version 0.8.0 2015-07-22
+- Refactor command line tool. The lydown command now accepts subcommands:
+  compile (default), version, translate.
+- Implement translation from Ripple into Lydown.
+
 ## Version 0.7.2 2015-07-15
 
 - Better proof mode: point and click to go to lydown source.
