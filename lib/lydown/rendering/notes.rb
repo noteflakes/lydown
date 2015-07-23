@@ -118,7 +118,7 @@ module Lydown::Rendering
       else
         @work['process/last_value'] = value
       end
-      
+
       if event[:line] && @work['options/proof_mode']
         @work.emit(event[:stream] || :music, note_event_url_link(event))
         # @work.emit(event[:stream] || :music, "%{#{event[:line]}:#{event[:column]}%}")
@@ -245,7 +245,7 @@ module Lydown::Rendering
         event[:figures] ? "<#{event[:figures].join}>" : '',
         event[:expressions] ? event[:expressions].join + ' ' : ''
       ]
-
+      
       # replace place holder and repeaters in macro group with actual note
       @work['process/macro_group'].gsub!(/[_∞]/) do |match|
         case match
@@ -257,22 +257,14 @@ module Lydown::Rendering
         end
       end
 
+      # keep filename and source in order to ensure source references are kept
+      # correct
+      @work['process/macro_filename'] = event[:filename]
+      @work['process/macro_source'] = event[:source]
+
       # if group is complete, compile it just like regular code
       unless @work['process/macro_group'].include?('_')
-        code = LydownParser.parse(@work['process/macro_group'], {
-          filename: event[:filename],
-          source:   event[:source]
-        })
-
-        # stash macro
-        macro = @work['process/duration_macro']
-        @work['process/duration_macro'] = nil
-        @work['process/macro_group'] = nil
-
-        @work.process(code, no_reset: true)
-
-        # restore macro
-        @work['process/duration_macro'] = macro
+        Notes.add_duration_macro_group(@work, @work['process/macro_group'])
       end
     end
     
@@ -283,15 +275,23 @@ module Lydown::Rendering
       
       # truncate macro group up until first placeholder
       group = work['process/macro_group'].sub(/_.*$/, '')
-      
-      # stash macro, in order to compile macro group
+      add_duration_macro_group(work, group)
+    end
+    
+    def self.add_duration_macro_group(work, group)
+      opts = (work[:options] || {}).merge({
+        filename: work['process/macro_filename'],
+        source:   work['process/macro_source']
+      }).deep!
+      code = LydownParser.parse(group, opts)
+
+      # stash macro
       macro = work['process/duration_macro']
       work['process/duration_macro'] = nil
       work['process/macro_group'] = nil
 
-      code = LydownParser.parse(group)
       work.process(code, no_reset: true)
-
+    ensure
       # restore macro
       work['process/duration_macro'] = macro
     end

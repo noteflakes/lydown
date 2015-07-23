@@ -17,14 +17,14 @@ module Lydown::Parsing
     end
     
     def event_hash(stream, opts, hash = {})
-      if source = opts[:source]
+      if opts[:proof_mode] && (source = opts[:source])
         last = stream.last
-        if last && last[:type] == :source_ref && last[:line]
+        if last && (last[:type] == :source_ref) && last[:line]
           line, column = last[:line], last[:column]
         else
           line, column = source.find_line_and_column(interval.first)
         end
-
+        
         hash.merge({
           filename: opts[:filename],
           source: source,

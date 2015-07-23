@@ -24,7 +24,7 @@ class LydownParser
   end
 
   def self.format_parser_error(source, parser, opts)
-    msg = opts[:source_filename] ? "#{opts[:source_filename]}: " : ""
+    msg = opts[:filename] ? "#{opts[:filename]}: " : ""
     if opts[:nice_error]
       msg << "Unexpected character at line #{parser.failure_line} column #{parser.failure_column}:\n"
     else

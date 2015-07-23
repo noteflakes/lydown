@@ -27,17 +27,18 @@ RSpec.describe LydownParser do
     expect(stream[6]).to eq({type: :note, raw: 'c', head: 'c'})
   end
   
-  it "includes source position in note events" do
+  it "includes source position in note events in proof mode" do
     filename = 'simple.ld'
     source = load_example(filename)
     
     stream = LydownParser.parse(source, {
       filename: filename,
-      source: source
+      source: source,
+      proof_mode: true
     })
 
     expect(stream[0]).to eq({type: :source_ref, filename: filename, 
-      source: source})
+      source: source, proof_mode: true})
     expect(stream[1]).to eq({type: :duration, value: '4', 
       filename: filename, source: source, line: 1, column: 1})
     expect(stream[2]).to eq({type: :note, raw: 'c', 
@@ -60,13 +61,14 @@ RSpec.describe LydownParser do
     
     stream = LydownParser.parse(source, {
       filename: filename,
-      source: source
+      source: source,
+      proof_mode: true
     })
     
     full_filename = File.expand_path(filename)
 
     expect(stream[0]).to eq({type: :source_ref, filename: filename, 
-      source: source})
+      source: source, proof_mode: true})
     expect(stream[1]).to eq({type: :duration_macro, macro: '4_8__',
       filename: filename, source: source, line: 1, column: 2})
     expect(stream[2]).to eq({type: :note, raw: 'c', 

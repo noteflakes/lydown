@@ -62,7 +62,7 @@ class Hash
     if @deep && k.is_a?(String) && k =~ /\//
       lookup(k)
     elsif @deep && k.is_a?(Symbol)
-      old_get(k.to_s)
+      old_get(k) || old_get(k.to_s)
     else
       old_get(k)
     end
