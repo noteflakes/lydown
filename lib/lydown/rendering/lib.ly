@@ -48,6 +48,13 @@ ficta = {
   \once \set suggestAccidentals = ##t
 }
 
+prallupbefore = {
+  \mark\markup {
+    \musicglyph #"scripts.prallup"
+    \hspace #1 
+  }
+}
+
 %{
   http://www.lilypond.org/doc/v2.18/Documentation/snippets/editorial-annotations#editorial-annotations-adding-links-to-objects
 %}
