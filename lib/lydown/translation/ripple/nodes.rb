@@ -49,16 +49,21 @@ module Lydown::Translation::Ripple
       check_line_break(stream, opts)
       note = {expressions: []}
       _translate(self, note, opts)
+      expressions = note[:expressions].join
+      expressions << ' ' unless expressions.empty?
+
       stream << "%s%s%s" % [
         note[:duration],
         note[:head],
-        note[:expressions].join
+        expressions
       ]
     end
     
     class Head < Root
       def translate(note, opts)
-        head = text_value.gsub('es', '-').gsub('s', '+')
+        head = text_value.dup
+        head.gsub!(/(?<=.{1})es/, '-')
+        head.gsub!(/(?<=.{1})s/, '+')
         head.sub!(/([a-g][\+\-]*)/) do |m|
           Lydown::Rendering::Accidentals.chromatic_to_diatonic(
             m, opts[:key] || 'c major'
@@ -128,7 +133,8 @@ module Lydown::Translation::Ripple
       check_line_break(stream, opts)
       macro_name = text_value.sub('$', '')
       if opts[:macros][macro_name]
-        stream << "{#{translate_macro(opts[:macros][macro_name])}}"
+        macro = translate_macro(opts[:macros][macro_name])
+        stream << "{#{macro}}"
       else
         raise LydownError, "Could not find named macro #{macro_name}"
       end
@@ -136,12 +142,20 @@ module Lydown::Translation::Ripple
 
     PLACE_HOLDERS = {
       '#' => '_',
-      '@' => '@'
+      '@' => '@',
+      'r' => 'r'
     }
     
     def translate_macro(macro)
-      macro.gsub(/([#@])([0-9\.]*)/) {|m| "#{$2}#{PLACE_HOLDERS[$1]}"}.
+      macro.gsub(/([r#@])([0-9\.]*)/) {|m| "#{$2}#{PLACE_HOLDERS[$1]}"}.
         gsub(' ', '')
+    end
+  end
+  
+  class Command < Root
+    def translate(stream, opts)
+      cmd = text_value.gsub(' ', ':')
+      stream << " #{cmd} "
     end
   end
 end

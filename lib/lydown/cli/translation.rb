@@ -30,7 +30,10 @@ module Lydown::CLI::Translation
       lyrics_path = base_path + '.lyr'
       figures_path = base_path + '.fig'
       
+      puts "translating #{path}"
+      
       code = {
+        path: path,
         ripple: IO.read(path),
         lyrics: File.file?(lyrics_path) && IO.read(lyrics_path),
         figures: File.file?(figures_path) && IO.read(figures_path),

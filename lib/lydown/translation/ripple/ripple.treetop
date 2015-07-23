@@ -2,12 +2,16 @@ grammar Ripple
   include Lydown::Translation::Ripple
 
   rule events
-    event ([\s]* event)* <Root>
+    white_space? event* <Root>
+  end
+  
+  rule white_space
+    [ \t\n]+
   end
   
   rule event
-    relative_cmd / curly_brace / key_signature / time_signature /
-    full_rest / note / phrasing / named_macro / stop_macro
+    (relative_cmd / curly_brace / key_signature / time_signature /
+    full_rest / note / phrasing / named_macro / stop_macro / command) white_space?
   end
   
   rule relative_cmd
@@ -67,7 +71,7 @@ grammar Ripple
   end
   
   rule full_rest
-    'R' [0-9]+ '*' [0-9]+ <FullRest>
+    'R' [0-9]+ ('*' [0-9]+)? <FullRest>
   end
   
   rule phrasing
@@ -80,5 +84,17 @@ grammar Ripple
   
   rule stop_macro
     '$$'
+  end
+  
+  rule command
+    (clef_command / simple_command) 
+  end
+  
+  rule simple_command
+    '\\' [a-zA-Z]+ <Command>
+  end
+  
+  rule clef_command
+    '\clef ' [a-z0-9_]+ <Command>
   end
 end
