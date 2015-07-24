@@ -47,7 +47,7 @@ grammar Ripple
   end
   
   rule accidental
-    ('s' / 'es')*
+    ('b' / 's' / 'es')*
   end
   
   rule accidental_flag

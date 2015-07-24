@@ -62,6 +62,7 @@ module Lydown::Translation::Ripple
     class Head < Root
       def translate(note, opts)
         head = text_value.dup
+        head.gsub!(/(?<=.{1})b/, '-')
         head.gsub!(/(?<=.{1})es/, '-')
         head.gsub!(/(?<=.{1})s/, '+')
         head.sub!(/([a-g][\+\-]*)/) do |m|
