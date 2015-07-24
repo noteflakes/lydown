@@ -4,6 +4,8 @@ EXAMPLES_PATH = File.join(File.expand_path(File.dirname(__FILE__)), 'examples')
 
 $spec_mode = true
 
+$old_stderr, $stderr = $stderr, StringIO.new
+
 def load_example(name, opts = {})
   content = IO.read(File.join(EXAMPLES_PATH, name))
   opts[:strip] ? content.strip_whitespace : content

@@ -21,11 +21,11 @@ module Lydown::CLI::Compiler
         work = Lydown::Work.new(opts)
         ly_code = work.to_lilypond(opts)
       rescue LydownError => e
-        STDERR.puts e.message
-        STDERR.puts e.backtrace.join("\n")
+        $stderr.puts e.message
+        $stderr.puts e.backtrace.join("\n")
         exit 1
       rescue => e
-        STDERR.puts "#{e.class}: #{e.message}\n#{e.backtrace.join("\n")}"
+        $stderr.puts "#{e.class}: #{e.message}\n#{e.backtrace.join("\n")}"
         exit 1
       end
       
@@ -40,7 +40,7 @@ module Lydown::CLI::Compiler
               f.write ly_code
             end
           rescue => e
-            STDERR.puts "#{e.class}: #{e.message}"
+            $stderr.puts "#{e.class}: #{e.message}"
           end
         end
       else
@@ -51,17 +51,17 @@ module Lydown::CLI::Compiler
     def compile(ly_code, opts)
       opts = opts.deep_clone
       begin
-        STDERR.puts "Compiling => #{opts[:output_target]}"
+        $stderr.puts "Compiling => #{opts[:output_target]}"
         t1 = Time.now
         Lydown::Lilypond.compile(ly_code, opts)
         t2 = Time.now
-        STDERR.puts "Elapsed: #{t2-t1}s"
+        $stderr.puts "Elapsed: #{t2-t1}s"
       rescue LydownError => e
-        STDERR.puts e.message
-        STDERR.puts e.backtrace.join("\n")
+        $stderr.puts e.message
+        $stderr.puts e.backtrace.join("\n")
       rescue => e
-        STDERR.puts "#{e.class}: #{e.message}"
-        STDERR.puts e.backtrace.join("\n")
+        $stderr.puts "#{e.class}: #{e.message}"
+        $stderr.puts e.backtrace.join("\n")
       end
 
       if opts[:open_target]

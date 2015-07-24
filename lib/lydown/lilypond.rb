@@ -28,8 +28,9 @@ module Lydown
           copy_pages(tmp_target, target, ext)
         end
       rescue => e
-        puts e.message
-        p e.backtrace
+        $stderr.puts e.message
+        $stderr.puts e.backtrace.join("\n")
+        raise e
       end
       
       def copy_pages(source, target, ext)

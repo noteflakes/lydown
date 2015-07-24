@@ -18,7 +18,7 @@ module Lydown::CLI::Diff
         set_cached_content(path, read_content(path)) rescue nil
         count += 1
       end
-      puts "Cached #{count} files."
+      $stderr.puts "Cached #{count} files."
     end
     
     def read_content(path)
@@ -47,8 +47,8 @@ module Lydown::CLI::Diff
       
       first..last
     rescue => e
-      STDERR << e.message
-      STDERR << e.backtrace.join("\n")
+      $stderr.puts e.message
+      $stderr.puts e.backtrace.join("\n")
       nil..nil
     end
   end

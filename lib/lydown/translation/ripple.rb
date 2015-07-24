@@ -10,7 +10,7 @@ class RippleParser
     ast = parser.parse(source)
     unless ast
       error_msg = format_parser_error(source, parser, opts)
-      STDERR.puts error_msg
+      $stderr.puts error_msg
       raise LydownError, error_msg
     end
     ast

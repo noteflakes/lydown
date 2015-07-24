@@ -7,7 +7,7 @@ module Lydown::CLI::Proofing
       
       Lydown::CLI::Diff.fill_cache(source)
       
-      puts "Proof mode: #{source} -> #{opts[:output_filename]}"
+      $stderr.puts "Proof mode: #{source} -> #{opts[:output_filename]}"
       last_proof_path = nil
 
       watch_directory(source, opts)
@@ -87,7 +87,7 @@ module Lydown::CLI::Proofing
     def process(opts)
       if opts[:line_range] != (nil..nil)
         t = Time.now.strftime("%H:%M:%S")
-        puts "[#{t}] Changed: #{opts[:base_path]} (lines #{opts[:line_range].inspect})"
+        $stderr.puts "[#{t}] Changed: #{opts[:base_path]} (lines #{opts[:line_range].inspect})"
         Lydown::CLI::Compiler.process(opts)
       end
     end
