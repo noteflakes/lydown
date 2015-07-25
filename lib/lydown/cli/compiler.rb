@@ -12,6 +12,7 @@ module Lydown::CLI::Compiler
     end
     
     def process(opts)
+      t1 = Time.now
       opts = opts.deep_clone
       # translate lydown code to lilypond code
       ly_code = ''
@@ -46,16 +47,14 @@ module Lydown::CLI::Compiler
       else
         compile(ly_code, opts)
       end
+      t2 = Time.now
+      $stderr.puts "Elapsed: #{t2-t1}s"
     end
 
     def compile(ly_code, opts)
       opts = opts.deep_clone
       begin
-        $stderr.puts "Compiling => #{opts[:output_target]}"
-        t1 = Time.now
         Lydown::Lilypond.compile(ly_code, opts)
-        t2 = Time.now
-        $stderr.puts "Elapsed: #{t2-t1}s"
       rescue LydownError => e
         $stderr.puts e.message
         $stderr.puts e.backtrace.join("\n")
