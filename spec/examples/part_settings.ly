@@ -31,7 +31,7 @@
             \clef "bass"
             << \new Voice = "continuo_voice1" {
               \time 3/8
-              r4. b'8 d g
+              r4. b''8 d g
             } >>
           }
         }

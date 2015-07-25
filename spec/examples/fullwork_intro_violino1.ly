@@ -22,7 +22,7 @@
         << \new Voice = "violino1_voice1" {
           \time 3/4
           \key d \major
-          a8 b cis d e4
+          a'8 b cis d e4
         } >>
         \bar "|."
       }

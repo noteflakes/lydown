@@ -33,7 +33,7 @@
         << \new Voice = "violino2_voice1" {
           \time 2/4
           \key bes \major
-          g4 f8 ees d2
+          g'4 f8 ees d2
         } >>
         \bar "|."
       }

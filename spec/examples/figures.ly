@@ -11,7 +11,7 @@
       \relative c {
         \clef "bass"
         << \new Voice = "continuo_voice1" {
-          a4 r r2
+          a'4 r r2
           bes4 r fis r
           f! r e r
           e r r d

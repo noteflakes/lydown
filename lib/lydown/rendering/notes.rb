@@ -82,6 +82,38 @@ module Lydown::Rendering
       lilypond_note_name(note, key)
     end
   end
+  
+  module Octaves
+    # calculates the octave markers needed to put a first note in the right 
+    # octave. In lydown, octaves are relative (i.e. lilypond's relative mode).
+    # But the first note gives the octave to start on, rather than a relative 
+    # note to c (or any other reference note).
+    #
+    # In that manner, d' is d above middle c, g'' is g an octave and fifth 
+    # above middle c, a is a a below middle c, and eß, is great e flat.
+    # 
+    # The return value is a string with octave markers for relative mode,
+    # based on the refence note
+    DIATONICS = %w{a b c d e f g}
+    def self.relative_octave(note, ref_note = 'c')
+      note_diatonic, ref_diatonic = note[0], ref_note[0]
+      raise LydownError, "Invalid note #{note}" unless DIATONICS.index(note_diatonic)
+      raise LydownError, "Invalid reference note #{ref_note}" unless DIATONICS.index(ref_diatonic)
+      
+      # calculate diatonic interval
+      note_array = DIATONICS.rotate(DIATONICS.index(ref_diatonic))
+      interval = note_array.index(note_diatonic)
+
+      # calculate octave interval and 
+      octave_value = note.count("'") - note.count(',')
+      ref_value = ref_note.count("'") - ref_note.count(',')
+      octave_interval = octave_value - ref_value
+      octave_interval += 1 if interval >= 4
+      
+      # generate octave markers
+      octave_interval >= 0 ? "'" * octave_interval : "," * -octave_interval
+    end
+  end
 
   module Notes
     include Lydown::Rendering::Figures
@@ -89,9 +121,16 @@ module Lydown::Rendering
     def add_note(event, options = {})
       return add_macro_note(event) if @work['process/duration_macro']
       
-      if @event[:head] == '@'
+      # calculate relative octave markers for first note
+      unless @work['process/first_note'] || event[:head] =~ /^[rsR]/
+        note = event[:head] + (event[:octave] || '')
+        event[:octave] = Lydown::Rendering::Octaves.relative_octave(note)
+        @work['process/first_note'] = note
+      end
+      
+      if event[:head] == '@'
         # replace repeating note head
-        @event[:head] = @work['process/last_note_head'] 
+        event[:head] = @work['process/last_note_head'] 
       else
         @work['process/last_note_head'] = event[:head]
       end

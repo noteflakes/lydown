@@ -27,7 +27,7 @@
             << \new Voice = "violino1_voice1" {
               \time 3/4
               \key bes \major
-              a4 bes c d
+              a'4 bes c d
               \key d \major
               a b cis d
             } >>
@@ -80,7 +80,7 @@
             << \new Voice = "violino1_voice1" {
               \time 2/4
               \key bes \major
-              a4 bes
+              a'4 bes
               \time 5/4
               c d
             } >>

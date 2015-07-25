@@ -9,7 +9,7 @@
     \context Staff = Staff {
       \relative c {
         << \new Voice = "voice1" {
-          a8. g16[ f8] ees'
+          a'8. g16[ f8] ees'
           c d16 e8 f16
         } >>
       }

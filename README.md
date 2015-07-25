@@ -97,19 +97,7 @@ Notes can be repeated using the <code>@</code> placeholder:
 Chords are written using angled brackets, like in lilypond:
 
     (2<fd>4<ge>) => <f d>2( <g e>4)
-
-### Rests
-
-Normal rests are written [like in lilypond](http://www.lilypond.org/doc/v2.18/Documentation/notation/writing-rests#rests):
-
-    4ce2r => c4 e r2
-
-Full bar rests are [similar to lilypond](http://www.lilypond.org/doc/v2.18/Documentation/notation/writing-rests#full-measure-rests), except there's no need to enter the rest value (it is implicit in the time signature):
-
-    - time: 3/4
-    // 4 bar rest in the middle
-    2c4e R*4 2.g
-
+    
 ### Accidentals
 
 Accidentals can be entered using + and -
@@ -143,7 +131,18 @@ A ficta accidental (an non-original accidental that appears above the staff) can
 
 ### Octaves
 
-Like in lilypond's [relative mode](http://www.lilypond.org/doc/v2.18/Documentation/notation/writing-pitches#relative-octave-entry), lydown uses ' and , for moving between octaves. The starting point is always c (that is c°).
+In Lydown, the first note in the document carries an absolute octave marker, using the <code>'</code> and <code>,</code> signs:
+
+      c,,   // contrabass octave
+      c,    // great octave
+      c     // small octave
+      c'    // first octave (middle c)
+      c''   // second octave
+      c'''  // third octave
+      ...   // etc.
+
+For the following notes, the octave markers <code>'</code> and <code>,</code> are used for jumping between octaves, using the same rules as 
+ lilypond's [relative mode](http://www.lilypond.org/doc/v2.18/Documentation/notation/writing-pitches#relative-octave-entry):
 
 ### Barlines
 
@@ -155,6 +154,18 @@ When entering unmetered music, an invisible barline can be added in order to pro
 
     -time: unmetered
     cdef ?| gag
+
+### Rests
+
+Normal rests are written [like in lilypond](http://www.lilypond.org/doc/v2.18/Documentation/notation/writing-rests#rests):
+
+    4ce2r => c4 e r2
+
+Full bar rests are [similar to lilypond](http://www.lilypond.org/doc/v2.18/Documentation/notation/writing-rests#full-measure-rests), except there's no need to enter the rest value (it is implicit in the time signature):
+
+    - time: 3/4
+    // 4 bar rest in the middle
+    2c4e R*4 2.g
 
 ### Beams, slurs and ties
 

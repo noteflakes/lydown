@@ -21,7 +21,7 @@
         << \new Voice = "voice1" {
           \time 4/4
           \key b \major
-          r4. b'8 dis gis
+          r4. b''8 dis gis
         } >>
       }
     }

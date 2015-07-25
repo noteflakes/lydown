@@ -11,7 +11,7 @@
       \relative c {
         << \new Voice = "voice1" {
           \key d \major
-          g16 a b g e4 <fis d>2
+          g'16 a b g e4 <fis d>2
         } >>
       }
     }

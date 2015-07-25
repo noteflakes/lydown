@@ -41,6 +41,10 @@ RSpec.describe Lydown do
     verify_example('accidental-modes')
   end
 
+  it "correctly translate first note octave markers" do
+    verify_example('octaves_first')
+  end
+
   it "correctly translate octave markers" do
     verify_example('octaves')
   end

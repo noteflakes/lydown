@@ -26,7 +26,7 @@
             << \new Voice = "violino1_voice1" {
               \time 3/4
               \key d \major
-              a8 b cis d e4
+              a'8 b cis d e4
             } >>
             \bar "|."
           }
@@ -90,7 +90,7 @@
             << \new Voice = "violino2_voice1" {
               \time 2/4
               \key bes \major
-              g4 f8 ees d2
+              g'4 f8 ees d2
             } >>
             \bar "|."
           }
