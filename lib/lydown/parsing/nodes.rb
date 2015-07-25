@@ -1,5 +1,5 @@
 module Lydown::Parsing
-  module Root
+  module RootMethods
     def _to_stream(element, stream, opts)
       if element.elements
         element.elements.each do |e|
@@ -24,7 +24,7 @@ module Lydown::Parsing
         else
           line, column = source.find_line_and_column(interval.first)
         end
-        
+
         hash.merge({
           filename: opts[:filename],
           source: source,
@@ -34,22 +34,34 @@ module Lydown::Parsing
       else
         hash
       end
+    ensure
+      if $progress_bar
+        $progress_bar.progress = (opts[:progress_base] || 0) + interval.end
+      end
     end
     
     def add_event(stream, opts, type)
       stream << event_hash(stream, opts, {type: type})
     end
   end
+  
+  class Root < Treetop::Runtime::SyntaxNode
+    include RootMethods
+    def initialize(*args)
+      super
+      if $progress_bar
+        $progress_bar.progress = interval.end
+      end
+    end
+  end
 
-  module CommentContent
+  class CommentContent < Root
     def to_stream(stream, opts)
       stream << {type: :comment, content: text_value.strip}
     end
   end
 
-  module Setting
-    include Root
-
+  class Setting < Root
     def to_stream(stream, opts)
       level = (text_value =~ /^([\s]+)/) ? ($1.length / 2) : 0
       @setting = event_hash(stream, opts, {
@@ -80,9 +92,7 @@ module Lydown::Parsing
     end
   end
 
-  module DurationValue
-    include Root
-    
+  class DurationValue < Root
     def to_stream(stream, opts)
       stream << event_hash(stream, opts, {
         type: :duration, value: text_value
@@ -90,9 +100,7 @@ module Lydown::Parsing
     end
   end
 
-  module TupletValue
-    include Root
-    
+  class TupletValue < Root
     def to_stream(stream, opts)
       if text_value =~ /^(\d+)%((\d+)\/(\d+))?$/
         value, fraction, group_length = $1, $2, $4
@@ -111,9 +119,7 @@ module Lydown::Parsing
     end
   end
 
-  module GraceDuration
-    include Root
-    
+  class GraceDuration < Root
     GRACE_KIND = {
       nil => :grace,
       '/' => :acciaccatura,
@@ -129,9 +135,7 @@ module Lydown::Parsing
     end
   end
 
-  module Note
-    include Root
-
+  class Note < Root
     def to_stream(stream, opts)
       note = event_hash(stream, opts, {
         type: :note, raw: text_value
@@ -169,9 +173,7 @@ module Lydown::Parsing
     end
   end
   
-  module Chord
-    include Root
-    
+  class Chord < Root
     def to_stream(stream, opts)
       chord = event_hash(stream, opts, {
         type: :chord, notes: []
@@ -188,9 +190,7 @@ module Lydown::Parsing
     end
   end
 
-  module StandAloneFigures
-    include Root
-
+  class StandAloneFigures < Root
     def to_stream(stream, opts)
       note = event_hash(stream, opts, {
         type: :stand_alone_figures
@@ -201,52 +201,44 @@ module Lydown::Parsing
   end
 
   module Phrasing
-    module BeamOpen
-      include Root
+    class BeamOpen < Root
       def to_stream(stream, opts)
         add_event(stream, opts, :beam_open)
       end
     end
 
-    module BeamClose
-      include Root
+    class BeamClose < Root
       def to_stream(stream, opts)
         add_event(stream, opts, :beam_close)
       end
     end
 
-    module SlurOpen
-      include Root
+    class SlurOpen < Root
       def to_stream(stream, opts)
         add_event(stream, opts, :slur_open)
       end
     end
 
-    module SlurClose
-      include Root
+    class SlurClose < Root
       def to_stream(stream, opts)
         add_event(stream, opts, :slur_close)
       end
     end
   end
 
-  module Tie
-    include Root
+  class Tie < Root
     def to_stream(stream, opts)
       stream << event_hash(stream, opts, {type: :tie})
     end
   end
 
-  module ShortTie
-    include Root
+  class ShortTie < Root
     def to_stream(stream, opts)
       stream << event_hash(stream, opts, {type: :short_tie})
     end
   end
 
-  module Rest
-    include Root
-    
+  class Rest < Root
     def to_stream(stream, opts)
       rest = event_hash(stream, opts, {
         type: :rest, raw: text_value, head: text_value[0]
@@ -261,9 +253,7 @@ module Lydown::Parsing
     end
   end
 
-  module Silence
-    include Root
-    
+  class Silence < Root
     def to_stream(stream, opts)
       stream << event_hash(stream, opts, {
         type: :silence, raw: text_value, head: text_value[0]
@@ -272,8 +262,7 @@ module Lydown::Parsing
   end
 
   module DurationMacroExpression
-    include Root
-    
+    include RootMethods
     def to_stream(stream, opts)
       stream << event_hash(stream, opts, {
         type: :duration_macro, macro: text_value
@@ -281,8 +270,7 @@ module Lydown::Parsing
     end
   end
 
-  module Lyrics
-    include Root
+  class Lyrics < Root
     def to_stream(stream, opts)
       o = {type: :lyrics}
       _to_stream(self, o, opts)
@@ -316,7 +304,7 @@ module Lydown::Parsing
     end
   end
   
-  module StreamIndex
+  class StreamIndex < Root
     def to_stream(o, opts)
       idx = (text_value =~ /\(([\d]+)\)/) && $1.to_i
       if idx.nil?
@@ -327,7 +315,7 @@ module Lydown::Parsing
   end
 
   module Barline
-    include Root
+    include RootMethods
     def to_stream(stream, opts)
       stream << event_hash(stream, opts, {
         type: :barline, 
@@ -336,9 +324,7 @@ module Lydown::Parsing
     end
   end
   
-  module Command
-    include Root
-    
+  class Command < Root
     def to_stream(stream, opts)
       cmd = event_hash(stream, opts, {
         type: :command, raw: text_value
@@ -377,15 +363,14 @@ module Lydown::Parsing
     end
   end
   
-  module VoiceSelector
+  class VoiceSelector < Root
     def to_stream(stream, opts)
       voice = (text_value =~ /^([1234])/) && $1.to_i
       stream << {type: :voice_select, voice: voice}
     end
   end
   
-  module SourceRef
-    include Root
+  class SourceRef < Root
     def to_stream(stream, opts)
       ref = {type: :source_ref, raw: text_value}
       _to_stream(self, ref, opts)

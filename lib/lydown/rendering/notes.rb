@@ -322,7 +322,7 @@ module Lydown::Rendering
         filename: work['process/macro_filename'],
         source:   work['process/macro_source']
       }).deep!
-      code = LydownParser.parse(group, opts)
+      code = LydownParser.parse_macro_group(group, opts)
 
       # stash macro
       macro = work['process/duration_macro']

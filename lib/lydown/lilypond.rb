@@ -1,6 +1,9 @@
 require 'lydown/errors'
+require 'lydown/cli/output'
+
 require 'tempfile'
 require 'fileutils'
+require 'open3'
 
 module Lydown
   module Lilypond
@@ -48,23 +51,54 @@ module Lydown
       
       def invoke(source, opts = {})
         # Run lilypond, pipe source into its STDIN, and capture its STDERR
-        cmd = 'lilypond -lERROR '
+        cmd = 'lilypond '
         cmd << "-o #{opts[:output_filename]} "
         cmd << "-dno-point-and-click "
         cmd << "--#{opts[:format]} " if opts[:format]
-        cmd << '-s - 2>&1'
+        cmd << ' - '
         
         err_info = ''
-        IO.popen(cmd, 'r+') do |f|
-          f.puts source
-          f.close_write
-          err_info = f.read
-          f.close
+        success = false
+        Open3.popen2e(cmd) do |input, output, wait_thr|
+          input.puts source
+          input.close_write
+          err_info = read_lilypond_progress(output, opts)
+          output.close
+          success = wait_thr.value == 0
         end
-        unless $?.success?
+        unless success
           err_info = err_info.lines[0, 3].join
           raise LydownError, "Lilypond compilation failed:\n#{err_info}"
         end
+      end
+      
+      LILYPOND_STATUS_LINES = %w{
+        Processing
+        Parsing
+        Interpreting
+        Preprocessing
+        Finding
+        Fitting
+        Drawing
+        Layout
+        Converting
+        Success:
+      }
+      STATUS_TOTAL = LILYPOND_STATUS_LINES.size
+      
+      def read_lilypond_progress(f, opts)
+        info = ''
+        Lydown::CLI::show_progress('Compile', STATUS_TOTAL) do |bar|
+          while !f.eof?
+            line = f.gets
+            info += line
+            if line =~ /^([^\s]+)/
+              idx = LILYPOND_STATUS_LINES.index($1)
+              bar.progress = idx + 1 if idx
+            end
+          end
+        end
+        info
       end
     end
   end

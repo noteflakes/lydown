@@ -213,7 +213,6 @@ module Lydown
     DEFAULT_BASENAMES = %w{work movement}
 
     def process_directory(path, recursive = true)
-      $stderr.puts "process_directory #{@context[:options].inspect}"
       preserve_context do
         # process work code
         process_lydown_file(File.join(path, 'work.ld'))
@@ -248,9 +247,9 @@ module Lydown
     end
     
     def process_lydown_file(path, prefix = [], opts = {})
-      $stderr.puts "process: #{path}"
       return unless File.file?(path)
 
+      $stderr.puts path
       content = IO.read(path)
       stream = LydownParser.parse(content, {
         filename: File.expand_path(path),

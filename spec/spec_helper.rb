@@ -17,6 +17,20 @@ class String
   end
 end
 
+class Sink
+  def method_missing(m, *args)
+    # do nothing
+  end
+end
+
+# Inhibit command line output
+module Lydown::CLI
+  # Simple wrapper around ProgressBar
+  def self.show_progress(title, total)
+    yield Sink.new
+  end
+end
+
 def verify_example(name, result_name = nil, opts = {})
   lydown = LydownParser.parse(load_example("#{name}.ld"))
   work = Lydown::Work.new
