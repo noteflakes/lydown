@@ -14,19 +14,21 @@ module Lydown::CLI
     method_option :format, aliases: '-f', 
       default: 'pdf', desc: 'Set output format (pdf/png/ly)', 
       enum: %w{pdf png ly}
-    method_option :png, desc: 'Set output format as PNG'
+    method_option :png, type: :boolean, desc: 'Set output format as PNG'
+    method_option :ly, type: :boolean, desc: 'Set output format as Lilypond'
     method_option :parts, aliases: '-p',
       desc: 'Compile only the specified parts (comma separated)'
     method_option :movements, aliases: '-m',
       desc: 'Compile only the specified movements (comma separated)'
-    method_option :score_only, aliases: '-s',
+    method_option :score_only, type: :boolean, aliases: '-s',
       desc: 'Compile score only'
-    method_option :parts_only, aliases: '-n',
+    method_option :parts_only, type: :boolean, aliases: '-n',
       desc: 'Compile parts only'
     method_option :output, aliases: '-o',
       desc: 'Set output path'
-    method_option :open_target, aliases: '-O',
+    method_option :open_target, type: :boolean, aliases: '-O',
       desc: 'Open output file after compilation'
+    method_option :verbose, type: :boolean
     def compile(*args)
       require 'lydown'
       
@@ -35,7 +37,7 @@ module Lydown::CLI
       Lydown::CLI::Support.detect_filename(opts)
       
       # Set format based on direct flag
-      [:png].each {|f| opts[:format] = f if opts[f]}
+      [:png, :ly].each {|f| opts[:format] = f.to_s if opts[f]}
 
       opts[:parts] = opts[:parts].split(',') if opts[:parts]
       opts[:movements] = opts[:movements].split(',') if opts[:movements]
