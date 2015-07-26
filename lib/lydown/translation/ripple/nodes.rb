@@ -56,7 +56,11 @@ module Lydown::Translation::Ripple
         octave = Lydown::Rendering::Octaves.absolute_octave(
           note[:head], opts[:relative_start_octave] || 'c'
         )
-        note[:head].gsub!(/[',]+/, octave)
+        if note[:head] =~ /[',]+$/
+          note[:head].gsub!(/[',]+/, octave)
+        else
+          note[:head] << octave
+        end
         opts[:first_note] = note[:head]
       end
       
@@ -150,6 +154,7 @@ module Lydown::Translation::Ripple
         macro = translate_macro(opts[:macros][macro_name])
         stream << "{#{macro}}"
         opts[:current_macro] = macro
+        opts[:post_macro_value] = nil
       else
         raise LydownError, "Could not find named macro #{macro_name}"
       end

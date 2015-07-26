@@ -30,7 +30,7 @@ module Lydown::CLI::Translation
       lyrics_path = base_path + '.lyr'
       figures_path = base_path + '.fig'
       
-      $stderr.puts "translating #{path}"
+      $stderr.puts "Translating #{path}..."
       
       code = {
         path: path,
