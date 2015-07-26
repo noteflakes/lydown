@@ -51,6 +51,14 @@ module Lydown::Translation::Ripple
       _translate(self, note, opts)
       expressions = note[:expressions].join
       expressions << ' ' unless expressions.empty?
+      
+      unless opts[:first_note] || note[:head] =~ /^[rs]/
+        octave = Lydown::Rendering::Octaves.absolute_octave(
+          note[:head], opts[:relative_start_octave] || 'c'
+        )
+        note[:head].gsub!(/[',]+/, octave)
+        opts[:first_note] = note[:head]
+      end
 
       stream << "%s%s%s" % [
         note[:duration],

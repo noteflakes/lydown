@@ -21,4 +21,11 @@ RSpec.describe Lydown::Rendering::Octaves do
 
     expect(o.relative_octave("f,,", "c,")).to eq(",")
   end
+  
+  it "calculates octave markers for translated Ripple code" do
+    o = Lydown::Rendering::Octaves
+    
+    expect(o.absolute_octave('c', "c'")).to eq("'")
+    expect(o.absolute_octave("b'", "c")).to eq("")
+  end
 end

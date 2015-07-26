@@ -20,8 +20,11 @@ RSpec.describe Lydown::Translation do
     expect(ld).to eq(load_example('translation_macros.ld'))
   end
 
+  after(:example) do
+    FileUtils.rm Dir.glob('spec/examples/translate/mvmt1/*.ld') rescue nil
+  end
+
   it "translates a complete directory of ripple files" do
-    FileUtils.rm('spec/examples/translate/mvmt1/*.ld') rescue nil
     ld = Lydown::CLI::Translation.process(
       path: File.join('spec/examples/translate')
     )

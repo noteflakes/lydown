@@ -84,6 +84,8 @@ module Lydown::Rendering
   end
   
   module Octaves
+    DIATONICS = %w{a b c d e f g}
+
     # calculates the octave markers needed to put a first note in the right 
     # octave. In lydown, octaves are relative (i.e. lilypond's relative mode).
     # But the first note gives the octave to start on, rather than a relative 
@@ -94,7 +96,6 @@ module Lydown::Rendering
     # 
     # The return value is a string with octave markers for relative mode,
     # based on the refence note
-    DIATONICS = %w{a b c d e f g}
     def self.relative_octave(note, ref_note = 'c')
       note_diatonic, ref_diatonic = note[0], ref_note[0]
       raise LydownError, "Invalid note #{note}" unless DIATONICS.index(note_diatonic)
@@ -109,6 +110,25 @@ module Lydown::Rendering
       ref_value = ref_note.count("'") - ref_note.count(',')
       octave_interval = octave_value - ref_value
       octave_interval += 1 if interval >= 4
+      
+      # generate octave markers
+      octave_interval >= 0 ? "'" * octave_interval : "," * -octave_interval
+    end
+
+    def self.absolute_octave(note, ref_note = 'c')
+      note_diatonic, ref_diatonic = note[0], ref_note[0]
+      raise LydownError, "Invalid note #{note}" unless DIATONICS.index(note_diatonic)
+      raise LydownError, "Invalid reference note #{ref_note}" unless DIATONICS.index(ref_diatonic)
+      
+      # calculate diatonic interval
+      note_array = DIATONICS.rotate(DIATONICS.index(ref_diatonic))
+      interval = note_array.index(note_diatonic)
+
+      # calculate octave interval and 
+      note_value = note.count("'") - note.count(',')
+      ref_value = ref_note.count("'") - ref_note.count(',')
+      octave_interval = ref_value + note_value
+      octave_interval -= 1 if interval >= 4
       
       # generate octave markers
       octave_interval >= 0 ? "'" * octave_interval : "," * -octave_interval
