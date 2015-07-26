@@ -59,6 +59,11 @@ module Lydown::Translation::Ripple
         note[:head].gsub!(/[',]+/, octave)
         opts[:first_note] = note[:head]
       end
+      
+      if opts[:post_macro_value]
+        note[:duration] ||= opts[:post_macro_value]
+        opts[:post_macro_value] = nil
+      end
 
       stream << "%s%s%s" % [
         note[:duration],
@@ -144,6 +149,7 @@ module Lydown::Translation::Ripple
       if opts[:macros][macro_name]
         macro = translate_macro(opts[:macros][macro_name])
         stream << "{#{macro}}"
+        opts[:current_macro] = macro
       else
         raise LydownError, "Could not find named macro #{macro_name}"
       end
@@ -158,6 +164,16 @@ module Lydown::Translation::Ripple
     def translate_macro(macro)
       macro.gsub(/([r#@])([0-9\.]*)/) {|m| "#{$2}#{PLACE_HOLDERS[$1]}"}.
         gsub(' ', '')
+    end
+    
+    class Stop < Root
+      def translate(stream, opts)
+        if opts[:current_macro]
+          if opts[:current_macro] =~ /([0-9]+\.*)[^0-9]*$/
+            opts[:post_macro_value] = $1
+          end
+        end
+      end
     end
   end
   

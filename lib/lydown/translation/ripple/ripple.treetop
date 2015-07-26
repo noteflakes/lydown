@@ -83,7 +83,7 @@ grammar Ripple
   end
   
   rule stop_macro
-    '$$'
+    '$$' <NamedMacro::Stop>
   end
   
   rule command

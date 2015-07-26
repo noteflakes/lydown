@@ -6,5 +6,5 @@
     d e cs $$ fs,4 ~ $m1 fs fs' e d cs b as b $$
   fs'8 fs, fs fs fs fs fs fs
   g g g g cs, cs cs cs
-  $m6 d e cs as $$
+  $m6 d e cs as $$ r
 }
