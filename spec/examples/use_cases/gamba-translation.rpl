@@ -1,0 +1,7 @@
+\relative c' {
+  \key b \minor
+  \time 4/4
+  
+  fs4 ~ fs fs
+}
+

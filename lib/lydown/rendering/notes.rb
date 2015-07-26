@@ -320,6 +320,10 @@ module Lydown::Rendering
       # correct
       @work['process/macro_filename'] = event[:filename]
       @work['process/macro_source'] = event[:source]
+      
+      # increment group note count
+      @work['process/macro_group_note_count'] ||= 0
+      @work['process/macro_group_note_count'] += 1
 
       # if group is complete, compile it just like regular code
       unless @work['process/macro_group'].include?('_')
@@ -330,10 +334,13 @@ module Lydown::Rendering
     # emits the current macro group up to the first placeholder character.
     # this method is called 
     def self.cleanup_duration_macro(work)
-      return unless work['process/macro_group']
+      return unless work['process/macro_group_note_count'] &&
+        work['process/macro_group_note_count'] > 0
       
       # truncate macro group up until first placeholder
       group = work['process/macro_group'].sub(/_.*$/, '')
+
+      # Refrain from adding 
       add_duration_macro_group(work, group)
     end
     
@@ -348,6 +355,7 @@ module Lydown::Rendering
       macro = work['process/duration_macro']
       work['process/duration_macro'] = nil
       work['process/macro_group'] = nil
+      work['process/macro_group_note_count'] = nil
 
       work.process(code, no_reset: true)
     ensure
