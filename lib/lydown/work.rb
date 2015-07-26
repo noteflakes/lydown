@@ -254,7 +254,7 @@ module Lydown
       stream = LydownParser.parse(content, {
         filename: File.expand_path(path),
         source: content
-      })
+      }.merge(proof_mode: @context['options/proof_mode']))
       
       if opts[:line_range]
         Lydown::Rendering.insert_skip_markers(stream, opts[:line_range])
