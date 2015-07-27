@@ -48,7 +48,7 @@ module Lydown::CLI::Compiler
         compile(ly_code, opts)
       end
       t2 = Time.now
-      $stderr.puts "Elapsed: #{t2-t1}s"
+      $stderr.puts "Elapsed: #{'%.1f' % [t2-t1]}s"
     end
 
     def compile(ly_code, opts)

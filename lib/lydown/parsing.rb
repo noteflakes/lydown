@@ -6,24 +6,33 @@ require 'lydown/parsing/lydown.treetop'
 
 class LydownParser
   def self.parse(source, opts = {})
-    Lydown::CLI.show_progress('Process', source.length * 2) do |bar|
-      parser, ast = self.new
-      ast = parser.parse(source)
-
-      unless ast
-        error_msg = format_parser_error(source, parser, opts)
-        $stderr.puts error_msg
-        raise LydownError, error_msg
-      else
-        stream = []
-        ast.to_stream(stream, opts.merge(progress_base: source.length))
-        # insert source ref event into stream if we have a filename ref
-        if opts[:filename] && !stream.empty?
-          stream.unshift({type: :source_ref}.merge(opts))
-        end
+    if opts[:no_progress]
+      do_parse(source, opts)
+    else
+      Lydown::CLI.show_progress('Parse', source.length * 2) do |bar|
+        stream = do_parse(source, opts)
         bar.finish
         stream
       end
+    end
+  end
+  
+  def self.do_parse(source, opts)
+    parser, ast = self.new
+    ast = parser.parse(source)
+
+    unless ast
+      error_msg = format_parser_error(source, parser, opts)
+      $stderr.puts error_msg
+      raise LydownError, error_msg
+    else
+      stream = []
+      ast.to_stream(stream, opts.merge(progress_base: source.length))
+      # insert source ref event into stream if we have a filename ref
+      if opts[:filename] && !stream.empty?
+        stream.unshift({type: :source_ref}.merge(opts))
+      end
+      stream
     end
   end
   

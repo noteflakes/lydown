@@ -1,7 +1,7 @@
 require 'lydown/core_ext'
 require 'lydown/templates'
-
-require 'pp'
+require 'lydown/cli/output'
+require 'parallel'
 
 module Lydown
   # Work is a virtual lilypond document. It can contain multiple movements,
@@ -212,34 +212,123 @@ module Lydown
 
     DEFAULT_BASENAMES = %w{work movement}
 
-    def process_directory(path, recursive = true)
+    def process_directory(path)
+      state = {
+        streams: {},
+        movements: Hash.new {|h, k| h[k] = {}},
+        current_movement: nil,
+        part_count: 0
+      }
+      
+      read_directory(path, true, state)
+      parse_directory_files(state)
+      process_directory_files(state)
+    end
+    
+    def read_directory(path, recursive, state)
+      streams = state[:streams]
+      movements = state[:movements]
+      current_movement = state[:current_movement]
+      part_filter = @context[:options][:parts]
+      mvmt_filter = @context[:options][:movements]
+      
+      # look for work code
+      file_path = File.join(path, 'work.ld')
+      if File.file?(file_path)
+        streams[file_path] = nil
+        movements[nil][:work] = file_path
+      end
+      
+      # look for movement code
+      file_path = File.join(path, 'movement.ld')
+      if File.file?(file_path)
+        streams[file_path] = nil
+        movements[current_movement][:movement] = file_path
+      end
+
+      Dir["#{path}/*"].entries.sort.each do |entry|
+        if File.file?(entry) && (entry =~ /\.ld$/)
+          part = File.basename(entry, '.*')
+          skip = part_filter && !part_filter.include?(part)
+          unless DEFAULT_BASENAMES.include?(part) || skip
+            streams[entry] = nil
+            movements[current_movement][part] = entry
+            state[:part_count] += 1
+          end
+        elsif File.directory?(entry) && recursive
+          movement = File.basename(entry)
+          skip = mvmt_filter && !mvmt_filter.include?(movement)
+          unless skip
+            state[:current_movement] = movement
+            # process([{type: :setting, key: 'movement', value: movement}])
+            read_directory(entry, false, state)
+          end
+        end
+      end
+    end
+
+    PARALLEL_PARSE_OPTIONS = {
+      progress: {
+        title: 'Parse',
+        format: Lydown::CLI::PROGRESS_FORMAT
+      }
+    }
+    
+    def parse_directory_files(state)
+      streams = state[:streams]
+      proof_mode =  @context['options/proof_mode']
+      paths = streams.keys
+      processed_streams = Parallel.map(paths, PARALLEL_PARSE_OPTIONS) do |path|
+        content = IO.read(path)
+        LydownParser.parse(content, {
+          filename: File.expand_path(path),
+          source: content,
+          proof_mode: proof_mode,
+          no_progress: true
+        })
+      end
+      processed_streams.each_with_index {|s, idx| streams[paths[idx]] = s}
+    end
+    
+    def process_directory_files(state)
+      streams = state[:streams]
+      movements = state[:movements]
+
+      Lydown::CLI.show_progress('Process', state[:part_count]) do |bar|
+        preserve_context do
+          if path = movements[nil][:work]
+            process(streams[path])
+          end
+        
+          movements.each do |mvmt, paths|
+            process_movement_directory_files(mvmt, state)
+          end
+        end
+        bar.finish
+      end
+    end
+    
+    def process_movement_directory_files(mvmt, state)
+      streams = state[:streams]
+      movements = state[:movements]
+      line_range = @context[:options][:line_range]
+
+      process([{type: :setting, key: 'movement', value: mvmt}]) unless mvmt.nil?
       preserve_context do
-        # process work code
-        process_lydown_file(File.join(path, 'work.ld'))
-        # process movement specific code
-        process_lydown_file(File.join(path, 'movement.ld'))
+        if path = movements[mvmt][:movement]
+          process(streams[path])
+        end
         
-        part_filter = @context[:options][:parts]
-        mvmt_filter = @context[:options][:movements]
-        
-        # Iterate over sorted directory entries
-        Dir["#{path}/*"].entries.sort.each do |entry|
-          if File.file?(entry) && (entry =~ /\.ld$/)
-            part = File.basename(entry, '.*')
-            skip = part_filter && !part_filter.include?(part)
-            unless DEFAULT_BASENAMES.include?(part) || skip
-              preserve_context do
-                process_lydown_file(entry, [
-                  {type: :setting, key: 'part', value: part}
-                ], line_range: @context[:options][:line_range])
+        movements[mvmt].each do |part, path|
+          unless part.is_a?(Symbol) # :work, :movement
+            preserve_context do
+              stream = streams[path]
+              if line_range
+                Lydown::Rendering.insert_skip_markers(stream, line_range)
               end
-            end
-          elsif File.directory?(entry) && recursive
-            movement = File.basename(entry)
-            skip = mvmt_filter && !mvmt_filter.include?(movement)
-            unless skip
-              process([{type: :setting, key: 'movement', value: movement}])
-              process_directory(entry, false)
+              stream.unshift({type: :setting, key: 'part', value: part})
+              $progress_bar.increment if $progress_bar
+              process(stream)
             end
           end
         end
@@ -253,8 +342,9 @@ module Lydown
       content = IO.read(path)
       stream = LydownParser.parse(content, {
         filename: File.expand_path(path),
-        source: content
-      }.merge(proof_mode: @context['options/proof_mode']))
+        source: content,
+        proof_mode: @context['options/proof_mode']
+      })
       
       if opts[:line_range]
         Lydown::Rendering.insert_skip_markers(stream, opts[:line_range])
