@@ -4,9 +4,9 @@ module Lydown::Rendering
       value = lilypond_lyrics(@event[:content])
       
       lyrics_idx = @event[:stream_index] || 1
-      voice = @work['process/voice_selector'] || 'voice1'
+      voice = @context['process/voice_selector'] || 'voice1'
       
-      @work.emit("lyrics/#{voice}/#{lyrics_idx}", value, ' ')
+      @context.emit("lyrics/#{voice}/#{lyrics_idx}", value, ' ')
     end
 
     def lilypond_lyrics(lyrics)

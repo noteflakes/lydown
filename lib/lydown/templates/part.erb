@@ -13,9 +13,9 @@
   score_mode = self['render_opts/mode'] == :score
   
   part['settings'] ||= {
-    'pickup' => @context[:pickup],
-    'key' => @context[:key],
-    'tempo' => @context[:tempo]
+    'pickup' => self[:pickup],
+    'key' => self[:key],
+    'tempo' => self[:tempo]
   }.deep!
 
   clef = Lydown::Rendering::Staff.clef(name)

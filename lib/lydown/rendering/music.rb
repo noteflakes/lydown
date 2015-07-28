@@ -9,80 +9,80 @@ module Lydown::Rendering
 
   class Duration < Base
     def translate
-      Notes.cleanup_duration_macro(@work)
+      Notes.cleanup_duration_macro(@context)
 
       # close tuplet braces
-      if @work['process/tuplet_mode']
-        TupletDuration.emit_tuplet_end(@work)
-        @work['process/tuplet_mode'] = nil
+      if @context['process/tuplet_mode']
+        TupletDuration.emit_tuplet_end(@context)
+        @context['process/tuplet_mode'] = nil
       end
 
-      if @work['process/grace_mode']
-        Grace.emit_grace_end(@work)
-        @work['process/grace_mode'] = nil
+      if @context['process/grace_mode']
+        Grace.emit_grace_end(@context)
+        @context['process/grace_mode'] = nil
       end
 
       value = @event[:value].sub(/^[0-9]+/) {|m| LILYPOND_DURATIONS[m] || m}
 
       if next_event && next_event[:type] == :stand_alone_figures
-        @work['process/figures_duration_value'] = value
+        @context['process/figures_duration_value'] = value
       else
-        @work['process/duration_values'] = [value]
-        @work['process/tuplet_mode'] = nil
-        @work['process/duration_macro'] = nil unless @work['process/macro_group']
+        @context['process/duration_values'] = [value]
+        @context['process/tuplet_mode'] = nil
+        @context['process/duration_macro'] = nil unless @context['process/macro_group']
       end
     end
 
   end
 
   class TupletDuration < Base
-    def self.emit_tuplet_end(work)
-      work.emit(:music, '} ')
+    def self.emit_tuplet_end(context)
+      context.emit(:music, '} ')
     end
 
     def translate
-      Notes.cleanup_duration_macro(@work)
+      Notes.cleanup_duration_macro(@context)
 
       # close tuplet braces
-      if @work['process/tuplet_mode']
-        TupletDuration.emit_tuplet_end(@work)
-        @work['process/tuplet_mode'] = nil
+      if @context['process/tuplet_mode']
+        TupletDuration.emit_tuplet_end(@context)
+        @context['process/tuplet_mode'] = nil
       end
 
       if next_event && next_event[:type] == :stand_alone_figures
-        @work['process/figures_duration_value'] = "#{@event[:value]}*#{@event[:fraction]}"
+        @context['process/figures_duration_value'] = "#{@event[:value]}*#{@event[:fraction]}"
       else
         value = LILYPOND_DURATIONS[@event[:value]] || @event[:value]
 
-        @work['process/duration_values'] = [value]
-        @work['process/last_value'] = nil
-        @work['process/tuplet_mode'] = true
+        @context['process/duration_values'] = [value]
+        @context['process/last_value'] = nil
+        @context['process/tuplet_mode'] = true
         
         group_value = value.to_i / @event[:group_length].to_i
-        @work.emit(:music, "\\tuplet #{@event[:fraction]} #{group_value} { ")
+        @context.emit(:music, "\\tuplet #{@event[:fraction]} #{group_value} { ")
       end
     end
   end
   
   class Grace < Base
-    def self.emit_grace_end(work)
-      work.emit(:music, '} ')
+    def self.emit_grace_end(context)
+      context.emit(:music, '} ')
     end
     
     def translate
       # close tuplet braces
-      if @work['process/grace_mode']
-        Grace.emit_grace_end(@work)
-        @work['process/grace_mode'] = nil
+      if @context['process/grace_mode']
+        Grace.emit_grace_end(@context)
+        @context['process/grace_mode'] = nil
       end
 
       value = LILYPOND_DURATIONS[@event[:value]] || @event[:value]
 
-      @work['process/duration_values'] = [value]
-      @work['process/last_value'] = nil
-      @work['process/grace_mode'] = true
+      @context['process/duration_values'] = [value]
+      @context['process/last_value'] = nil
+      @context['process/grace_mode'] = true
       
-      @work.emit(:music, "\\#{@event[:kind]} { ")
+      @context.emit(:music, "\\#{@event[:kind]} { ")
     end
   end
 
@@ -141,7 +141,7 @@ module Lydown::Rendering
 
   class BeamOpen < Base
     def translate
-      @work['process/open_beam'] = true
+      @context['process/open_beam'] = true
     end
   end
 
@@ -152,7 +152,7 @@ module Lydown::Rendering
 
   class SlurOpen < Base
     def translate
-      @work['process/open_slur'] = true
+      @context['process/open_slur'] = true
     end
   end
 
@@ -161,7 +161,7 @@ module Lydown::Rendering
 
   class Tie < Base
     def translate
-      @work.emit(:music, '~ ')
+      @context.emit(:music, '~ ')
     end
   end
 
@@ -169,8 +169,8 @@ module Lydown::Rendering
     include Notes
 
     def translate
-      note_head = @work['process/last_note_head']
-      @work.emit(:music, '~ ')
+      note_head = @context['process/last_note_head']
+      @context.emit(:music, '~ ')
       add_note({head: note_head})
     end
   end
@@ -194,17 +194,17 @@ module Lydown::Rendering
       translate_expressions
 
       if @event[:multiplier]
-        value = full_bar_value(@work[:time])
-        @work['process/duration_macro'] = nil unless @work['process/macro_group']
+        value = full_bar_value(@context[:time])
+        @context['process/duration_macro'] = nil unless @context['process/macro_group']
         if value
           @event[:rest_value] = "#{value}*#{@event[:multiplier]}"
           @event[:head] = "#{@event[:head]}#{@event[:rest_value]}"
         else
-          @event[:head] = "#{@event[:head]}#{@event[:multiplier]}*#{@work[:time]}"
+          @event[:head] = "#{@event[:head]}#{@event[:multiplier]}*#{@context[:time]}"
         end
         # reset the last value so the next note will be rendered with its value
-        @work['process/last_value'] = nil
-        @work['process/duration_values'] = []
+        @context['process/last_value'] = nil
+        @context['process/duration_values'] = []
       end
 
       add_note(@event)
@@ -230,22 +230,22 @@ module Lydown::Rendering
 
   class DurationMacro < Base
     def translate
-      Notes.cleanup_duration_macro(@work)
+      Notes.cleanup_duration_macro(@context)
       
       if @event[:macro] =~ /^[a-zA-Z_]/
-        macro = @work['macros'][@event[:macro]]
+        macro = @context['macros'][@event[:macro]]
         if macro
           if macro =~ /^\{(.+)\}$/
             macro = $1
           end
           # replace the repeating note placeholder with another sign in order to
           # avoid mixing up with repeating notes from outside the macro
-          @work['process/duration_macro'] = macro.gsub('@', '∞')
+          @context['process/duration_macro'] = macro.gsub('@', '∞')
         else
           raise LydownError, "Unknown macro #{@event[:macro]}"
         end
       else
-        @work['process/duration_macro'] = @event[:macro]
+        @context['process/duration_macro'] = @event[:macro]
       end
     end
   end
@@ -254,7 +254,7 @@ module Lydown::Rendering
     def translate
       barline = @event[:barline]
       barline = '' if barline == '?|'
-      @work.emit(:music, "\\bar \"#{barline}\" ")
+      @context.emit(:music, "\\bar \"#{barline}\" ")
     end
   end
 end

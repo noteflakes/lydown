@@ -1,7 +1,7 @@
 module Lydown::Rendering
   module Staff
-    def self.staff_groups(work, movement, parts)
-      model = work['score/order'] || movement['score/order'] || DEFAULTS['score/order']
+    def self.staff_groups(context, movement, parts)
+      model = context['score/order'] || movement['score/order'] || DEFAULTS['score/order']
       parts_copy = parts.clone
       
       groups = []
@@ -75,8 +75,8 @@ module Lydown::Rendering
     
     DEFAULT_END_BARLINE = '|.'
     
-    def self.end_barline(work, movement)
-      barline = movement['end_barline'] || work['end_barline'] || DEFAULT_END_BARLINE
+    def self.end_barline(context, movement)
+      barline = movement['end_barline'] || context['end_barline'] || DEFAULT_END_BARLINE
       barline == 'none' ? nil : barline
     end
   end

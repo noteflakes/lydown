@@ -3,12 +3,12 @@ module Lydown::Rendering
   # for notes in a macro group
   class SourceRef < Base
     def translate
-      return # unless @work['options/proof_mode']
+      return # unless @context['options/proof_mode']
 
       fn = @event[:filename]
-      if fn && fn != @work['process/last_filename']
-        @work['process/last_filename'] = fn
-        @work.emit(@event[:stream] || :music, "%{::#{File.expand_path(fn)}%} ")
+      if fn && fn != @context['process/last_filename']
+        @context['process/last_filename'] = fn
+        @context.emit(@event[:stream] || :music, "%{::#{File.expand_path(fn)}%} ")
       end
     end
   end

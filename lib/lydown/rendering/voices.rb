@@ -2,30 +2,30 @@ module Lydown::Rendering
   class VoiceSelect < Base
     def translate
       if @event[:voice]
-        @work['process/voice_selector'] = "voice#{@event[:voice]}"
+        @context['process/voice_selector'] = "voice#{@event[:voice]}"
       else
-        self.class.render_voices(@work)
+        self.class.render_voices(@context)
       end
     end
     
-    def self.render_voices(work)
-      work['process/voice_selector'] = nil
+    def self.render_voices(context)
+      context['process/voice_selector'] = nil
       
-      music = Lydown::Templates.render(:multi_voice, work, part: work[:part])
+      music = Lydown::Templates.render(:multi_voice, context, part: context[:part])
       
-      work.emit(:music, music)
+      context.emit(:music, music)
       
-      work['process/voices'].each_value do |stream|
+      context['process/voices'].each_value do |stream|
         if stream['lyrics']
           stream['lyrics'].each do |voice, lyrics_stream|
             lyrics_stream.each do |idx, content|
-              work.emit("lyrics/#{voice}/#{idx}", content)
+              context.emit("lyrics/#{voice}/#{idx}", content)
             end
           end
         end
       end
       
-      work['process/voices'] = nil
+      context['process/voices'] = nil
     end
     
     VOICE_COMMANDS = {

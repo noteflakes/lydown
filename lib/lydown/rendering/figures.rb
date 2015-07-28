@@ -1,37 +1,37 @@
 module Lydown::Rendering
   module Figures
     def add_figures(figures, value)
-      if @work['process/running_values']
-        @work['process/running_values'].each do |v|
+      if @context['process/running_values']
+        @context['process/running_values'].each do |v|
           silence = "s"
-          if v != @work['process/last_figures_value']
+          if v != @context['process/last_figures_value']
             silence << v
-            @work['process/last_figures_value'] = v
+            @context['process/last_figures_value'] = v
           end
-          @work.emit(:figures, "#{silence} ")
+          @context.emit(:figures, "#{silence} ")
         end
-        @work['process/running_values'] = []
+        @context['process/running_values'] = []
       end
 
       figures = lilypond_figures(figures)
-      if value != @work['process/last_figures_value']
+      if value != @context['process/last_figures_value']
         figures << value
-        @work['process/last_figures_value'] = value
+        @context['process/last_figures_value'] = value
       end
 
-      @work.emit(:figures, "#{figures} ")
-      @work.emit(:figures, EXTENDERS_ON) if @event[:figure_extenders_on]
-      @work.emit(:figures, EXTENDERS_OFF) if @event[:figure_extenders_off]
+      @context.emit(:figures, "#{figures} ")
+      @context.emit(:figures, EXTENDERS_ON) if @event[:figure_extenders_on]
+      @context.emit(:figures, EXTENDERS_OFF) if @event[:figure_extenders_off]
     end
 
     def add_stand_alone_figures(figures)
-      if @work['process/running_values']
+      if @context['process/running_values']
         # for stand alone figures, we regard the stand alone figure as being
         # aligned to the last note. Therefore we pop its value from
         # running_values array.
-        @work['process/running_values'].pop
+        @context['process/running_values'].pop
       end
-      value =  @work['process/figures_duration_value'] || @work['process/last_value']
+      value =  @context['process/figures_duration_value'] || @context['process/last_value']
       add_figures(figures, value)
     end
 

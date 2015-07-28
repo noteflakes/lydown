@@ -37,7 +37,7 @@ Lydown::Work::PARALLEL_PARSE_OPTIONS.delete(:progress)
 def verify_example(name, result_name = nil, opts = {})
   lydown = LydownParser.parse(load_example("#{name}.ld"))
   work = Lydown::Work.new
-  work['end_barline'] = 'none'
+  work.context['end_barline'] = 'none'
   work.process(lydown)
   ly = work.to_lilypond(opts.merge(no_lib: true)).strip_whitespace
 

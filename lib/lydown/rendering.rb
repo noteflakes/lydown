@@ -38,15 +38,6 @@ module Lydown::Rendering
       end
     end
   end
-  
-  class Base
-    def initialize(event, work, stream, idx)
-      @event = event
-      @work = work
-      @stream = stream
-      @idx = idx
-    end
-  end
 end
 
 LY_LIB_DIR = File.join(File.dirname(__FILE__), 'rendering')

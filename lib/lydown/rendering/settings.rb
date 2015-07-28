@@ -19,7 +19,7 @@ module Lydown::Rendering
 
     def translate
       # if setting while doing a macro, insert it into the current macro group
-      if @work['process/duration_macro'] && @event[:raw]
+      if @context['process/duration_macro'] && @event[:raw]
         return add_macro_event(@event[:raw])
       end
       
@@ -33,20 +33,20 @@ module Lydown::Rendering
 
       if level == 0
         value = check_setting_value(key, value)
-        @work[key] = value
+        @context[key] = value
         case key
         when 'part'
-          @work.set_part_context(value)
+          @context.set_part_context(value)
           
           # when changing parts we repeat the last set time and key signature
-          render_setting('time', @work[:time]) unless @work[:time] == '4/4'
+          render_setting('time', @context[:time]) unless @context[:time] == '4/4'
           
-          key =  @work[:key]
+          key =  @context[:key]
           render_setting('key', key) unless key == 'c major'
 
-          @work.reset_context(:part)
+          @context.reset(:part)
         when 'movement'
-          @work.reset_context(:movement)
+          @context.reset(:movement)
         end
 
         if RENDERABLE_SETTING_KEYS.include?(key)
@@ -56,14 +56,14 @@ module Lydown::Rendering
         # nested settings
         l, path = 0, ''
         while l < level
-          path << "#{@work['process/setting_levels'][l]}/"; l += 1
+          path << "#{@context['process/setting_levels'][l]}/"; l += 1
         end
         path << key
-        @work[path] = value
+        @context[path] = value
       end
 
-      @work['process/setting_levels'] ||= {}
-      @work['process/setting_levels'][level] = key
+      @context['process/setting_levels'] ||= {}
+      @context['process/setting_levels'][level] = key
     end
 
     def check_setting_value(key, value)
@@ -85,9 +85,9 @@ module Lydown::Rendering
       setting = ""
       case key
       when 'time'
-        cadenza_mode = @work[:cadenza_mode]
+        cadenza_mode = @context[:cadenza_mode]
         should_cadence = value == 'unmetered'
-        @work[:cadenza_mode] = should_cadence
+        @context[:cadenza_mode] = should_cadence
 
         if should_cadence && !cadenza_mode
           setting = "\\cadenzaOn "
@@ -119,7 +119,7 @@ module Lydown::Rendering
         setting = "\\#{key} #{value} "
       end
 
-      @work.emit(:music, setting)
+      @context.emit(:music, setting)
     end
   end
 end

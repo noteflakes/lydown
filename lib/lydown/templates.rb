@@ -19,4 +19,13 @@ module Lydown
       ERB.new IO.read(File.join(TEMPLATES_DIR, "#{name}.erb")), 0, '<>'
     end
   end
+  
+  module TemplateBinding
+    # Used to bind to instance when rendering templates
+    def template_binding(locals = {})
+      b = binding
+      locals.each {|k, v| b.local_variable_set(k.to_sym, v)}
+      b
+    end
+  end
 end

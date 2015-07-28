@@ -1,4 +1,3 @@
-require 'lydown/core_ext'
 require 'lydown/templates'
 require 'lydown/cli/output'
 require 'parallel'
@@ -16,81 +15,21 @@ module Lydown
     attr_accessor :context
 
     def initialize(opts = {})
-      @context = {}.deep!
-      reset_context(:work)
-      @context[:options] = opts.deep_clone
+      @context = WorkContext.new(self, opts)
 
       process_work_files if opts[:path]
-    end
-
-    def reset_context(mode)
-      case mode
-      when :work
-        @context[:time] = '4/4'
-        @context[:tempo] = nil
-        @context[:cadenza_mode] = nil
-        @context[:key] = 'c major'
-        @context[:pickup] = nil
-        @context[:beaming] = nil
-        @context[:end_barline] = nil
-        @context[:part] = nil
-      when :movement
-        @context[:part] = nil
-      end
-      if @context['process/tuplet_mode']
-        Lydown::Rendering::TupletDuration.emit_tuplet_end(self)
-      end
-      if @context['process/grace_mode']
-        Lydown::Rendering::Grace.emit_grace_end(self)
-      end
-      
-      if @context['process/voice_selector']
-        Lydown::Rendering::VoiceSelect.render_voices(self)
-      end
-      
-      Lydown::Rendering::Notes.cleanup_duration_macro(self)
-
-      # reset processing variables
-      @context['process'] = {
-        'duration_values' => ['4'],
-        'running_values' => []
-      }
-    end
-
-    # Used to bind to instance when rendering templates
-    def template_binding(locals = {})
-      b = binding
-      locals.each {|k, v| b.local_variable_set(k.to_sym, v)}
-      b
     end
 
     # translate a lydown stream into lilypond
     def process(lydown_stream, opts = {})
       lydown_stream.each_with_index do |e, idx|
         if e[:type]
-          Lydown::Rendering.translate(self, e, lydown_stream, idx)
+          Lydown::Rendering.translate(@context, e, lydown_stream, idx)
         else
           raise LydownError, "Invalid lydown stream event: #{e.inspect}"
         end
       end
-      reset_context(:part) unless opts[:no_reset]
-    end
-
-    def emit(path, *content)
-      stream = current_stream(path)
-
-      content.each {|c| stream << c}
-    end
-
-    def current_stream(subpath)
-      if @context['process/voice_selector']
-        path = "process/voices/#{@context['process/voice_selector']}/#{subpath}"
-      else
-        movement = @context[:movement]
-        part = @context[:part]
-        path = "movements/#{movement}/parts/#{part}/#{subpath}"
-      end
-      @context[path] ||= (subpath == :settings) ? {} : ''
+      @context.reset(:part) unless opts[:no_reset]
     end
 
     def to_lilypond(opts = {})
@@ -105,96 +44,19 @@ module Lydown
       else
         @original_context = @context
         begin
-          @context = filter_context(opts)
-          Lydown::Templates.render(:lilypond_doc, self)
+          filtered = @context.filter(opts)
+          filtered.extend(TemplateBinding)
+          Lydown::Templates.render(:lilypond_doc, filtered)
         ensure
           @context = @original_context
         end
       end
     end
 
-    def filter_context(opts = {})
-      filtered = @context.deep_clone
-
-      if filtered['movements'].nil? || filtered['movements'].size == 0
-        # no movements found, so no music
-        raise LydownError, "No music found"
-      elsif filtered['movements'].size > 1
-        # delete default movement if other movements are present
-        filtered['movements'].delete('')
-      end
-
-      if opts[:movements]
-        opts[:movements] = [opts[:movements]] unless opts[:movements].is_a?(Array)
-        filtered['movements'].select! do |name, m|
-          opts[:movements].include?(name.to_s)
-        end
-      end
-
-      if opts[:parts]
-        opts[:parts] = [opts[:parts]] unless opts[:parts].is_a?(Array)
-      end
-      filtered['movements'].each do |name, m|
-        # delete default part if other parts are present
-        if m['parts'].size > 1
-          m['parts'].delete('')
-        end
-
-        if opts[:parts]
-          m['parts'].select! do |pname, p|
-            opts[:parts].include?(pname.to_s)
-          end
-        end
-      end
-
-      filtered
-    end
-
     def compile(opts = {})
       code = to_lilypond(opts)
 
       Lydown::Lilypond.compile(code, opts)
-    end
-
-    def [](path)
-      context[path]
-    end
-
-    def []=(path, value)
-      context[path] = value
-    end
-    
-    # Helper method to preserve context while processing a file or directory.
-    # This method is called with a block. After the block is executed, the 
-    # context is restored.
-    def preserve_context
-      old_context = @context
-      new_context = old_context.deep_merge({})
-      @context = new_context
-      yield
-    ensure
-      @context = old_context
-      if new_context['movements']
-        if @context['movements']
-          @context['movements'].deep_merge! new_context['movements']
-        else
-          @context['movements'] = new_context['movements']
-        end
-        if @context['movements/01-intro/parts/violino1/settings'] && @context['movements/01-intro/parts/violino1/settings'].keys.include?('pickup')
-        end
-      end
-    end
-    
-    def set_part_context(part)
-      movement = @context[:movement]
-      path = "movements/#{movement}/parts/#{part}/settings"
-
-      settings = {}.deep!
-      settings[:pickup] = @context[:pickup]
-      settings[:key] = @context[:key]
-      settings[:tempo] = @context[:tempo]
-      
-      @context[path] = settings
     end
 
     def process_work_files
@@ -295,7 +157,7 @@ module Lydown
       movements = state[:movements]
 
       Lydown::CLI.show_progress('Process', state[:part_count]) do |bar|
-        preserve_context do
+        @context.preserve do
           if path = movements[nil][:work]
             process(streams[path])
           end
@@ -314,14 +176,14 @@ module Lydown
       line_range = @context[:options][:line_range]
 
       process([{type: :setting, key: 'movement', value: mvmt}]) unless mvmt.nil?
-      preserve_context do
+      @context.preserve do
         if path = movements[mvmt][:movement]
           process(streams[path])
         end
         
         movements[mvmt].each do |part, path|
           unless part.is_a?(Symbol) # :work, :movement
-            preserve_context do
+            @context.preserve do
               stream = streams[path]
               if line_range
                 Lydown::Rendering.insert_skip_markers(stream, line_range)

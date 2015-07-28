@@ -73,11 +73,11 @@ module Lydown::Rendering
     end
 
     # Takes into account the accidentals mode
-    def self.translate_note_name(work, note)
-      if work[:accidentals] == 'manual'
+    def self.translate_note_name(context, note)
+      if context[:accidentals] == 'manual'
         key = 'c major'
       else
-        key = work[:key]
+        key = context[:key]
       end
       lilypond_note_name(note, key)
     end
@@ -139,76 +139,76 @@ module Lydown::Rendering
     include Lydown::Rendering::Figures
 
     def add_note(event, options = {})
-      return add_macro_note(event) if @work['process/duration_macro']
+      return add_macro_note(event) if @context['process/duration_macro']
       
       # calculate relative octave markers for first note
-      unless @work['process/first_note'] || event[:head] =~ /^[rsR]/
+      unless @context['process/first_note'] || event[:head] =~ /^[rsR]/
         note = event[:head] + (event[:octave] || '')
         event[:octave] = Lydown::Rendering::Octaves.relative_octave(note)
-        @work['process/first_note'] = note
+        @context['process/first_note'] = note
       end
       
       if event[:head] == '@'
         # replace repeating note head
-        event[:head] = @work['process/last_note_head'] 
+        event[:head] = @context['process/last_note_head'] 
       else
-        @work['process/last_note_head'] = event[:head]
+        @context['process/last_note_head'] = event[:head]
       end
 
-      value = @work['process/duration_values'].first
-      @work['process/duration_values'].rotate!
+      value = @context['process/duration_values'].first
+      @context['process/duration_values'].rotate!
 
       add_figures(event[:figures], value) if event[:figures]
 
       # push value into running values accumulator. This is used to synthesize
       # the bass figures durations.
       unless event[:figures]
-        @work['process/running_values'] ||= []
+        @context['process/running_values'] ||= []
         if event[:rest_value]
-          @work['process/running_values'] << event[:rest_value]
+          @context['process/running_values'] << event[:rest_value]
         else
-          @work['process/running_values'] << value
+          @context['process/running_values'] << value
         end
       end
 
       # only add the value if different than the last used
-      if options[:no_value] || (value == @work['process/last_value'])
+      if options[:no_value] || (value == @context['process/last_value'])
         value = ''
       else
-        @work['process/last_value'] = value
+        @context['process/last_value'] = value
       end
 
-      if event[:line] && @work['options/proof_mode']
-        @work.emit(event[:stream] || :music, note_event_url_link(event))
-        # @work.emit(event[:stream] || :music, "%{#{event[:line]}:#{event[:column]}%}")
+      if event[:line] && @context['options/proof_mode']
+        @context.emit(event[:stream] || :music, note_event_url_link(event))
+        # @context.emit(event[:stream] || :music, "%{#{event[:line]}:#{event[:column]}%}")
       end
 
       code = lilypond_note(event, options.merge(value: value))
-      @work.emit(event[:stream] || :music, code)
+      @context.emit(event[:stream] || :music, code)
     end
     
     def add_chord(event, options = {})
-      value = @work['process/duration_values'].first
-      @work['process/duration_values'].rotate!
+      value = @context['process/duration_values'].first
+      @context['process/duration_values'].rotate!
 
       add_figures(event[:figures], value) if event[:figures]
 
       # push value into running values accumulator. This is used to synthesize
       # the bass figures durations.
       unless event[:figures]
-        @work['process/running_values'] ||= []
+        @context['process/running_values'] ||= []
         if event[:rest_value]
-          @work['process/running_values'] << event[:rest_value]
+          @context['process/running_values'] << event[:rest_value]
         else
-          @work['process/running_values'] << value
+          @context['process/running_values'] << value
         end
       end
 
       # only add the value if different than the last used
-      if value == @work['process/last_value']
+      if value == @context['process/last_value']
         value = ''
       else
-        @work['process/last_value'] = value
+        @context['process/last_value'] = value
       end
       
       notes = event[:notes].map do |note|
@@ -216,11 +216,11 @@ module Lydown::Rendering
       end
       
       options = options.merge(value: value)
-      @work.emit(event[:stream] || :music, lilypond_chord(event, notes, options))
+      @context.emit(event[:stream] || :music, lilypond_chord(event, notes, options))
     end
     
     def lilypond_note(event, options = {})
-      head = Accidentals.translate_note_name(@work, event[:head])
+      head = Accidentals.translate_note_name(@context, event[:head])
       if options[:head_only]
         head
       else
@@ -258,13 +258,13 @@ module Lydown::Rendering
 
     def lilypond_phrasing(event)
       phrasing = ''
-      if @work['process/open_beam']
+      if @context['process/open_beam']
         phrasing << '['
-        @work['process/open_beam'] = nil
+        @context['process/open_beam'] = nil
       end
-      if @work['process/open_slur']
+      if @context['process/open_slur']
         phrasing << '('
-        @work['process/open_slur'] = nil
+        @context['process/open_slur'] = nil
       end
       phrasing << ']' if event[:beam_close]
       phrasing << ')' if event[:slur_close]
@@ -273,13 +273,13 @@ module Lydown::Rendering
 
     def lydown_phrasing_open(event)
       phrasing = ''
-      if @work['process/open_beam']
+      if @context['process/open_beam']
         phrasing << '['
-        @work['process/open_beam'] = nil
+        @context['process/open_beam'] = nil
       end
-      if @work['process/open_slur']
+      if @context['process/open_slur']
         phrasing << '('
-        @work['process/open_slur'] = nil
+        @context['process/open_slur'] = nil
       end
       phrasing
     end
@@ -292,7 +292,7 @@ module Lydown::Rendering
     end
 
     def add_macro_note(event)
-      @work['process/macro_group'] ||= @work['process/duration_macro'].clone
+      @context['process/macro_group'] ||= @context['process/duration_macro'].clone
       underscore_count = 0
 
       lydown_note = "{%d:%d}%s%s%s%s%s%s%s" % [
@@ -306,7 +306,7 @@ module Lydown::Rendering
       ]
       
       # replace place holder and repeaters in macro group with actual note
-      @work['process/macro_group'].gsub!(/[_∞]/) do |match|
+      @context['process/macro_group'].gsub!(/[_∞]/) do |match|
         case match
         when '_'
           underscore_count += 1
@@ -318,58 +318,58 @@ module Lydown::Rendering
 
       # keep filename and source in order to ensure source references are kept
       # correct
-      @work['process/macro_filename'] = event[:filename]
-      @work['process/macro_source'] = event[:source]
+      @context['process/macro_filename'] = event[:filename]
+      @context['process/macro_source'] = event[:source]
       
       # increment group note count
-      @work['process/macro_group_note_count'] ||= 0
-      @work['process/macro_group_note_count'] += 1
+      @context['process/macro_group_note_count'] ||= 0
+      @context['process/macro_group_note_count'] += 1
 
       # if group is complete, compile it just like regular code
-      unless @work['process/macro_group'].include?('_')
-        Notes.add_duration_macro_group(@work, @work['process/macro_group'])
+      unless @context['process/macro_group'].include?('_')
+        Notes.add_duration_macro_group(@context, @context['process/macro_group'])
       end
     end
     
     # emits the current macro group up to the first placeholder character.
     # this method is called 
-    def self.cleanup_duration_macro(work)
-      return unless work['process/macro_group_note_count'] &&
-        work['process/macro_group_note_count'] > 0
+    def self.cleanup_duration_macro(context)
+      return unless context['process/macro_group_note_count'] &&
+        context['process/macro_group_note_count'] > 0
       
       # truncate macro group up until first placeholder
-      group = work['process/macro_group'].sub(/_.*$/, '')
+      group = context['process/macro_group'].sub(/_.*$/, '')
 
       # Refrain from adding 
-      add_duration_macro_group(work, group)
+      add_duration_macro_group(context, group)
     end
     
-    def self.add_duration_macro_group(work, group)
-      opts = (work[:options] || {}).merge({
-        filename: work['process/macro_filename'],
-        source:   work['process/macro_source']
+    def self.add_duration_macro_group(context, group)
+      opts = (context[:options] || {}).merge({
+        filename: context['process/macro_filename'],
+        source:   context['process/macro_source']
       }).deep!
       code = LydownParser.parse_macro_group(group, opts)
 
       # stash macro
-      macro = work['process/duration_macro']
-      work['process/duration_macro'] = nil
-      work['process/macro_group'] = nil
-      work['process/macro_group_note_count'] = nil
+      macro = context['process/duration_macro']
+      context['process/duration_macro'] = nil
+      context['process/macro_group'] = nil
+      context['process/macro_group_note_count'] = nil
 
-      work.process(code, no_reset: true)
+      context.work.process(code, no_reset: true)
     ensure
       # restore macro
-      work['process/duration_macro'] = macro
+      context['process/duration_macro'] = macro
     end
     
     def add_macro_event(code)
-      case @work['process/macro_group']
+      case @context['process/macro_group']
       when nil
-        @work['process/macro_group'] = @work['process/duration_macro'].clone
-        @work['process/macro_group'].insert(0, " #{code} ")
+        @context['process/macro_group'] = @context['process/duration_macro'].clone
+        @context['process/macro_group'].insert(0, " #{code} ")
       when /_/
-        @work['process/macro_group'].sub!(/([_∞])/, " #{code} \\0")
+        @context['process/macro_group'].sub!(/([_∞])/, " #{code} \\0")
       end
     end
 

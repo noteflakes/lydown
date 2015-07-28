@@ -25,7 +25,7 @@ RSpec.describe Lydown::Work do
     lydown_code = LydownParser.parse(load_example('2_part.ld'))
     work = Lydown::Work.new
     work.process(lydown_code)
-    work['end_barline'] = 'none'
+    work.context['end_barline'] = 'none'
     
     ly = work.to_lilypond(parts: 'violino1', mode: :part, no_lib: true).strip_whitespace
     ex = load_example('2_part_violino1.ly', strip: true)
@@ -43,7 +43,7 @@ RSpec.describe Lydown::Work do
   
   it "processes files if given path" do
     work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'simple'))
-    work['end_barline'] = 'none'
+    work.context['end_barline'] = 'none'
     
     ly = work.to_lilypond(mode: :part, no_lib: true).strip_whitespace
     ex = load_example('simple.ly', strip: true)
@@ -52,7 +52,7 @@ RSpec.describe Lydown::Work do
   
   it "handles multipart directories" do
     work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'multipart'))
-    work['end_barline'] = 'none'
+    work.context['end_barline'] = 'none'
     
     ly = work.to_lilypond(parts: 'violino1', mode: :part, no_lib: true).strip_whitespace
     ex = load_example('multipart_violino1.ly', strip: true)
@@ -69,7 +69,7 @@ RSpec.describe Lydown::Work do
   
   it "handles multiple movements" do
     work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, '2_movement.ld'))
-    work['end_barline'] = 'none'
+    work.context['end_barline'] = 'none'
     
     ly = work.to_lilypond(movements: '01-intro', no_lib: true).strip_whitespace
     ex = load_example('2_movement_intro.ly', strip: true)
