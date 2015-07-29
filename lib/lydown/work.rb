@@ -81,7 +81,6 @@ module Lydown
         streams:          {},
         movements:        Hash.new {|h, k| h[k] = {}},
         current_movement: nil,
-        part_count:       0,
         part_filter:      @context[:options][:parts],
         mvmt_filter:      @context[:options][:movements]
       }
@@ -92,23 +91,6 @@ module Lydown
     end
     
     def read_directory(path, recursive, state)
-      streams = state[:streams]
-      movements = state[:movements]
-      
-      # look for work code
-      file_path = File.join(path, 'work.ld')
-      if File.file?(file_path)
-        streams[file_path] = nil
-        movements[nil][:work] = file_path
-      end
-      
-      # look for movement code
-      file_path = File.join(path, 'movement.ld')
-      if File.file?(file_path)
-        streams[file_path] = nil
-        movements[state[:current_movement]][:movement] = file_path
-      end
-      
       Dir["#{path}/*"].entries.sort.each do |entry|
         handle_directory_entry(entry, recursive, state)
       end
@@ -117,10 +99,15 @@ module Lydown
     def handle_directory_entry(entry, recursive, state)
       if File.file?(entry) && (entry =~ /\.ld$/)
         part = File.basename(entry, '.*')
-        unless skip_part?(part, state)
+        if part == 'work'
+          state[:streams][entry] = nil
+          state[:movements][nil][:work] = entry
+        elsif part == 'movement'
+          state[:streams][entry] = nil
+          state[:movements][state[:current_movement]][:movement] = entry
+        elsif !skip_part?(part, state)
           state[:streams][entry] = nil
           state[:movements][state[:current_movement]][part] = entry
-          state[:part_count] += 1
         end
       elsif File.directory?(entry) && recursive
         movement = File.basename(entry)
