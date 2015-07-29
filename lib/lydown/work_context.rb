@@ -80,33 +80,31 @@ module Lydown
     def filter(opts = {})
       filtered = @context.deep_clone
 
-      if filtered['movements'].nil? || filtered['movements'].size == 0
+      if filtered[:movements].nil? || filtered[:movements].size == 0
         # no movements found, so no music
         raise LydownError, "No music found"
-      elsif filtered['movements'].size > 1
+      elsif filtered[:movements].size > 1
         # delete default movement if other movements are present
-        filtered['movements'].delete('')
+        filtered[:movements].delete('')
       end
 
-      if opts[:movements]
-        opts[:movements] = [opts[:movements]] unless opts[:movements].is_a?(Array)
-        filtered['movements'].select! do |name, m|
-          opts[:movements].include?(name.to_s)
-        end
+      if filter = opts[:movements]
+        filter = [filter] unless filter.is_a?(Array)
+        filtered[:movements].select! {|name, m| filter.include?(name.to_s)}
       end
 
-      if opts[:parts]
-        opts[:parts] = [opts[:parts]] unless opts[:parts].is_a?(Array)
+      if filter = opts[:parts]
+        filter = [filter] unless filter.is_a?(Array)
       end
-      filtered['movements'].each do |name, m|
+      filtered[:movements].each do |name, m|
         # delete default part if other parts are present
-        if m['parts'].size > 1
-          m['parts'].delete('')
+        if m[:parts].size > 1
+          m[:parts].delete('')
         end
 
-        if opts[:parts]
-          m['parts'].select! do |pname, p|
-            opts[:parts].include?(pname.to_s)
+        if filter
+          m[:parts].select! do |pname, p|
+            filter.include?(pname.to_s)
           end
         end
       end
