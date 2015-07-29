@@ -88,7 +88,7 @@ RSpec.describe LydownParser do
     work.context['end_barline'] = 'none'
     # turn on proof mode in order to emit source refs
     work.context['options'][:proof_mode] = true
-    work.process(stream)
+    work.translate(stream)
     
     link_pre = "\\once \\override NoteHead.after-line-breaking =\n            #(add-link \"txmt://open?url=file:///Users/sharon/repo/lydown/simple_macro.ld&line=%d&column=%d\")"
     

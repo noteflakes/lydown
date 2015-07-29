@@ -4,7 +4,7 @@ RSpec.describe Lydown::Work do
   it "compiles correctly to raw" do
     lydown_code = LydownParser.parse(load_example('simple.ld'))
     work = Lydown::Work.new
-    work.process(lydown_code)
+    work.translate(lydown_code)
     ly = work.to_lilypond(stream_path: 'movements//parts//music')
     expect(ly.strip_whitespace).to eq(load_example('simple-raw.ly'))
   end
@@ -16,7 +16,7 @@ RSpec.describe Lydown::Work do
   it "compiles correctly to PDF" do
     lydown_code = LydownParser.parse(load_example('simple.ld'))
     work = Lydown::Work.new
-    work.process(lydown_code)
+    work.translate(lydown_code)
     ly = work.to_lilypond(no_lib: true)
     expect {Lydown::Lilypond.compile(ly, output_filename: 'spec/tmp/test')}.not_to raise_error
   end
@@ -24,7 +24,7 @@ RSpec.describe Lydown::Work do
   it "handles multiple parts" do
     lydown_code = LydownParser.parse(load_example('2_part.ld'))
     work = Lydown::Work.new
-    work.process(lydown_code)
+    work.translate(lydown_code)
     work.context['end_barline'] = 'none'
     
     ly = work.to_lilypond(parts: 'violino1', mode: :part, no_lib: true).strip_whitespace

@@ -3,19 +3,32 @@ module Lydown
   # This includes both the document settings and processing state, and the
   # resulting lilypond streams and associated data.
   class WorkContext
-    attr_reader :work
     attr_reader :context
     
     include TemplateBinding
     
-    def initialize(work, opts = {})
-      @work = work
-      @context = {}.deep!
-
-      reset(:work)
-      @context[:options] = opts.deep_clone
+    def initialize(opts = {}, context = nil)
+      if context
+        @context = context
+      else
+        @context = {}.deep!
+        reset(:work)
+        @context[:options] = opts.deep_clone
+      end
     end
     
+    # process lydown stream by translating into self
+    def translate(stream, opts = {})
+      stream.each_with_index do |e, idx|
+        if e[:type]
+          Lydown::Rendering.translate(self, e, stream, idx)
+        else
+          raise LydownError, "Invalid lydown stream event: #{e.inspect}"
+        end
+      end
+      reset(:part) unless opts[:macro_group]
+    end
+
     def reset(mode)
       case mode
       when :work
@@ -50,23 +63,17 @@ module Lydown
       }
     end
 
-    # Helper method to preserve context while processing a file or directory.
-    # This method is called with a block. After the block is executed, the 
-    # context is restored.
-    def preserve
-      old_context = @context
-      new_context = old_context.deep_merge({})
-      new_context['movements'] = nil
-      @context = new_context
-      yield
-    ensure
-      @context = old_context
-      if new_context['movements']
-        if @context['movements']
-          @context['movements'].deep_merge! new_context['movements']
-        else
-          @context['movements'] = new_context['movements']
-        end
+    def clone_for_translation
+      new_context = @context.deep_merge({'movements' => nil})
+      WorkContext.new(nil, new_context)
+    end
+    
+    def merge_movements(ctx)
+      return unless ctx['movements']
+      if @context['movements']
+        @context['movements'].deep_merge! ctx['movements']
+      else
+        @context['movements'] = ctx['movements']
       end
     end
     

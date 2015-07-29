@@ -36,7 +36,7 @@ RSpec.describe Lydown do
   it "correctly interprets accidental modes" do
     lydown = LydownParser.parse('- accidentals: blah')
     work = Lydown::Work.new
-    expect {work.process(lydown)}.to raise_error(LydownError)
+    expect {work.translate(lydown)}.to raise_error(LydownError)
 
     verify_example('accidental-modes')
   end

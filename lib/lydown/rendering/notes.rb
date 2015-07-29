@@ -357,7 +357,7 @@ module Lydown::Rendering
       context['process/macro_group'] = nil
       context['process/macro_group_note_count'] = nil
 
-      context.work.process(code, no_reset: true)
+      context.translate(code, macro_group: true)
     ensure
       # restore macro
       context['process/duration_macro'] = macro
