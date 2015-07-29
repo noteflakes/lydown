@@ -1,3 +1,18 @@
+\header {
+  tagline = \markup {
+    Engraved using \bold {
+      \with-url #"http://github.com/ciconia/lydown" {
+        Lydown
+      }
+    }
+    and \bold {
+      \with-url #"http://lilypond.org/" {
+        Lilypond
+      }
+    }
+  }
+}
+
 segno = {
   \once \override Score.RehearsalMark #'font-size = #-2
   \mark \markup { \musicglyph #"scripts.segno" }
