@@ -1,5 +1,6 @@
 <%
-  score_mode = self['render_opts/mode'] == :score
+  render_mode = self['render_opts/mode']
+  score_mode = (render_mode == :score) || (render_mode == :proof)
   staff_groups = Lydown::Rendering::Staff.staff_groups(
     self, movement, movement['parts'].keys)
   parts_in_order = staff_groups.flatten

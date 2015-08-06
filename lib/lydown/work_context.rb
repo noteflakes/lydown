@@ -95,6 +95,7 @@ module Lydown
 
       if filter = opts[:parts]
         filter = [filter] unless filter.is_a?(Array)
+        filter += opts[:include_parts] if opts[:include_parts]
       end
       filtered[:movements].each do |name, m|
         # delete default part if other parts are present

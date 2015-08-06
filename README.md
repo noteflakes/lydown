@@ -60,6 +60,22 @@ To create a MIDI file:
 
     lydown -O --midi helloworld.lydown
 
+
+## Proofing mode
+
+Lydown can be run in a special proofing mode designed to minimize the turnaround time between editing and viewing the result when entering new music or when editing existing music. To run lydown in proofing mode, use the proof subcommand:
+
+    lydown proof
+  
+Lydown will then start to monitor all subdirectories and files in the current directory, and compile them whenever they're changed. Lydown will detect the lines that have changed and insert skip markers in order to speed up compilation and typeset only the music that has actually changed. In addition, notes in the bars that changed will be colored red.
+
+In proof mode, lydown will generate parts and not a score. To include another part for reference along with the part that changed, you can use the include_parts parameter:
+
+    lydown proof --include_parts continuo # or:
+    lydown proof -i continuo
+
+This is useful when editing baroque music for example, or when any other part can give context and aid in verifying the music.
+
 ## The lydown syntax
 
 The lydown syntax is designed for faster note entry, better legibility and minimal boilerplate. The lydown syntax takes the basic ideas put forth by lilypond and simplifies them, with the following main differences:

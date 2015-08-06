@@ -1,3 +1,4 @@
+- Add include_parts parameter to proof mode
 - Improve error reporting, beep on error in proof mode
 
 ## Version 0.9.0 2015-08-06

@@ -62,12 +62,14 @@ module Lydown::CLI
     method_option :format, aliases: '-f', 
       default: 'pdf', desc: 'Set output format (pdf/png/ly)', 
       enum: %w{pdf png ly}
+    method_option :include_parts, aliases: '-i', desc: 'Include parts (comma separated)'
     def proof(*args)
       require 'lydown'
 
       opts = Lydown::CLI::Support.copy_options(options)
       opts[:path] = args.first || '.'
       opts[:proof_mode] = true
+      opts[:include_parts] = opts[:include_parts] && opts[:include_parts].split(',')
       opts[:open_target] = true
     
       Lydown::CLI::Support.detect_filename(opts)

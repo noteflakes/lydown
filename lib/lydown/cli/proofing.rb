@@ -77,7 +77,7 @@ module Lydown::CLI::Proofing
         opts[:mode] = :score
       else
         opts[:parts] = [part]
-        opts[:mode] = part
+        opts[:mode] = :proof
         opts[:line_range] = Lydown::CLI::Diff.diff_line_range(path)
       end
       

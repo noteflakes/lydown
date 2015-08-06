@@ -77,11 +77,20 @@ module Lydown
     DEFAULT_BASENAMES = %w{work movement}
 
     def process_directory(path)
+      parts_filter = @context[:options][:parts]
+      if @context[:options] && @context[:options][:include_parts]
+        if parts_filter
+          parts_filter += @context[:options][:include_parts]
+        else
+          parts_filter = @context[:options][:include_parts]
+        end
+      end
+      
       state = {
         streams:          {},
         movements:        Hash.new {|h, k| h[k] = {}},
         current_movement: nil,
-        part_filter:      @context[:options][:parts],
+        part_filter:      parts_filter,
         mvmt_filter:      @context[:options][:movements]
       }
       
