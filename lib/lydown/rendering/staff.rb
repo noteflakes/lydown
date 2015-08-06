@@ -59,6 +59,10 @@ module Lydown::Rendering
       DEFAULTS["parts/#{part}/clef"]
     end
     
+    def self.midi_instrument(part)
+      DEFAULTS["parts/#{part}/midi_instrument"]
+    end
+    
     def self.beaming_mode(part)
       beaming = DEFAULTS["parts/#{part}/beaming"]
       return nil if beaming.nil?

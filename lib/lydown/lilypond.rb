@@ -50,11 +50,14 @@ module Lydown
       end
       
       def invoke(source, opts = {})
+        format = opts[:format]
+        format = nil if format == 'midi'
+        
         # Run lilypond, pipe source into its STDIN, and capture its STDERR
         cmd = 'lilypond '
         cmd << "-o #{opts[:output_filename]} "
         cmd << "-dno-point-and-click "
-        cmd << "--#{opts[:format]} " if opts[:format]
+        cmd << "--#{opts[:format]} " if format
         cmd << ' - '
         
         err_info = ''

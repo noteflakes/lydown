@@ -132,4 +132,12 @@ RSpec.describe Lydown::Work do
     ex = load_example('simple_include_lib.ly', strip: true)
     expect(ly).to eq(ex)
   end
+  
+  it "adds a midi block with optional tempo when midi format is specified" do
+    work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'simple_with_midi_tempo'))
+    
+    ly = work.to_lilypond(mode: :score, format: 'midi', no_lib: true).strip_whitespace
+    ex = load_example('simple_midi.ly', strip: true)
+    expect(ly).to eq(ex)
+  end
 end

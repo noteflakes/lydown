@@ -52,6 +52,14 @@
       <% end %>
   
   <% if score_mode %>
-    >> }
+      >>
+      <% if self['render_opts']['format'] == 'midi' %>
+      \midi {
+        <% if tempo = movement['settings/midi_tempo'] %>
+          \tempo <%= tempo %>
+        <% end %>
+      }
+      <% end %> 
+    }
   <% end %>
 }

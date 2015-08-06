@@ -4,7 +4,8 @@ module Lydown::Rendering
     
     SETTING_KEYS = [
       'key', 'time', 'pickup', 'clef', 'part', 'movement', 'tempo',
-      'accidentals', 'beams', 'end_barline', 'macros', 'empty_staves'
+      'accidentals', 'beams', 'end_barline', 'macros', 'empty_staves',
+      'midi_tempo'
     ]
 
     RENDERABLE_SETTING_KEYS = [
@@ -26,7 +27,7 @@ module Lydown::Rendering
       key = @event[:key]
       value = @event[:value]
       level = @event[:level] || 0
-
+      
       unless (level > 0) || SETTING_KEYS.include?(key)
         raise LydownError, "Invalid setting (#{key})"
       end
@@ -47,6 +48,10 @@ module Lydown::Rendering
           @context.reset(:part)
         when 'movement'
           @context.reset(:movement)
+        when 'midi_tempo'
+          movement = @context[:movement]
+          path = "movements/#{movement}/settings/midi_tempo"
+          @context[path] = value
         end
 
         if RENDERABLE_SETTING_KEYS.include?(key)

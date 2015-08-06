@@ -19,6 +19,10 @@
   }.deep!
 
   clef = Lydown::Rendering::Staff.clef(name)
+  
+  midi_mode = self['render_opts']['format'] == 'midi'
+  midi_instrument = midi_mode && Lydown::Rendering::Staff.midi_instrument(name)
+  
   beaming_mode = Lydown::Rendering::Staff.beaming_mode(name)
   partial = part['settings'][:pickup] ? "\\partial #{part['settings'][:pickup]}" : ""
   
@@ -38,6 +42,11 @@
   <% end %>
 
 <% if score_mode %>\set Staff.instrumentName = #"<%= title %>"<% end %>
+
+<% if midi_instrument %>
+  \set Staff.midiInstrument = #"<%= midi_instrument %>"
+<% end %>
+
   \relative c {
     <% if clef %>
         \clef "<%= clef %>"
