@@ -145,8 +145,8 @@ module Lydown
       streams = state[:streams]
       proof_mode =  @context['options/proof_mode']
       paths = streams.keys
-
-      processed_streams = Parallel.map(paths, PARALLEL_PARSE_OPTIONS) do |path|
+      
+      processed_streams = Parallel.map(paths, PARALLEL_PARSE_OPTIONS.clone) do |path|
         content = IO.read(path)
         LydownParser.parse(content, {
           filename: File.expand_path(path),
@@ -169,7 +169,7 @@ module Lydown
     
     def translate_movement_files(state)
       stream_entries = prepare_work_stream_array(state)
-      processed_contexts = Parallel.map(stream_entries, PARALLEL_PROCESS_OPTIONS) do |entry|
+      processed_contexts = Parallel.map(stream_entries, PARALLEL_PROCESS_OPTIONS.clone) do |entry|
         mvmt_stream, stream = *entry
         ctx = @context.clone_for_translation
         ctx.translate(mvmt_stream)

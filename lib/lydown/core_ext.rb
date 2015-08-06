@@ -1,4 +1,5 @@
 require 'escape_utils'
+require 'pathname'
 
 class Hash
   # Merges self with another hash, recursively.
@@ -177,3 +178,9 @@ class Fixnum
   end
 end
 
+class Pathname
+  # Returns path relative to working directory
+  def self.relative_pwd(path)
+    self.new(path).relative_path_from(pwd).to_s
+  end
+end

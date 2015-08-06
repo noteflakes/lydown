@@ -21,13 +21,18 @@ module Lydown::CLI::Compiler
         opts[:nice_error] = true
         work = Lydown::Work.new(opts)
         ly_code = work.to_lilypond(opts)
-      rescue LydownError => e
-        $stderr.puts e.message
-        $stderr.puts e.backtrace.join("\n")
-        exit 1
       rescue => e
-        $stderr.puts "#{e.class}: #{e.message}\n#{e.backtrace.join("\n")}"
-        exit 1
+        if e.is_a?(LydownError)
+          $stderr.puts e.message
+        else
+          $stderr.puts "#{e.class}: #{e.message}\n#{e.backtrace.join("\n")}"
+        end
+        if opts[:proof_mode]
+          `osascript -e beep`
+          return
+        else
+          exit(1)
+        end
       end
       
       opts[:output_target] = output_filename(opts)

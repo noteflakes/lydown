@@ -32,7 +32,7 @@ module Lydown
         end
       rescue => e
         $stderr.puts e.message
-        $stderr.puts e.backtrace.join("\n")
+        $stderr.puts e.backtrace.join("\n") unless e.is_a?(LydownError)
         raise e
       end
       

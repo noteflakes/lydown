@@ -1,4 +1,7 @@
+- Improve error reporting, beep on error in proof mode
+
 ## Version 0.9.0 2015-08-06
+- Show progress bars when parsing/processing/compiling code (#4)
 - Implement MIDI output (#6)
 - Set default tagline
 - Refactor work and work context code
