@@ -1,3 +1,13 @@
+## Version 0.9.0 2015-08-06
+- Implement MIDI output (#6)
+- Set default tagline
+- Refactor work and work context code
+- Parallelize parsing and translation of lydown code (#5)
+- Fix rendering of macros with rests
+- Improve Ripple code translation (#1)
+- Use absolute octave marker for first note (#3)
+- Add \prallupbefore command to stdlib
+
 ## Version 0.8.1 2015-07-22
 - Fix proofing.
 
