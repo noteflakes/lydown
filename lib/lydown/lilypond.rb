@@ -30,6 +30,8 @@ module Lydown
         else
           copy_pages(tmp_target, target, ext)
         end
+      rescue CompilationAbortError => e
+        raise e
       rescue => e
         $stderr.puts e.message
         $stderr.puts e.backtrace.join("\n") unless e.is_a?(LydownError)
@@ -51,7 +53,7 @@ module Lydown
       
       def invoke(source, opts = {})
         format = opts[:format]
-        format = nil if format == 'midi'
+        format = nil if (format == 'midi') || (format == 'mp3')
         
         # Run lilypond, pipe source into its STDIN, and capture its STDERR
         cmd = 'lilypond '
@@ -62,16 +64,27 @@ module Lydown
         
         err_info = ''
         success = false
+        exit_value = nil
         Open3.popen2e(cmd) do |input, output, wait_thr|
-          input.puts source
-          input.close_write
-          err_info = read_lilypond_progress(output, opts)
-          output.close
-          success = wait_thr.value == 0
+          begin
+            Lydown::CLI.register_abortable_process(wait_thr.pid)
+            input.puts source
+            input.close_write
+            err_info = read_lilypond_progress(output, opts)
+            output.close
+          ensure
+            Lydown::CLI.unregister_abortable_process(wait_thr.pid)
+            exit_value = wait_thr.value
+            success = wait_thr.value == 0
+          end
         end
         unless success
-          err_info = err_info.lines[0, 3].join
-          raise LydownError, "Lilypond compilation failed:\n#{err_info}"
+          if exit_value.termsig
+            raise CompilationAbortError
+          else
+            err_info = err_info.lines[0, 3].join
+            raise LydownError, "Lilypond compilation failed:\n#{err_info}"
+          end
         end
       end
       

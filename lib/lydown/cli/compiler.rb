@@ -57,26 +57,67 @@ module Lydown::CLI::Compiler
     end
 
     def compile(ly_code, opts)
-      opts = opts.deep_clone
-      begin
-        Lydown::Lilypond.compile(ly_code, opts)
-      rescue LydownError => e
-        $stderr.puts e.message
-        $stderr.puts e.backtrace.join("\n")
-      rescue => e
-        $stderr.puts "#{e.class}: #{e.message}"
-        $stderr.puts e.backtrace.join("\n")
+      if opts[:format] == 'mp3'
+        return compile_mp3(ly_code, opts)
       end
+      
+      opts = opts.deep_clone
+      Lydown::Lilypond.compile(ly_code, opts)
+      open_target(opts) if opts[:open_target]
 
-      if opts[:open_target]
-        filename = "#{opts[:output_target]}.#{opts[:format]}"
-        
-        unless File.file?(filename)
-          filename = "#{opts[:output_target]}-page1.#{opts[:format]}"
+    rescue CompilationAbortError
+      $stderr.puts "Compilation aborted"
+    rescue LydownError => e
+      $stderr.puts e.message
+      $stderr.puts e.backtrace.join("\n")
+    rescue => e
+      $stderr.puts "#{e.class}: #{e.message}"
+      $stderr.puts e.backtrace.join("\n")
+    end
+    
+    def compile_mp3(ly_code, opts)
+      opts2 = opts.merge(format: 'midi').deep_clone
+      Lydown::Lilypond.compile(ly_code, opts2)
+
+      midi_filename = "#{opts[:output_target]}.midi"
+      mp3_filename =  "#{opts[:output_target]}.mp3"
+      cmd = "timidity -Ow -o - #{midi_filename} | lame - #{mp3_filename}"
+      $stderr.puts "Converting to MP3..."
+      Open3.popen2e(cmd) do |input, output, wait_thr|
+        input.close
+        output.read
+        output.close
+      end
+      open_target(opts)
+    rescue CompilationAbortError
+      $stderr.puts "Compilation aborted"
+    end
+    
+    def open_target(opts)
+      filename = "#{opts[:output_target]}.#{opts[:format]}"
+      
+      unless File.file?(filename)
+        filename2 = "#{opts[:output_target]}-page1.#{opts[:format]}"
+        unless File.file?(filename2)
+          raise "Could not find target file #{filename}"
+        else
+          filename = filename2
         end
-
-        # Mac OSX specific probably
+      end
+      
+      if opts[:format] == 'midi'
+        open_midi_target(filename)
+      else
         system("open #{filename}")
+      end
+    end
+    
+    def open_midi_target(filename)
+      $stderr << "Playing #{filename}..."
+      Open3.popen2e("timidity #{filename}") do |input, output, wait_thr|
+        input.close
+        output.read
+        output.close
       end
     end
   end

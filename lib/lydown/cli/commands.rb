@@ -12,11 +12,12 @@ module Lydown::CLI
 
     desc "compile [PATH]", "compile the lydown source at PATH"
     method_option :format, aliases: '-f', 
-      default: 'pdf', desc: 'Set output format (pdf/png/ly/midi)', 
-      enum: %w{pdf png ly midi}
+      default: 'pdf', desc: 'Set output format (pdf/png/ly/midi/mp3)', 
+      enum: %w{pdf png ly midi mp3}
     method_option :png, type: :boolean, desc: 'Set PNG output format'
     method_option :ly, type: :boolean, desc: 'Set Lilypond output format'
     method_option :midi, type: :boolean, desc: 'Set MIDI output format'
+    method_option :mp3, type: :boolean, desc: 'Set MP3 output format'
 
     method_option :parts, aliases: '-p',
       desc: 'Compile only the specified parts (comma separated)'
@@ -39,7 +40,7 @@ module Lydown::CLI
       Lydown::CLI::Support.detect_filename(opts)
       
       # Set format based on direct flag
-      [:png, :ly, :midi].each {|f| opts[:format] = f.to_s if opts[f]}
+      [:png, :ly, :midi, :mp3].each {|f| opts[:format] = f.to_s if opts[f]}
 
       opts[:parts] = opts[:parts].split(',') if opts[:parts]
       opts[:movements] = opts[:movements].split(',') if opts[:movements]

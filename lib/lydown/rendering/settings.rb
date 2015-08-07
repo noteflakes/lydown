@@ -35,6 +35,8 @@ module Lydown::Rendering
       if level == 0
         value = check_setting_value(key, value)
         @context[key] = value
+        movement = @context[:movement]
+        @context["movements/#{movement}/settings/#{key}"] = value
         case key
         when 'part'
           @context.set_part_context(value)
@@ -48,10 +50,6 @@ module Lydown::Rendering
           @context.reset(:part)
         when 'movement'
           @context.reset(:movement)
-        when 'midi_tempo'
-          movement = @context[:movement]
-          path = "movements/#{movement}/settings/midi_tempo"
-          @context[path] = value
         end
 
         if RENDERABLE_SETTING_KEYS.include?(key)

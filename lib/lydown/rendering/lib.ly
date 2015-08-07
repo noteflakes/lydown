@@ -13,6 +13,10 @@
   }
 }
 
+\layout {
+  #(layout-set-staff-size 16)
+}
+
 segno = {
   \once \override Score.RehearsalMark #'font-size = #-2
   \mark \markup { \musicglyph #"scripts.segno" }

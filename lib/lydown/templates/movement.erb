@@ -12,6 +12,11 @@
   end
   
   movement_title = Lydown::Rendering::Movement.movement_title(self, name)
+  
+  midi_mode = (self['render_opts/format'] == 'midi') || 
+              (self['render_opts/format'] == 'mp3')
+  
+  empty_staves = self['empty_staves'] || movement['settings/empty_staves']
 %>
 
 \bookpart {
@@ -28,7 +33,7 @@
   
   <% if score_mode %>
     \score {
-      <% if self['empty_staves'] == 'hide' %>
+      <% if empty_staves == 'hide' %>
         \layout {
           \context {
             \RemoveEmptyStaffContext
@@ -54,7 +59,7 @@
   
   <% if score_mode %>
       >>
-      <% if self['render_opts']['format'] == 'midi' %>
+      <% if midi_mode %>
       \midi {
         <% if tempo = movement['settings/midi_tempo'] %>
           \tempo <%= tempo %>
