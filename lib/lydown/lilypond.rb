@@ -82,7 +82,7 @@ module Lydown
           if exit_value.termsig
             raise CompilationAbortError
           else
-            err_info = err_info.lines[0, 3].join
+            # err_info = err_info.lines[0, 3].join
             raise LydownError, "Lilypond compilation failed:\n#{err_info}"
           end
         end
@@ -116,6 +116,7 @@ module Lydown
         end
         info
       end
+
     end
   end
 end
