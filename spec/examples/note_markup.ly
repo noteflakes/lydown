@@ -13,7 +13,7 @@
           e^\markup { \italic { italic } }
           fis^\markup { \bold { bold } }
           g\p r^\markup { Jünger ("alto"): }
-          r^\markup { \italic { blah } }
+          r^\markup { \italic { bl ah } }
           r_\markup { bleh }
         } >>
       }
