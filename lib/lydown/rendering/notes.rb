@@ -170,7 +170,7 @@ module Lydown::Rendering
           @context['process/running_values'] << value
         end
       end
-
+      
       # only add the value if different than the last used
       if options[:no_value] || (value == @context['process/last_value'])
         value = ''

@@ -13,7 +13,7 @@
           \time 4/4
           c4 d e f
           R1*1
-          g a b c
+          g4 a b c
           \time 3/4
           R2.*4
           c2.
