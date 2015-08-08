@@ -4,6 +4,10 @@ RSpec.describe Lydown do
   it "correctly translates continuo with full bar rests" do
     verify_example('use_cases/recitativo-continuo')
   end
+
+  it "correctly translates continuo from BWV247/16" do
+    verify_example('use_cases/recitativo-continuo-BWV247-16')
+  end
 end
 
 RSpec.describe Lydown do

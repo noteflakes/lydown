@@ -47,7 +47,7 @@ grammar Lydown
   end
   rule event
     (inline_command / inline_lyrics / voice_selector / barline / source_ref / 
-      grace_duration / duration / chord / note / standalone_figures / rest / 
+      grace_duration / duration / standalone_figures / chord / note / rest / 
       silence / phrasing / tie) white_space*
   end
   rule barline
@@ -109,6 +109,9 @@ grammar Lydown
   rule expression_longhand
     '\\' [^\s\n]+
   end
+  rule expression_string
+    '\\' '_'? string
+  end
   rule string
     '"' ('\"' / !'"' .)* '"'
   end
@@ -125,7 +128,7 @@ grammar Lydown
     [rR] multiplier* rest_expression* <Rest>
   end
   rule rest_expression
-    (expression_longhand / string) <Note::Expression>
+    (expression_string / expression_longhand) <Note::Expression>
   end
   rule silence
     [s] multiplier* <Silence>
