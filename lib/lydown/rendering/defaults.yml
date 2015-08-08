@@ -182,7 +182,5 @@ score:
     - [violino, violino1, violino2, violino3, violin1, violin2, violin3]
     - viola
     - [gamba, gamba1, gamba2]
-    - [soprano, alto, tenore, basso]
-    - [soprano1, alto1, tenore1, basso1]
-    - [soprano2, alto2, tenore2, basso2]
+    - [soprano1, soprano2, soprano, alto1, alto2, alto, tenore1, tenore2, tenore, basso1, basso2, basso]
     - continuo

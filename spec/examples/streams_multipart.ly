@@ -6,7 +6,7 @@
   \bookpart {
     \score {
       \new StaffGroup <<
-        \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBracket soprano1 soprano2 )
+        \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBracket (SystemStartBrace soprano1 soprano2) )
         <<
         \new Staff = SopranoIStaff \with { }
         \context Staff = SopranoIStaff {
