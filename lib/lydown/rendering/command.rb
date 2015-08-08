@@ -7,8 +7,20 @@ module Lydown::Rendering
         add_macro_event(@event[:raw] || cmd_to_lydown(@event))
       else
         once = @event[:once] ? '\once ' : ''
-        cmd = "#{once}\\#{@event[:key]} #{(@event[:arguments] || []).join(' ')} "
+        arguments = (@event[:arguments] || []).map do |a|
+          format_argument(@event[:key], a)
+        end.join(' ')
+        cmd = "#{once}\\#{@event[:key]} #{arguments} "
         @context.emit(:music, cmd)
+      end
+    end
+    
+    def format_argument(command_key, argument)
+      case command_key
+      when 'tempo', 'mark'
+        "\"#{argument}\""
+      else
+        argument
       end
     end
     
