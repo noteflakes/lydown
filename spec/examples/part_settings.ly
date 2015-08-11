@@ -24,7 +24,7 @@
         >>
 
         <<
-        \new Staff = ContinuoStaff \with { }
+        \new Staff = ContinuoStaff \with { \override VerticalAxisGroup.remove-empty = ##f }
         \context Staff = ContinuoStaff {
           \set Staff.instrumentName = #"Continuo"
           \relative c {

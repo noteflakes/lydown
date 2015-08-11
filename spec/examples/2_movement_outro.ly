@@ -17,6 +17,7 @@
     <<
     \new Staff = Staff \with { }
     \context Staff = Staff {
+      \set Score.skipBars = ##t 
       \relative c {
         << \new Voice = "voice1" {
           \time 4/4

@@ -5,7 +5,7 @@
 
   \bookpart {
     <<
-    \new Staff = ContinuoStaff \with { }
+    \new Staff = ContinuoStaff \with { \override VerticalAxisGroup.remove-empty = ##f }
 
     \context Staff = ContinuoStaff {
       \relative c {

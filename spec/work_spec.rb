@@ -46,7 +46,7 @@ RSpec.describe Lydown::Work do
     work.context['end_barline'] = 'none'
     
     ly = work.to_lilypond(mode: :part, no_lib: true).strip_whitespace
-    ex = load_example('simple.ly', strip: true)
+    ex = load_example('simple_part.ly', strip: true)
     expect(ly).to eq(ex)
   end
   

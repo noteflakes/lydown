@@ -14,6 +14,7 @@
           c4 d e f
           R1*1
           g4 a b c
+          R1*1^\markup { \italic { blah } }
           \time 3/4
           R2.*4
           c2.

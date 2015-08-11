@@ -8,6 +8,7 @@
     <<
     \new Staff = ViolinoIIStaff \with { }
     \context Staff = ViolinoIIStaff {
+      \set Score.skipBars = ##t 
       \relative c {
         \clef "treble"
         << \new Voice = "violino2_voice1" {
