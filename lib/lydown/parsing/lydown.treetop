@@ -100,17 +100,17 @@ grammar Lydown
     '<' note white_space* (note white_space*)* '>' expression* <Chord>
   end
   rule expression
-    (expression_shorthand / expression_longhand / string) <Note::Expression>
+    (expression_shorthand / expression_string / expression_longhand) <Note::Expression>
   end
 
   rule expression_shorthand
     [\_\.`]
   end
   rule expression_longhand
-    '\\' [^\s\n]+
+    '\\' [a-zA-Z]+
   end
   rule expression_string
-    '\\' '_'? string
+    '\\' '_'? [<>\|]? string
   end
   rule string
     '"' ('\"' / !'"' .)* '"'
