@@ -1,14 +1,12 @@
 <%
-  title = nil
   if name && (name != '')
-    title = Lydown::Rendering.part_title(name)
+    part_title = Lydown::Rendering::Staff.part_title(self, name)
     voice_prefix = "#{name}_"
   else
-    title = nil
+    part_title = "#\"\""
     voice_prefix = nil
   end
-  staff_id = "#{title && title.gsub(' ', '')}Staff"
-  
+  staff_id = Lydown::Rendering::Staff.staff_id(name)
 
   score_mode = self['render_opts/mode'] == :score
   
@@ -31,6 +29,14 @@
   end_barline = Lydown::Rendering::Staff.end_barline(self, movement)
 
   cadenza = part['settings'][:time] == 'unmetered'
+  
+  mode = self['render_opts/mode'] || self['mode']
+  skip_bars = (mode == :proof) || (mode == :part)
+
+  instrument_names = self['instrument_names'] || movement['settings/instrument_names']
+  hide_instrument_names = 
+    (instrument_names == 'hide') || 
+    (instrument_names == 'inline')
 %>
 
 <<
