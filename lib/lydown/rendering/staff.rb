@@ -28,7 +28,8 @@ module Lydown::Rendering
       "bracket" => "SystemStartBracket"
     }
     
-    BRACKET_PARTS = %w{soprano alto tenore basso}
+    BRACKET_PARTS = %w{soprano alto tenore basso soprano1 soprano2 
+      alto1 alto2 tenore1 tenore2 basso1 basso2}
     
     def self.staff_group_directive(group)
       if group.size == 1
@@ -42,6 +43,7 @@ module Lydown::Rendering
     
     # renders a systemStartDelimiterHierarchy expression
     def self.staff_hierarchy(staff_groups)
+      directive = nil
       expr = staff_groups.inject('') do |m, group|
         directive = staff_group_directive(group)
         if directive
@@ -51,8 +53,13 @@ module Lydown::Rendering
         end
         m
       end
-        
-      "#'(SystemStartBracket #{expr})"
+      
+      if (staff_groups.size == 1) && (staff_groups[0].size > 1) && directive == "SystemStartBracket"
+        # If all staves are already group, no need to add the system bracket
+        "#'#{expr}"
+      else
+        "#'(SystemStartBracket #{expr})"
+      end
     end
     
     def self.clef(part)
