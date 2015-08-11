@@ -13,10 +13,6 @@
   }
 }
 
-\layout {
-  #(layout-set-staff-size 16)
-}
-
 segno = {
   \once \override Score.RehearsalMark #'font-size = #-2
   \mark \markup { \musicglyph #"scripts.segno" }
@@ -90,3 +86,24 @@ prallupbefore = {
           (ly:grob-set-property! grob 'stencil new-stil)))
         #f))))
         
+
+\layout {
+  #(layout-set-staff-size 14)
+  indent = 0\cm
+
+  \context {
+    \Score
+    \override InstrumentName #'self-alignment-X = #right
+    \override InstrumentName #'padding = 0.6
+    
+    \override BarNumber #'padding = 1.5
+  }
+}
+
+\paper {
+  top-margin = 1.4\cm
+  bottom-margin = 1.4\cm
+  two-sided = ##t
+  inner-margin = 1.4\cm
+  outer-margin = 2\cm
+}
