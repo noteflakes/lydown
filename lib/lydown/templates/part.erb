@@ -38,11 +38,18 @@
 }
 
 \context Staff = <%= staff_id %> {
+  <% if skip_bars %>
+    \set Score.skipBars = ##t
+  <% end %>
+    
+
   <% if part['settings'][:tempo] %>
     \tempo "<%= part['settings'][:tempo] %>"
   <% end %>
 
-<% if score_mode %>\set Staff.instrumentName = #"<%= title %>"<% end %>
+<% if score_mode && !hide_instrument_names %>
+  \set Staff.instrumentName = <%= part_title %>
+<% end %>
 
 <% if midi_instrument %>
   \set Staff.midiInstrument = #"<%= midi_instrument %>"
@@ -53,6 +60,10 @@
         \clef "<%= clef %>"
     <% end %>
     <%= partial %>
+    
+    <% if (mode == :score) && (instrument_names == 'inline') %>
+      <%= part_title %>
+    <% end %>
     
     <<
       \new Voice = "<%= voice_prefix %>voice1" {

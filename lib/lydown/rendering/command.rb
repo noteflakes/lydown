@@ -3,6 +3,10 @@ module Lydown::Rendering
     include Notes
     
     def translate
+      if respond_to?("cmd_#{@event[:key]}".to_sym)
+        return send("cmd_#{@event[:key]}".to_sym)
+      end
+      
       if @context['process/duration_macro']
         add_macro_event(@event[:raw] || cmd_to_lydown(@event))
       else
@@ -31,6 +35,16 @@ module Lydown::Rendering
         cmd << event[:arguments].map {|a| a.inspect}.join(':')
       end
       cmd
+    end
+    
+    def cmd_instr
+      return unless @context['options/mode'] == :score
+      markup = Staff.part_title(
+        @context,
+        @context[:part], 
+        @event[:arguments] && @event[:arguments][0]
+      )
+      @context.emit(:music, markup)
     end
   end
 end

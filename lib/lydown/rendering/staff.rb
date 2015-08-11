@@ -77,6 +77,26 @@ module Lydown::Rendering
       end
     end
     
+    def self.staff_id(part)
+      title = Lydown::Rendering.part_title(part).gsub(/\s+/, '')
+      "#{title}Staff"
+    end
+    
+    def self.part_title(context, part, name = nil)
+      title = name || Lydown::Rendering.part_title(part)
+      title.strip!
+
+      if title.empty?
+        "#\"\""
+      else
+        if context['options/instrument_names_style'] == 'small_caps'
+          "<>^\\markup { \\smallCaps { #{title} } } "
+        else
+          "#\"#{title}\""
+        end
+      end
+    end
+    
     DEFAULT_END_BARLINE = '|.'
     
     def self.end_barline(context, movement)

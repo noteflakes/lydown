@@ -5,7 +5,7 @@ module Lydown::Rendering
     SETTING_KEYS = [
       'key', 'time', 'pickup', 'clef', 'part', 'movement', 'tempo',
       'accidentals', 'beams', 'end_barline', 'macros', 'empty_staves',
-      'midi_tempo'
+      'midi_tempo', 'instrument_names'
     ]
 
     RENDERABLE_SETTING_KEYS = [
@@ -15,7 +15,8 @@ module Lydown::Rendering
     ALLOWED_SETTING_VALUES = {
       'accidentals' => ['manual', 'auto'],
       'beams' => ['manual', 'auto'],
-      'empty_staves' => ['hide', 'show']
+      'empty_staves' => ['hide', 'show'],
+      'instrument_names' => ['hide', 'show', 'inline']
     }
 
     def translate
