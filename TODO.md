@@ -1,7 +1,14 @@
-- source refs
-  - spec line_and_column calculation
-  - spec source refs when processing multiple files
-  - spec source refs for chords
+- idea for future: pluggable architecture for rendering instrument names, header markup, etc?
+
+- markup for instrument name:
+  \instr
+
+- bug: figures for a note without duration after a full bar rest
+
+- rehearsal marks:
+
+  \mark:4a //long form
+  *4a* // short form
 
 - footnote syntax:
 
