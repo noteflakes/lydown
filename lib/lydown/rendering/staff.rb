@@ -98,12 +98,27 @@ module Lydown::Rendering
       title.strip!
 
       if title.empty?
+        "#\"\" "
+      else
+        if context['instrument_name_style'] == 'smallcaps'
+          "\\markup { \\smallCaps { #{title} } } "
+        else
+          "#\"#{title}\" "
+        end
+      end
+    end
+    
+    def self.inline_part_title(context, part, name = nil)
+      title = name || Lydown::Rendering.part_title(part)
+      title.strip!
+
+      if title.empty?
         "#\"\""
       else
-        if context['options/instrument_names_style'] == 'small_caps'
+        if context['instrument_name_style'] == 'smallcaps'
           "<>^\\markup { \\smallCaps { #{title} } } "
         else
-          "#\"#{title}\""
+          "<>^\\markup { #{title} } "
         end
       end
     end

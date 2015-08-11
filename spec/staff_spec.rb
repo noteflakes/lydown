@@ -53,4 +53,12 @@ RSpec.describe Lydown::Rendering::Staff do
 
     verify_example('end_barline')
   end
+  
+  it "renders smallcaps instrument name style" do
+    verify_example('instrument_smallcaps_name_style', nil, mode: :score)
+  end
+
+  it "renders instrument names inline" do
+    verify_example('instrument_name_inline', nil, mode: :score)
+  end
 end

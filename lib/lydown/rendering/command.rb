@@ -38,8 +38,8 @@ module Lydown::Rendering
     end
     
     def cmd_instr
-      return unless @context['options/mode'] == :score
-      markup = Staff.part_title(
+      return unless (@context['options/mode'] == :score)
+      markup = Staff.inline_part_title(
         @context,
         @context[:part], 
         @event[:arguments] && @event[:arguments][0]

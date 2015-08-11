@@ -1,3 +1,13 @@
+- Add support for smallcaps instrument name style, using the <code>instrument_name_style</code> setting.
+- Prevent removal of continuo staff when empty_staves is set to <code>hide</code>.
+- Add support for aligned note markup: <code>\<"right-aligned"</code>, <code>\>"left-aligned"</code>, <code>\|"centered"</code>.
+- Add instrument_names setting for showing/hiding instrument names on first system. When set to inline, the instrument names are shown inline using the \instr command.
+- Add \instr command for showing the instrument name inline, above the staff.
+- Support for rehearsal marks with whitespace
+- Change default bracing for split choir
+- Fix rendering of <b> figure
+- Add support for mp3 output format (using timidity & [LAME](http://lame.sourceforge.net/))
+- Fix opening of MIDI output files (using [timidity](http://timidity.sourceforge.net/))
 - Add include_parts parameter to proof mode
 - Improve error reporting, beep on error in proof mode
 
