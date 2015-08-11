@@ -253,6 +253,7 @@ module Lydown::Rendering
         options[:value],
         lilypond_phrasing(event),
         event[:expressions] ? event[:expressions].join : '',
+        ' '
       ].join
     end
 
@@ -379,13 +380,23 @@ module Lydown::Rendering
       '`' => '-!'
     }
 
+    MARKUP_ALIGNMENT = {
+      '<' => 'right-align',
+      '>' => 'left-align',
+      '|' => 'center-align'
+    }
+
     def translate_expressions
       return unless @event[:expressions]
 
       @event[:expressions] = @event[:expressions].map do |expr|
-        if expr =~ /^(?:\\(_?))?"(.+)"$/
+        if expr =~ /^(?:\\(_?)([<>\|])?)?"(.+)"$/
           placement = ($1 == '_') ? '_' : '^'
-          "#{placement}\\markup { #{translate_string_expression($2)} }"
+          content = translate_string_expression($3)
+          if MARKUP_ALIGNMENT[$2]
+            content = "\\#{MARKUP_ALIGNMENT[$2]} { #{content} }"
+          end
+          "#{placement}\\markup { #{content} }"
         elsif expr =~ /^\\/
           expr
         elsif LILYPOND_EXPRESSIONS[expr]

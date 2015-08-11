@@ -15,6 +15,9 @@
           g\p r^\markup { Jünger ("alto"): }
           r^\markup { \italic { bl ah } }
           r_\markup { bleh }
+          g^\markup { \right-align { \italic { right-aligned } } } 
+          b_\markup { \left-align { \italic { left-aligned } } } 
+          d^\markup { \center-align { \italic { centered } } }
         } >>
       }
     }

@@ -105,7 +105,7 @@ module Lydown::Rendering
         end
         look_ahead_idx += 1
       end
-
+      
       add_note(@event)
     end
   end
@@ -114,6 +114,8 @@ module Lydown::Rendering
     include Notes
     
     def translate
+      translate_expressions
+      
       look_ahead_idx = @idx + 1
       while event = @stream[look_ahead_idx]
         case event[:type]
