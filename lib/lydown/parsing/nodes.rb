@@ -11,6 +11,16 @@ module Lydown::Parsing
       stream
     end
     
+    def each_child(ele = nil, &block)
+      ele ||= elements
+      return unless ele
+
+      ele.each do |e|
+        block[e] if e.respond_to?(:to_stream)
+        each_child(e.elements, &block) if e.elements
+      end
+    end
+    
     def to_stream(stream = [], opts = {})
       _to_stream(self, stream, opts)
       stream
@@ -178,7 +188,15 @@ module Lydown::Parsing
       chord = event_hash(stream, opts, {
         type: :chord, notes: []
       })
-      _to_stream(self, chord[:notes], opts)
+      each_child do |c|
+        if c.is_a?(Note)
+          c.to_stream(chord[:notes], opts)
+        elsif c.is_a?(Note::Expression)
+          c.to_stream(chord, opts)
+        end
+      end
+           
+      # _to_stream(self, chord[:notes], opts)
       stream << chord
     end
   end
@@ -243,10 +261,9 @@ module Lydown::Parsing
       rest = event_hash(stream, opts, {
         type: :rest, raw: text_value, head: text_value[0]
       })
-      if text_value =~ /^R(\*([0-9]+))?$/
+      if text_value =~ /^R(\*([0-9]+))?/
         rest[:multiplier] = $2 || '1'
       end
-
       _to_stream(self, rest, opts)
 
       stream << rest
@@ -255,9 +272,11 @@ module Lydown::Parsing
 
   class Silence < Root
     def to_stream(stream, opts)
-      stream << event_hash(stream, opts, {
+      silence = event_hash(stream, opts, {
         type: :silence, raw: text_value, head: text_value[0]
       })
+      _to_stream(self, silence, opts)
+      stream << silence
     end
   end
 
