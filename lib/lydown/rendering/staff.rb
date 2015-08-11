@@ -66,6 +66,10 @@ module Lydown::Rendering
       DEFAULTS["parts/#{part}/clef"]
     end
     
+    def self.prevent_remove_empty(part)
+      DEFAULTS["parts/#{part}/remove_empty"] == false
+    end
+    
     def self.midi_instrument(part)
       DEFAULTS["parts/#{part}/midi_instrument"]
     end

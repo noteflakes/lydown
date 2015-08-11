@@ -148,6 +148,7 @@ parts:
     clef: bass
     midi_instrument: cello
     embed_figures: true
+    remove_empty: false
   organo:
     clef: bass
     midi_instrument: church organ

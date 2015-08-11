@@ -19,6 +19,7 @@
   }.deep!
 
   clef = Lydown::Rendering::Staff.clef(name)
+  prevent_remove_empty = Lydown::Rendering::Staff.prevent_remove_empty(name)
   
   midi_mode = (self['render_opts/format'] == 'midi') ||
               (self['render_opts/format'] == 'mp3')
@@ -35,6 +36,9 @@
 <<
 
 \new Staff = <%= staff_id %> \with {
+  <% if prevent_remove_empty %>
+    \override VerticalAxisGroup.remove-empty = ##f
+  <% end %>
 }
 
 \context Staff = <%= staff_id %> {
