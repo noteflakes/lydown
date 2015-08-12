@@ -438,6 +438,34 @@ To extract a specific part, we use the -p  switch:
 
 lydown -o -p violino1 score.lydown
 
+## Staff and system appearance
+
+Numerous settings can be used to control the way staves and systems are displayed. Normally, lydown will follow standard conventions when putting together a score: the different parts will be ordered correctly (e.g. flutes, then oboes, then strings, then vocal parts, then continuo), and braced/bracketed according to convention.
+
+When a single movement switches between different ensembles, for example a recitativo secco followed by a recitativo accompagnato, empty staves may be hidden using setting <code>empty_staves</code> setting:
+
+    - empty_staves: hide
+    
+Normally, instrument names are shown according to convention, to the left of each staff in the first system. To hide the instrument names on the first system, use the <code>instrument_names</code> setting:
+
+    - instrument_names: hide
+    
+The <code>instrument_names</code> setting can also be set to <inline>, in which case the instrument name will be displayed above the beginning of each staff in the first system.
+  
+To show the instrument name inline at any point in the music, use the <code>\instr</code> command:
+
+    - part: flute
+    R*4
+    // when no parameter is given, the part name is used, 
+    // and engraved capitalized with numbers formatted to roman numerals
+    \instr 4c8eg2c
+    ...
+    // when the instrument name is specifed, it is used in place of the 
+    // part name:
+    \instr:"Flute II" 4c8eg2c
+
+Another setting which controls the display of instrument names is <code>instrument_name_style</code> which can be set to <code>normal</code> or <code>smallcaps</code>, in which case the instrument name will be engraved using small caps.
+
 ## Adding a front cover
 
-When creating professional scores and parts, it is customary to add a cover page, with the title of the piece, the composer's name and other general information. Lydown includes a
+When creating professional scores and parts, it is customary to add a cover page, with the title of the piece, the composer's name and other general information.
