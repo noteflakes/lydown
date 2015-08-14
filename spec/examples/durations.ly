@@ -15,6 +15,10 @@
           c8. d16 e8. f16 g2
 
           r16.. c32 r16 f r c r f
+          
+          c\breve e1 g c\longa
+
+          r c\longa. c\breve.
         } >>
       }
     }

@@ -3,6 +3,8 @@ require 'lydown/rendering/notes'
 
 module Lydown::Rendering
   LILYPOND_DURATIONS = {
+    '0' => "\\breve",
+    'l' => "\\longa",
     '6' => '16',
     '3' => '32'
   }
@@ -22,7 +24,7 @@ module Lydown::Rendering
         @context['process/grace_mode'] = nil
       end
 
-      value = @event[:value].sub(/^[0-9]+/) {|m| LILYPOND_DURATIONS[m] || m}
+      value = @event[:value].sub(/^[0-9]+|l/) {|m| LILYPOND_DURATIONS[m] || m}
 
       if next_event && next_event[:type] == :stand_alone_figures
         @context['process/figures_duration_value'] = value
