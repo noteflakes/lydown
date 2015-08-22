@@ -25,7 +25,8 @@ module Lydown
     end
 
     def to_lilypond(opts = {})
-      @context['render_opts'] = opts
+      @context[:render_opts] = opts
+      @context[:variables] = {}
       ly_code = ''
 
       if opts[:stream_path]
@@ -37,7 +38,10 @@ module Lydown
         @original_context = @context
         begin
           filtered = @context.filter(opts)
+          
+          # the filtered context is to the template's self 
           filtered.extend(TemplateBinding)
+
           Lydown::Templates.render(:lilypond_doc, filtered)
         ensure
           @context = @original_context

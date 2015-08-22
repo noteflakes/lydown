@@ -37,6 +37,32 @@ module Lydown::Rendering
         part_name.titlize
       end
     end
+    
+    def variable_name_infix(infix)
+      infix.capitalize.gsub(/(\d+)/) {|n| n.to_i.to_roman.upcase}.
+        gsub(/[^a-zA-Z]/, '').gsub(/\s+/, '')
+    end
+    
+    VOICE_INDEX = {
+      '1' => 'One',
+      '2' => 'Two',
+      '3' => 'Three',
+      '4' => 'Four'
+    }
+    
+    def voice_variable_name_infix(infix)
+      infix.capitalize.gsub(/(\d+)/) {|n| VOICE_INDEX[n]}
+    end
+    
+    def variable_name(opts)
+      "ld%s%s%s%s%s" % [
+        opts[:movement] ? variable_name_infix(opts[:movement]) : '',
+        opts[:part] ? variable_name_infix(opts[:part]) : '',
+        opts[:stream].to_s.capitalize,
+        opts[:voice] ? voice_variable_name_infix(opts[:voice]) : '',
+        opts[:idx] ? opts[:idx].to_i.to_roman.upcase : ''
+      ]
+    end
   end
 end
 

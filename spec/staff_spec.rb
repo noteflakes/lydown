@@ -36,7 +36,7 @@ RSpec.describe Lydown::Rendering::Staff do
     expect(mode).to be_nil
     
     mode = Lydown::Rendering::Staff.beaming_mode('soprano')
-    expect(mode).to eq('\autoBeamOff')
+    expect(mode).to eq('\\set Staff.autoBeaming = ##f')
   end
   
   it "passes the correct end barline when rendering staves" do

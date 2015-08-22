@@ -1,6 +1,6 @@
 \version "2.18.2"
 
-<% unless self['render_opts']['no_lib'] %>
+<% unless self['render_opts/no_lib'] %>
 \include "<%= File.join(LY_LIB_DIR, 'lib.ly') %>"
 <% end %>
 
@@ -8,6 +8,8 @@
 \layout {
 }
 <% end %>
+
+<%= Lydown::Templates.render(:variables, self) %>
 
 \book {
   \header {

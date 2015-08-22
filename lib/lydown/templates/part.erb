@@ -40,6 +40,8 @@
   hide_instrument_names = 
     (instrument_names == 'hide') || 
     (instrument_names == 'inline')
+    
+  var_opts = {movement: movement_name, part: name}
 %>
 
 <<
@@ -68,48 +70,43 @@
   \set Staff.midiInstrument = #"<%= midi_instrument %>"
 <% end %>
 
-  \relative c {
-    <% if clef %>
-        \clef "<%= clef %>"
-    <% end %>
-    <%= partial %>
-    
-    <% if (mode == :score) && (instrument_names == 'inline') %>
-      <%= inline_part_title %>
-    <% end %>
-    
-    <<
-      \new Voice = "<%= voice_prefix %>voice1" {
-        <%= beaming_mode %>
-        <%= part['music'] %>
-      }
-    >>
-    <% if end_barline %>
-      \bar "<%= end_barline %>"
-    <% end %>
-  }
+  <% if clef %>
+      \clef "<%= clef %>"
+  <% end %>
+  <%= partial %>
+
+  <% if (mode == :score) && (instrument_names == 'inline') %>
+    <%= inline_part_title %>
+  <% end %>
+  
+  <%= beaming_mode %>
+  \<%= Lydown::Rendering.variable_name(var_opts.merge(stream: :music)) %>
+  
+  <% if end_barline %>
+    \bar "<%= end_barline %>"
+  <% end %>
 }
 
-  <% if part['lyrics'] %>
-    <% multi_voice = part['lyrics'].size > 1 %>
-    <% part['lyrics'].each_key do |voice| %>
-      <% above_staff = multi_voice && ['voice1', 'voice3'].include?(voice) %>
-      <% part['lyrics'][voice].keys.sort.each do |idx| %>
-        \new Lyrics 
-        <% if above_staff %>
-          \with { alignAboveContext = "<%= staff_id %>" }
-        <% end %>
-        {
-          \lyricsto "<%= voice_prefix %><%= voice %>" {
-            <%= part['lyrics'][voice][idx] %>
-          }
-        }
+<% if part['lyrics'] %>
+  <% multi_voice = part['lyrics'].size > 1 %>
+  <% part['lyrics'].each_key do |voice| %>
+    <% above_staff = multi_voice && ['voice1', 'voice3'].include?(voice) %>
+    <% part['lyrics'][voice].keys.sort.each do |idx| %>
+      \new Lyrics 
+      <% if above_staff %>
+        \with { alignAboveContext = "<%= staff_id %>" }
       <% end %>
+      {
+        \lyricsto "<%= voice_prefix %><%= voice %>" {
+          \<%= Lydown::Rendering.variable_name(var_opts.merge(stream: :lyrics, voice: voice, idx: idx)) %>
+        }
+      }
     <% end %>
-  
   <% end %>
 
-  <% if part['figures'] %>
-    \figures { <%= part['figures'] %> }
-  <% end %>
+<% end %>
+
+<% if part['figures'] %>
+  \new FiguredBass { \<%= Lydown::Rendering.variable_name(var_opts.merge(stream: :figures)) %> }
+<% end %>
 >>

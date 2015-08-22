@@ -19,7 +19,7 @@
   empty_staves = self['empty_staves'] || movement['settings/empty_staves']
 %>
 
-\bookpart {
+\score {
   <% if movement_title %>
     \header { 
       piece = \markup {
@@ -32,18 +32,17 @@
   <% end %>
   
   <% if score_mode %>
-    \score {
-      <% if empty_staves == 'hide' %>
-        \layout {
-          \context {
-            \RemoveEmptyStaffContext
-            \override VerticalAxisGroup #'remove-first = ##t
-          }
-        }      
-      <% end %>
-      
-      \new StaffGroup <<
-        \set StaffGroup.systemStartDelimiterHierarchy = <%= staff_hierarchy %>
+    <% if empty_staves == 'hide' %>
+      \layout {
+        \context {
+          \RemoveEmptyStaffContext
+          \override VerticalAxisGroup #'remove-first = ##t
+        }
+      }      
+    <% end %>
+    
+    \new StaffGroup <<
+      \set StaffGroup.systemStartDelimiterHierarchy = <%= staff_hierarchy %>
   <% end %>
     
       <% if n = movement['bar_number'] %>
@@ -54,18 +53,17 @@
       
       <% parts.each do |n, p| %>
         <%= Lydown::Templates.render(:part, self, 
-          name: n, part: p, movement: movement) %>
+          name: n, part: p, movement: movement, movement_name: name) %>
       <% end %>
   
   <% if score_mode %>
-      >>
-      <% if midi_mode %>
-      \midi {
-        <% if tempo = movement['settings/midi_tempo'] %>
-          \tempo <%= tempo %>
-        <% end %>
-      }
-      <% end %> 
+    >>
+    <% if midi_mode %>
+    \midi {
+      <% if tempo = movement['settings/midi_tempo'] %>
+        \tempo <%= tempo %>
+      <% end %>
     }
+    <% end %> 
   <% end %>
 }

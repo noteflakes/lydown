@@ -1,10 +1,18 @@
 \version "2.18.2"
 
+ldIIoutroViolinoIIMusic = \relative c {
+  << \new Voice = "violino2_voice1" {
+    \time 2/4
+    \key bes \major
+    g'4 f8 ees d2
+  } >>
+}
+
 \book {
   \header {
   }
 
-  \bookpart {
+  \score {
     \header {
       piece = \markup {
         \column {
@@ -15,7 +23,7 @@
     }
   }
 
-  \bookpart {
+  \score {
     \header {
       piece = \markup {
         \column {
@@ -28,15 +36,9 @@
     <<
     \new Staff = ViolinoIIStaff \with { }
     \context Staff = ViolinoIIStaff {
-      \relative c {
-        \clef "treble"
-        << \new Voice = "violino2_voice1" {
-          \time 2/4
-          \key bes \major
-          g'4 f8 ees d2
-        } >>
-        \bar "|."
-      }
+      \clef "treble"
+      \ldIIoutroViolinoIIMusic
+      \bar "|."
     }
     >>
   }

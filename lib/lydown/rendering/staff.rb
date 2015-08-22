@@ -80,9 +80,9 @@ module Lydown::Rendering
       
       case beaming
       when 'auto'
-        '\autoBeamOn'
+        '\\set Staff.autoBeaming = ##t'
       when 'manual'
-        '\autoBeamOff'
+        '\\set Staff.autoBeaming = ##f'
       else
         raise LydownError, "Invalid beaming mode (#{beaming.inspect})"
       end

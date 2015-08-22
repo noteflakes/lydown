@@ -170,11 +170,34 @@ class String
 end
 
 class Fixnum
-  ROMAN = %w[0 I II III IV V VI VII VIII IX X XI XII XIII XIV XV XVI XVII XVIII XIX
-    XX XXI XXII XXIII XXIV XXV XXVI XXVII XXVIII XXIX XXX]
-  
+  # Taken from https://github.com/AndrewVos/roman-numerals
+  # Copyright (c) 2011 Andrew Vos
+  @@roman_digits = {
+    1000 => 'M',
+    900  => 'CM',
+    500  => 'D',
+    400  => 'CD',
+    100  => 'C',
+    90   => 'XC',
+    50   => 'L',
+    40   => 'XL',
+    10   => 'X',
+    9    => 'IX',
+    5    => 'V',
+    4    => 'IV',
+    1    => 'I'
+  }
+
   def to_roman
-    ROMAN[self]
+    result = ''
+    value = self
+    @@roman_digits.keys.each do |decimal|
+      while value >= decimal
+        value -= decimal
+        result += @@roman_digits[decimal]
+      end
+    end
+    result
   end
 end
 
