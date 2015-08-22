@@ -4,3 +4,5 @@
 cd \instr ef
 - part: violino2
 \instr gabc
+- part: continuo
+\<instr e

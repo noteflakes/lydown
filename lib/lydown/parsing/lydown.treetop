@@ -191,7 +191,7 @@ grammar Lydown
     '\\' '!'? inline_command_key (':' inline_command_argument)* <Command>
   end
   rule inline_command_key
-    [a-zA-Z_0-9]+ <Command::Key>
+    [\<\>\|]? [a-zA-Z_0-9]+ <Command::Key>
   end
   rule inline_command_argument
     (string / [^\s\t\n\:]+) <Command::Argument>

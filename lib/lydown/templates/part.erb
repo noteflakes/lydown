@@ -1,6 +1,9 @@
 <%
   if name && (name != '')
     part_title = Lydown::Rendering::Staff.part_title(self, name)
+    inline_part_title = Lydown::Rendering::Staff.inline_part_title(
+      self, part: name
+    )
     voice_prefix = "#{name}_"
   else
     part_title = "#\"\""
@@ -72,7 +75,7 @@
     <%= partial %>
     
     <% if (mode == :score) && (instrument_names == 'inline') %>
-      <%= part_title %>
+      <%= inline_part_title %>
     <% end %>
     
     <<

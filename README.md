@@ -220,7 +220,15 @@ Other arbitrary lilypond articulations can be entered after a backslash:
 
     \f cege \p cfaf => c\f e g e c\p f a f
 
-Arbitrary expression marks can be entered as a string following a backslash (for placing it under the note) or a forward slash (for placing it above the note).
+Arbitrary expression markup can be entered as a string following a backslash. Lydown supports basic markdown syntax for formatting the expression:
+
+    c\"hello" // displayed above the note
+    c\_"hello" // displayed below the note
+    c\<"hello" // right-aligned
+    c\|"hello" // centered
+    c\_|"hello" // centered, below the note
+    c\"_hello_" // italic
+    c\"__hello__" // bold
 
 ### Repeated articulation and rhythmic patterns: macros
 
@@ -463,6 +471,12 @@ To show the instrument name inline at any point in the music, use the <code>\ins
     // when the instrument name is specifed, it is used in place of the 
     // part name:
     \instr:"Flute II" 4c8eg2c
+    
+The <code>\instr</code> command can also accept an alignment modifier:
+
+    \<instr // right-aligned
+    \>instr // left-aligned (default)
+    \|instr // centered
 
 Another setting which controls the display of instrument names is <code>instrument_name_style</code> which can be set to <code>normal</code> or <code>smallcaps</code>, in which case the instrument name will be engraved using small caps.
 

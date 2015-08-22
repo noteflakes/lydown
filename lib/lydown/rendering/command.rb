@@ -2,9 +2,20 @@ module Lydown::Rendering
   class Command < Base
     include Notes
     
+    COMMAND_ALIGNMENT = {
+      '<' => '\\right-align',
+      '>' => '\\left-align',
+      '|' => '\\center-align'
+    }
+
     def translate
-      if respond_to?("cmd_#{@event[:key]}".to_sym)
-        return send("cmd_#{@event[:key]}".to_sym)
+      key = @event[:key]
+      if key =~ /([\<\>\|])([a-zA-Z0-9]+)/
+        @event[:alignment] =  COMMAND_ALIGNMENT[$1]
+        key = $2
+      end
+      if respond_to?("cmd_#{key}".to_sym)
+        return send("cmd_#{key}".to_sym)
       end
       
       if @context['process/duration_macro']
@@ -41,8 +52,9 @@ module Lydown::Rendering
       return unless (@context['options/mode'] == :score)
       markup = Staff.inline_part_title(
         @context,
-        @context[:part], 
-        @event[:arguments] && @event[:arguments][0]
+        part: @context[:part], 
+        name: @event[:arguments] && @event[:arguments][0],
+        alignment: @event[:alignment]
       )
       @context.emit(:music, markup)
     end
