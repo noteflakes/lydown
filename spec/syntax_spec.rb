@@ -83,7 +83,7 @@ RSpec.describe Lydown do
 
   it "correctly translates inline bass figures" do
     verify_example('figures')
-
+    verify_example('figures_extenders')
     verify_example('figures_bwv135')
   end
 

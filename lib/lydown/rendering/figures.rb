@@ -10,16 +10,19 @@ module Lydown::Rendering
     def add_figures(figures, value)
       # Add fill-in silences to catch up with music stream
       if @context['process/running_values']
+        silence_figures = @event[:tenue] ?
+          @context['process/last_figures'] :
+          (@context['process/blank_extender_mode'] ? '<_>' : 's')
+         
         @context['process/running_values'].each do |v|
-          silence = @context['process/blank_extender_mode'] ?
-            '<_>' : 's'
+          silence = silence_figures
           if v != @context['process/last_figures_value']
-            silence << v
+            silence = silence + v
             @context['process/last_figures_value'] = v
           end
           @context.emit(:figures, "#{silence} ")
         end
-        @context['process/running_values'] = []
+        @context['process/running_values'] = nil
       end
 
       figures = lilypond_figures(figures)
@@ -31,11 +34,12 @@ module Lydown::Rendering
         @context['process/blank_extender_mode'] = false
         figures = BLANK_EXTENDER
         @event[:figure_extenders_off] = true
+      else
+        @context['process/last_figures'] = figures
       end
       
-      @context['process/last_figures'] = figures
       if value != @context['process/last_figures_value']
-        figures << value
+        figures = figures + value
         @context['process/last_figures_value'] = value
       end
 
