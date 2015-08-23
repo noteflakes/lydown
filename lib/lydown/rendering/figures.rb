@@ -29,8 +29,8 @@ module Lydown::Rendering
         @context.emit(:figures, EXTENDERS_ON)
       elsif figures == BLANK_EXTENDER_STOP
         @context['process/blank_extender_mode'] = false
-        @context.emit(:figures, EXTENDERS_OFF)
-        return
+        figures = BLANK_EXTENDER
+        @event[:figure_extenders_off] = true
       end
       
       @context['process/last_figures'] = figures
