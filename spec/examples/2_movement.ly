@@ -21,12 +21,7 @@ ldIIoutroMusic = \relative c {
 
   \score {
     \header {
-      piece = \markup {
-        \column {
-          \fill-line {\bold \large "1. Intro"}
-
-        }
-      }
+      piece = \markup { \bold \large { 1. Intro } }
     }
 
       <<
@@ -39,12 +34,7 @@ ldIIoutroMusic = \relative c {
   }
   \score {
     \header {
-      piece = \markup {
-        \column {
-          \fill-line {\bold \large "2. Outro"}
-
-        }
-      }
+      piece = \markup { \bold \large { 2. Outro } }
     }
 
       <<

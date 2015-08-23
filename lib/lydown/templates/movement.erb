@@ -22,12 +22,7 @@
 \score {
   <% if movement_title %>
     \header { 
-      piece = \markup {
-        \column {
-          \fill-line {\bold \large "<%= movement_title %>"}
-          
-        }
-      }
+      piece = \markup { \bold \large { <%= movement_title %> } }
     }
   <% end %>
   

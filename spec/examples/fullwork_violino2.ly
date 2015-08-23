@@ -14,23 +14,13 @@ ldIIoutroViolinoIIMusic = \relative c {
 
   \score {
     \header {
-      piece = \markup {
-        \column {
-          \fill-line {\bold \large "1. Intro - tacet"}
-
-        }
-      }
+      piece = \markup { \bold \large { 1. Intro - tacet } }
     }
   }
 
   \score {
     \header {
-      piece = \markup {
-        \column {
-          \fill-line {\bold \large "2. Outro"}
-
-        }
-      }
+      piece = \markup { \bold \large { 2. Outro } }
     }
 
     <<

@@ -14,12 +14,7 @@ ldIintroViolinoIMusic = \relative c {
 
   \score {
     \header {
-      piece = \markup {
-        \column {
-          \fill-line {\bold \large "1. Intro"}
-
-        }
-      }
+      piece = \markup { \bold \large { 1. Intro } }
     }
 
     <<
