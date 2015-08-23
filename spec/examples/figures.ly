@@ -8,6 +8,7 @@ ldContinuoMusic = \relative c {
     e r r d
     g r f r
     a1
+    c,8 d e c c d e c
   } >>
 }
 ldContinuoFigures = \figuremode {
@@ -17,6 +18,8 @@ ldContinuoFigures = \figuremode {
   <6> s s s
   s s <4 2> s
   s2 <_+>
+  <7 4>8 \bassFigureExtendersOn <7 4> <7 3> <7 3> \bassFigureExtendersOff
+  \bassFigureExtendersOn <_> <_> <_> <_> \bassFigureExtendersOff
 }
 
 \book {

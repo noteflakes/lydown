@@ -122,7 +122,7 @@ grammar Lydown
     '<' figures_component? (white_space? figures_component)* '>'
   end
   rule figures_component
-    ('_' / [#bh] / ([1-9] [\+\-\!\\'`]*)) <FiguresComponent>
+    ([_\-\.] / [#bh] / ([1-9] [\+\-\!\\'`]*)) <FiguresComponent>
   end
   rule standalone_figures
     duration_value? figures <StandAloneFigures>

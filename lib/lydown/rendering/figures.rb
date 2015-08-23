@@ -1,9 +1,18 @@
 module Lydown::Rendering
   module Figures
+    BLANK_EXTENDER_START  = '<->'
+    BLANK_EXTENDER_STOP   = '<.>'
+    BLANK_EXTENDER        = '<_>'
+
+    EXTENDERS_ON = "\\bassFigureExtendersOn "
+    EXTENDERS_OFF = "\\bassFigureExtendersOff "
+    
     def add_figures(figures, value)
+      # Add fill-in silences to catch up with music stream
       if @context['process/running_values']
         @context['process/running_values'].each do |v|
-          silence = "s"
+          silence = @context['process/blank_extender_mode'] ?
+            '<_>' : 's'
           if v != @context['process/last_figures_value']
             silence << v
             @context['process/last_figures_value'] = v
@@ -14,6 +23,17 @@ module Lydown::Rendering
       end
 
       figures = lilypond_figures(figures)
+      if figures == BLANK_EXTENDER_START
+        @context['process/blank_extender_mode'] = true
+        figures = BLANK_EXTENDER
+        @context.emit(:figures, EXTENDERS_ON)
+      elsif figures == BLANK_EXTENDER_STOP
+        @context['process/blank_extender_mode'] = false
+        @context.emit(:figures, EXTENDERS_OFF)
+        return
+      end
+      
+      @context['process/last_figures'] = figures
       if value != @context['process/last_figures_value']
         figures << value
         @context['process/last_figures_value'] = value
@@ -80,9 +100,6 @@ module Lydown::Rendering
       '`' => '\\\\',
       "'" => "/"
     }
-    EXTENDERS_ON = "\\bassFigureExtendersOn "
-    EXTENDERS_OFF = "\\bassFigureExtendersOff "
-
     HIDDEN_FORMAT = "\\once \\override BassFigure #'implicit = ##t"
 
     def next_figures_event

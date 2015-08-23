@@ -375,6 +375,19 @@ Multiple lyrics stanzas can be written by including the stanza number in parens:
 Figured bass is entered inline, following notes or even between notes, when
 multiple figures align with a single note.
 
+    c<6>de<5>c // figures are automatically rhythmically aligned 
+    e<7`> // barred figure
+    f<6+> // sharp 6th
+    g<6-> // flat 6th
+    g<6!> // natural sixth
+    a<h> // natural third
+    a<#> // sharp third
+    a<b> // flat third
+    b<7#>b<6_> // extender (tenue) line on sharp third
+    1c2<6><7-> // use durations to change figures over a long note
+    1c2<><7-> // <> is an empty figure
+    c<->dec<.> // extender (tenue) line without figures over the four notes
+
 ## Multiple parts
 
 Multiple parts can be entered in the same file by prefixing each part's content with a -part setting:
