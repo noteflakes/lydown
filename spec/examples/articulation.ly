@@ -4,6 +4,8 @@ ldMusic = \relative c {
   << \new Voice = "voice1" {
     c4 c-- c-. c-! c
     des'\f dis-.\trill
+    e-._\editP
+    fisis-.^\editF
   } >>
 }
 

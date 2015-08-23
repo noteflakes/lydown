@@ -110,7 +110,7 @@ grammar Lydown
     [\_\.`]
   end
   rule expression_longhand
-    '\\' [a-zA-Z]+
+    '\\' [_\^]? [a-zA-Z]+
   end
   rule expression_string
     '\\' '_'? [<>\|]? string

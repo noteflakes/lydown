@@ -385,20 +385,25 @@ module Lydown::Rendering
       '>' => 'left-align',
       '|' => 'center-align'
     }
+    
+    DYNAMICS = %w{
+      pppp ppp pp p mp mf f ff fff ffff fp sf sff sp spp sfz rfz
+    }
 
     def translate_expressions
       return unless @event[:expressions]
 
       @event[:expressions] = @event[:expressions].map do |expr|
         if expr =~ /^(?:\\(_?)([<>\|])?)?"(.+)"$/
-          placement = ($1 == '_') ? '_' : '^'
+          v_pos = ($1 == '_') ? '_' : '^'
           content = translate_string_expression($3)
           if MARKUP_ALIGNMENT[$2]
             content = "\\#{MARKUP_ALIGNMENT[$2]} { #{content} }"
           end
-          "#{placement}\\markup { #{content} }"
-        elsif expr =~ /^\\/
-          expr
+          "#{v_pos}\\markup { #{content} }"
+        elsif expr =~ /^\\([_^]?)(.+)$/
+          v_pos = $1
+          "#{v_pos}\\#{$2}"
         elsif LILYPOND_EXPRESSIONS[expr]
           LILYPOND_EXPRESSIONS[expr]
         else
