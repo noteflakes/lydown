@@ -13,8 +13,8 @@
   
   movement_title = Lydown::Rendering::Movement.movement_title(self, name)
   
-  midi_mode = (self['render_opts/format'] == 'midi') || 
-              (self['render_opts/format'] == 'mp3')
+  format = self['options/format'] || self['render_opts/format'] || :pdf
+  midi_mode = (format == :midi) || (format == :mp3)
   
   empty_staves = self['empty_staves'] || movement['settings/empty_staves']
 %>
@@ -53,12 +53,12 @@
   
   <% if score_mode %>
     >>
-    <% if midi_mode %>
-    \midi {
-      <% if tempo = movement['settings/midi_tempo'] %>
-        \tempo <%= tempo %>
-      <% end %>
-    }
-    <% end %> 
   <% end %>
+  <% if midi_mode %>
+  \midi {
+    <% if tempo = movement['settings/midi_tempo'] %>
+      \tempo <%= tempo %>
+    <% end %>
+  }
+  <% end %> 
 }

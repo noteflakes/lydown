@@ -16,7 +16,7 @@ module Lydown
         opts[:output_filename] ||= 'lydown'
         
         target = opts[:output_filename].dup
-        ext = ".#{opts[:format] || 'pdf'}"
+        ext = ".#{opts[:format] || :pdf}"
         if target !~ /#{ext}$/
           target << ext
         end
@@ -53,7 +53,7 @@ module Lydown
       
       def invoke(source, opts = {})
         format = opts[:format]
-        format = nil if (format == 'midi') || (format == 'mp3')
+        format = nil if (format == :midi) || (format == :mp3)
         
         # Run lilypond, pipe source into its STDIN, and capture its STDERR
         cmd = 'lilypond '

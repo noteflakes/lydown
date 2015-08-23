@@ -136,8 +136,30 @@ RSpec.describe Lydown::Work do
   it "adds a midi block with optional tempo when midi format is specified" do
     work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'simple_with_midi_tempo'))
     
-    ly = work.to_lilypond(mode: :score, format: 'midi', no_lib: true).strip_whitespace
+    ly = work.to_lilypond(mode: :score, format: :midi, no_lib: true).strip_whitespace
     ex = load_example('simple_midi.ly', strip: true)
+    expect(ly).to eq(ex)
+  end
+
+  it "renders midi tempos only in midi mode" do
+    path = File.join(EXAMPLES_PATH, 'midi_tempo')
+
+    work = Lydown::Work.new(path: path)
+    work.context['end_barline'] = 'none'
+    ly = work.to_lilypond(no_lib: true).strip_whitespace
+    ex = load_example('midi_tempo_normal.ly', strip: true)
+    expect(ly).to eq(ex)
+
+    work = Lydown::Work.new(path: path, format: :midi)
+    work.context['end_barline'] = 'none'
+    ly = work.to_lilypond(format: :midi, no_lib: true).strip_whitespace
+    ex = load_example('midi_tempo_midi.ly', strip: true)
+    expect(ly).to eq(ex)
+
+    work = Lydown::Work.new(path: path, format: :mp3)
+    work.context['end_barline'] = 'none'
+    ly = work.to_lilypond(no_lib: true).strip_whitespace
+    ex = load_example('midi_tempo_midi.ly', strip: true)
     expect(ly).to eq(ex)
   end
 end

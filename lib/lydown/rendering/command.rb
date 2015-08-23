@@ -14,6 +14,7 @@ module Lydown::Rendering
         @event[:alignment] =  COMMAND_ALIGNMENT[$1]
         key = $2
       end
+      # Is there a command handler
       if respond_to?("cmd_#{key}".to_sym)
         return send("cmd_#{key}".to_sym)
       end
@@ -57,6 +58,21 @@ module Lydown::Rendering
         alignment: @event[:alignment]
       )
       @context.emit(:music, markup)
+    end
+    
+    def cmd_tempo
+      unless @event[:arguments] && @event[:arguments].size == 1
+        raise LydownError, "Invalid or missing tempo argument"
+      end
+      
+      tempo = @event[:arguments].first
+      if tempo =~ /^\((.+)\)$/
+        format = @context['options/format']
+        return unless (format == :midi) || (format == :mp3)
+        tempo = $1
+      end
+      
+      @context.emit(:music, "\\tempo #{tempo} ")
     end
   end
 end

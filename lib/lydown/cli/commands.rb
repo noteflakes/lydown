@@ -38,9 +38,10 @@ module Lydown::CLI
       opts = Lydown::CLI::Support.copy_options(options)
       opts[:path] = args.first || '.'
       Lydown::CLI::Support.detect_filename(opts)
-      
+
       # Set format based on direct flag
-      [:png, :ly, :midi, :mp3].each {|f| opts[:format] = f.to_s if opts[f]}
+      opts[:format] = opts[:format].to_sym if opts[:format]
+      [:png, :ly, :midi, :mp3].each {|f| opts[:format] = f if opts[f]}
 
       opts[:parts] = opts[:parts].split(',') if opts[:parts]
       opts[:movements] = opts[:movements].split(',') if opts[:movements]
