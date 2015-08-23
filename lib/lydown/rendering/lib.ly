@@ -126,6 +126,8 @@ ficta = {
   two-sided = ##t
   inner-margin = 1.4\cm
   outer-margin = 2\cm
+  
+  markup-system-spacing #'padding = #3
 }
 
 % trill = #(make-articulation "stopped")
