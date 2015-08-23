@@ -493,6 +493,27 @@ The <code>\instr</code> command can also accept an alignment modifier:
 
 Another setting which controls the display of instrument names is <code>instrument_name_style</code> which can be set to <code>normal</code> or <code>smallcaps</code>, in which case the instrument name will be engraved using small caps.
 
+## Rendering MIDI && mp3 files
+
+In order to render the source code into MIDI, the midi format should be specified:
+
+    lydown --midi score.ld
+    
+The playback tempo can be specified either using the <code>midi_tempo</code> setting:
+
+    - midi_tempo: 4=96
+    
+Or inline using the <code>tempo</code> command, putting the tempo in parens:
+
+    \tempo:(4=120)
+    cdef
+    /tempo:(4=54)
+    gabc
+
+Rendering of mp3 files requires both [timidity](http://timidity.sourceforge.net/) and [LAME](http://lame.sourceforge.net/) to be installed. The mp3 format needs to be 
+
 ## Adding a front cover
 
 When creating professional scores and parts, it is customary to add a cover page, with the title of the piece, the composer's name and other general information.
+
+
