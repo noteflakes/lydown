@@ -92,7 +92,7 @@ ficta = {
     \override BarNumber #'padding = 1.5
     
     %make note stems a bit thicker
-    \override Stem.thickness = #1.5
+    \override Stem.thickness = #2
     
     % slurs and ties are a bit curvier and thicker
     % ties are also a bit more distant from note heads
@@ -110,8 +110,16 @@ ficta = {
   }
   
   \context {
-%     \Lyrics
-%     \override LyricText #'font-name = #"Arial"
+    \Staff
+    \override StaffSymbol.color = #(rgb-color 0.1 0.07 0.05)
+    
+  }
+  
+  \context {
+    \Lyrics
+    % candidates: Georgia, Hoefler Text, Hoefler Text Italic,
+    % 
+    \override LyricText #'font-name = #"Hoefler Text"
 %     \override LyricText #'font-size = #3
   }
 }
