@@ -27,7 +27,6 @@ module Lydown
     def to_lilypond(opts = {})
       @context[:render_opts] = opts
       @context[:variables] = {}
-      ly_code = ''
 
       if opts[:stream_path]
         unless @context[opts[:stream_path]]
@@ -35,17 +34,14 @@ module Lydown
         end
         @context[opts[:stream_path]].strip
       else
-        @original_context = @context
-        begin
-          filtered = @context.filter(opts)
-          
-          # the filtered context is to the template's self 
-          filtered.extend(TemplateBinding)
+        filtered = @context.filter(opts)
+        
+        # the filtered context is to the template's self 
+        filtered.extend(TemplateBinding)
 
-          Lydown::Templates.render(:lilypond_doc, filtered)
-        ensure
-          @context = @original_context
-        end
+        # Remove empty lines from the rendered code
+        Lydown::Templates.render(:lilypond_doc, filtered).
+          gsub(/^\s+$/, '').gsub(/\n+/m, "\n")
       end
     end
 
