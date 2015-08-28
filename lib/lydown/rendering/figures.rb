@@ -73,7 +73,7 @@ module Lydown::Rendering
       unless next_event
         # if next figures event is not found, check if there is a tenue, and
         # add extenders off flag
-        @event[:figure_extenders_off] = true if @event[:tenue]
+        @event[:figure_extenders_off] = @event[:tenue]
         return
       end
 
