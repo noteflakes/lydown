@@ -17,8 +17,11 @@
   midi_mode = (format == :midi) || (format == :mp3)
   
   empty_staves = self['empty_staves'] || movement['settings/empty_staves']
+  
+    
+  page_breaks = Lydown::Rendering::Movement.page_breaks(self)
 %>
-
+<% if page_breaks[:before] %>\pageBreak <% end %>
 \score {
   <% if movement_title %>
     \header { 
@@ -62,3 +65,4 @@
   }
   <% end %> 
 }
+<% if page_breaks[:after] %>\pageBreak <% end %>

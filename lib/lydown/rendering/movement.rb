@@ -15,5 +15,23 @@ module Lydown::Rendering
       
       title
     end
+    
+    PAGE_BREAKS = {
+      'before' => {before: true},
+      'after'  => {after: true},
+      'before and after' => {before: true, after: true}
+    }
+    
+    def self.page_breaks(context)
+      case context['render_opts/mode']
+      when :score
+        PAGE_BREAKS[context['score/page_break']] || {}
+      when :part
+        part = context['part']
+        PAGE_BREAKS[context["parts/#{part}/page_break"]] || {}
+      else
+        {}
+      end
+    end
   end
 end

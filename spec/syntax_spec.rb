@@ -118,4 +118,11 @@ RSpec.describe Lydown do
   it "correctly handles grace notes" do
     verify_example('grace_notes')
   end
+  
+  it "correctly parses nested settings" do
+    path = File.join(EXAMPLES_PATH, 'nested_settings')
+
+    work = Lydown::Work.new(path: path)
+    expect(work.context['parts/gamba1/page_break']).to eq("before")
+  end
 end

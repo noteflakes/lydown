@@ -5,7 +5,8 @@ module Lydown::Rendering
     SETTING_KEYS = [
       'key', 'time', 'pickup', 'clef', 'part', 'movement', 'tempo',
       'accidentals', 'beams', 'end_barline', 'macros', 'empty_staves',
-      'midi_tempo', 'instrument_names', 'instrument_name_style'
+      'midi_tempo', 'instrument_names', 'instrument_name_style',
+      'parts', 'score'
     ]
 
     RENDERABLE_SETTING_KEYS = [
@@ -16,8 +17,9 @@ module Lydown::Rendering
       'accidentals' => ['manual', 'auto'],
       'beams' => ['manual', 'auto'],
       'empty_staves' => ['hide', 'show'],
-      'instrument_names' => ['hide', 'show', 'inline'],
-      'instrument_name_style' => ['normal', 'smallcaps']
+      'instrument_names' => ['hide', 'show', 'inline', 'inline-right-align', 'inline-center-align'],
+      'instrument_name_style' => ['normal', 'smallcaps'],
+      'page_break' => ['before', 'after', 'before and after']
     }
 
     def translate
@@ -34,8 +36,9 @@ module Lydown::Rendering
         raise LydownError, "Invalid setting (#{key})"
       end
 
+      value = check_setting_value(key, value)
+
       if level == 0
-        value = check_setting_value(key, value)
         @context[key] = value
         movement = @context[:movement]
         @context["movements/#{movement}/settings/#{key}"] = value
@@ -65,6 +68,7 @@ module Lydown::Rendering
         end
         path << key
         @context[path] = value
+        @context["movements/#{movement}/settings/#{path}"] = value
       end
 
       @context['process/setting_levels'] ||= {}

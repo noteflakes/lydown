@@ -122,7 +122,6 @@ RSpec.describe Lydown::Work do
     ly = work.to_lilypond(mode: :score, no_lib: true).strip_whitespace
     ex = load_example('fullwork_settings.ly', strip: true)
     expect(ly).to eq(ex)
-
   end
 
   it "adds the lydown library include file to the rendered file" do
@@ -162,4 +161,17 @@ RSpec.describe Lydown::Work do
     ex = load_example('midi_tempo_midi.ly', strip: true)
     expect(ly).to eq(ex)
   end
+
+  it "handles nested setting for part and score" do
+    work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'nested_settings'))
+    
+    ly = work.to_lilypond(mode: :part, no_lib: true).strip_whitespace
+    ex = load_example('nested_settings_part.ly', strip: true)
+    expect(ly).to eq(ex)
+
+    ly = work.to_lilypond(mode: :score, no_lib: true).strip_whitespace
+    ex = load_example('nested_settings_score.ly', strip: true)
+    expect(ly).to eq(ex)
+  end
+
 end

@@ -1,9 +1,7 @@
 <%
+  inline_part_title = nil
   if name && (name != '')
     part_title = Lydown::Rendering::Staff.part_title(self, name)
-    inline_part_title = Lydown::Rendering::Staff.inline_part_title(
-      self, part: name
-    )
     voice_prefix = "#{name}_"
   else
     part_title = "#\"\""
@@ -39,7 +37,15 @@
   instrument_names = self['instrument_names'] || movement['settings/instrument_names']
   hide_instrument_names = 
     (instrument_names == 'hide') || 
-    (instrument_names == 'inline')
+    (instrument_names =~ /^inline\-?(.+)$/)
+    
+  if instrument_names =~ /^inline\-?(.+)$/
+    alignment = $1 && "\\#{$1}"
+    inline_part_title = Lydown::Rendering::Staff.inline_part_title(
+      self, part: name, alignment: alignment
+    )
+  end
+     
     
   var_opts = {movement: movement_name, part: name}
 %>
@@ -75,7 +81,7 @@
   <% end %>
   <%= partial %>
 
-  <% if (mode == :score) && (instrument_names == 'inline') %>
+  <% if (mode == :score) && inline_part_title %>
     <%= inline_part_title %>
   <% end %>
   
