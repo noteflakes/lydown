@@ -37,7 +37,7 @@ module Lydown::CLI::Compiler
       
       opts[:output_target] = output_filename(opts)
 
-      if opts[:format] == 'ly'
+      if opts[:format] == :ly
         unless opts[:output_target]
           STDOUT << ly_code
         else

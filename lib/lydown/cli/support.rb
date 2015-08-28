@@ -14,7 +14,7 @@ module Lydown::CLI::Support
   
       # the output defaults to a file named lydown expect if the format is ly.
       # In that case the output will be sent to STDOUT.
-      options[:output_filename] ||= 'lydown' unless options[:format] == 'ly'
+      options[:output_filename] ||= 'lydown' unless options[:format] == :ly
     else
       options[:source_filename] = options[:path]
       if (options[:path] !~ /\.ld$/) and File.file?(options[:path] + ".ld")
