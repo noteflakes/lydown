@@ -149,5 +149,46 @@ module Lydown
       
       @context[path] = settings
     end
+    
+    def settings_path(movement, part)
+      if part
+        "movements/#{movement}/parts/#{part}/settings"
+      elsif movement && !movement.empty?
+        "movements/#{movement}/settings"
+      else
+        "global/settings"
+      end
+    end
+    
+    def query_setting(movement, part, path)
+      path = "#{settings_path(movement, part)}/#{path}"
+      @context[path]
+    end
+    
+    def get_setting(path, opts = {})
+      if opts[:part]
+        parts_section_path = "parts/#{opts[:part]}/#{path}"
+        
+        query_setting(opts[:movement], opts[:part], path) ||
+        query_setting(nil, opts[:part], path) ||
+        query_setting(opts[:movement], nil, path) ||
+        query_setting(nil, nil, path) ||
+        
+        # search in parts section
+        query_setting(opts[:movement], nil, parts_section_path) ||
+        query_setting(nil, nil, parts_section_path) ||
+        
+        DEFAULTS["parts/#{opts[:part]}/#{path}"]
+      else
+        query_setting(opts[:movement], nil, path) || 
+        query_setting(nil, nil, path) || 
+        DEFAULTS["#{path}"]
+      end
+    end
+    
+    def set_setting(path, value)
+      path = "#{settings_path(@context[:movement], @context[:part])}/#{path}"
+      @context[path] = value
+    end
   end
 end

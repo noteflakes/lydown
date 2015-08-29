@@ -42,6 +42,7 @@ module Lydown::Rendering
         @context[key] = value
         movement = @context[:movement]
         @context["movements/#{movement}/settings/#{key}"] = value
+        @context.set_setting(key, value)
         case key
         when 'part'
           @context.set_part_context(value)
@@ -68,6 +69,7 @@ module Lydown::Rendering
         end
         path << key
         @context[path] = value
+        @context.set_setting(path, value)
         @context["movements/#{movement}/settings/#{path}"] = value
       end
 

@@ -1,0 +1,3 @@
+- parts:
+  - gamba1:
+    - clef: bass
