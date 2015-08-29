@@ -13,11 +13,7 @@ require 'lydown/rendering/voices'
 require 'lydown/rendering/source_ref'
 require 'lydown/rendering/skipping'
 
-require 'yaml'
-
 module Lydown::Rendering
-  DEFAULTS = YAML.load(IO.read(File.join(File.dirname(__FILE__), 'rendering/defaults.yml'))).deep!
-  
   class << self
     def translate(work, e, lydown_stream, idx)
       klass = class_for_event(e)

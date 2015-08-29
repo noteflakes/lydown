@@ -1,7 +1,8 @@
 module Lydown::Rendering
   module Staff
     def self.staff_groups(context, movement, parts)
-      model = context['score/order'] || movement['score/order'] || DEFAULTS['score/order']
+      model = context['score/order'] || movement['score/order'] || 
+        Lydown::DEFAULTS['score/order']
       parts_copy = parts.clone
       
       groups = []
@@ -63,19 +64,19 @@ module Lydown::Rendering
     end
     
     def self.clef(part)
-      DEFAULTS["parts/#{part}/clef"]
+      Lydown::DEFAULTS["parts/#{part}/clef"]
     end
     
     def self.prevent_remove_empty(part)
-      DEFAULTS["parts/#{part}/remove_empty"] == false
+      Lydown::DEFAULTS["parts/#{part}/remove_empty"] == false
     end
     
     def self.midi_instrument(part)
-      DEFAULTS["parts/#{part}/midi_instrument"]
+      Lydown::DEFAULTS["parts/#{part}/midi_instrument"]
     end
     
     def self.beaming_mode(part)
-      beaming = DEFAULTS["parts/#{part}/beaming"]
+      beaming = Lydown::DEFAULTS["parts/#{part}/beaming"]
       return nil if beaming.nil?
       
       case beaming
