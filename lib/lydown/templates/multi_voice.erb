@@ -1,5 +1,5 @@
 <<
-  <% beaming_mode = Lydown::Rendering::Staff.beaming_mode(part) %>
+  <% beaming_mode = Lydown::Rendering::Staff.beaming_mode(self, self.current_setting_opts) %>
   <% voice_prefix = part.nil? || (part == "") ? nil : "#{part}_" %>
 
   <% self['process/voices'].each do |voice, stream| %>

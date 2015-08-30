@@ -2,17 +2,19 @@
 
 ldFluteIMusic = \relative c {
   << \new Voice = "flute1_voice1" {
-    c4 d <>^\markup { \smallCaps { Flute I } } e f
+  c4 d <>^\markup { \smallCaps { Flute I } } e f
   } >>
 }
 ldViolinoIIMusic = \relative c {
   << \new Voice = "violino2_voice1" {
-    <>^\markup { \smallCaps { Violino II } } g'4 a b c
+  <>^\markup { \smallCaps { Violino II } } 
+    g'4 a b c
   } >>
 }
 ldContinuoMusic = \relative c {
   << \new Voice = "continuo_voice1" {
-    <>^\markup { \right-align \smallCaps { Continuo } } e4
+  <>^\markup { \right-align \smallCaps { Continuo } } 
+    e4
   } >>
 }
 

@@ -74,10 +74,10 @@ module Lydown::Rendering
 
     # Takes into account the accidentals mode
     def self.translate_note_name(context, note)
-      if context[:accidentals] == 'manual'
+      if context.get_current_setting(:accidentals) == 'manual'
         key = 'c major'
       else
-        key = context[:key]
+        key = context.get_current_setting(:key)
       end
       lilypond_note_name(note, key)
     end
@@ -139,6 +139,8 @@ module Lydown::Rendering
     include Lydown::Rendering::Figures
 
     def add_note(event, options = {})
+      @context.set_setting(:got_music, true)
+      
       return add_macro_note(event) if @context['process/duration_macro']
       
       # calculate relative octave markers for first note

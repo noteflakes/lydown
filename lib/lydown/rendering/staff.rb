@@ -1,8 +1,7 @@
 module Lydown::Rendering
   module Staff
-    def self.staff_groups(context, movement, parts)
-      model = context['score/order'] || movement['score/order'] || 
-        Lydown::DEFAULTS['score/order']
+    def self.staff_groups(context, opts, parts)
+      model = context.get_setting('score/order', opts)
       parts_copy = parts.clone
       
       groups = []
@@ -63,20 +62,21 @@ module Lydown::Rendering
       end
     end
     
-    def self.clef(part)
-      Lydown::DEFAULTS["parts/#{part}/clef"]
+    def self.clef(context, opts)
+      !context.get_setting(:inhibit_first_clef, opts) &&
+        context.get_setting(:clef, opts)
     end
     
-    def self.prevent_remove_empty(part)
-      Lydown::DEFAULTS["parts/#{part}/remove_empty"] == false
+    def self.prevent_remove_empty(context, opts)
+      context.get_setting(:remove_empty, opts)
     end
     
-    def self.midi_instrument(part)
-      Lydown::DEFAULTS["parts/#{part}/midi_instrument"]
+    def self.midi_instrument(context, opts)
+      context.get_setting(:midi_instrument, opts)
     end
     
-    def self.beaming_mode(part)
-      beaming = Lydown::DEFAULTS["parts/#{part}/beaming"]
+    def self.beaming_mode(context, opts)
+      beaming = context.get_setting(:beaming, opts)
       return nil if beaming.nil?
       
       case beaming
@@ -94,14 +94,14 @@ module Lydown::Rendering
       "#{title}Staff"
     end
     
-    def self.part_title(context, part, name = nil)
-      title = name || Lydown::Rendering.part_title(part)
+    def self.part_title(context, opts)
+      title = opts[:name] || Lydown::Rendering.part_title(opts[:part])
       title.strip!
 
       if title.empty?
         "#\"\" "
       else
-        if context['instrument_name_style'] == 'smallcaps'
+        if context.get_setting('instrument_name_style', opts) == 'smallcaps'
           "\\markup { \\smallCaps { #{title} } } "
         else
           "#\"#{title}\" "
@@ -116,7 +116,7 @@ module Lydown::Rendering
       if title.empty?
         "#\"\""
       else
-        if context['instrument_name_style'] == 'smallcaps'
+        if context.get_setting('instrument_name_style', opts) == 'smallcaps'
           "<>^\\markup { #{opts[:alignment]} \\smallCaps { #{title} } } "
         else
           "<>^\\markup { #{opts[:alignment]} { #{title} } } "
@@ -124,10 +124,10 @@ module Lydown::Rendering
       end
     end
     
-    DEFAULT_END_BARLINE = '|.'
-    
-    def self.end_barline(context, movement)
-      barline = movement['end_barline'] || context['end_barline'] || DEFAULT_END_BARLINE
+    def self.end_barline(context, opts)
+      return nil if context['global/settings/inhibit_end_barline']
+      
+      barline = context.get_setting('end_barline', opts)
       barline == 'none' ? nil : barline
     end
   end

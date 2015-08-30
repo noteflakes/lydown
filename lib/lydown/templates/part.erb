@@ -1,7 +1,9 @@
 <%
+  setting_opts = {movement: movement_name, part: name}
+
   inline_part_title = nil
   if name && (name != '')
-    part_title = Lydown::Rendering::Staff.part_title(self, name)
+    part_title = Lydown::Rendering::Staff.part_title(self, setting_opts)
     voice_prefix = "#{name}_"
   else
     part_title = "#\"\""
@@ -11,43 +13,36 @@
 
   score_mode = self['render_opts/mode'] == :score
   
-  part['settings'] ||= {
-    'pickup' => self[:pickup],
-    'key' => self[:key],
-    'tempo' => self[:tempo]
-  }.deep!
-
-  clef = Lydown::Rendering::Staff.clef(name)
-  prevent_remove_empty = Lydown::Rendering::Staff.prevent_remove_empty(name)
+  clef = Lydown::Rendering::Staff.clef(self, setting_opts)
+  prevent_remove_empty = Lydown::Rendering::Staff.prevent_remove_empty(self, setting_opts) == false
   
   midi_mode = (self['render_opts/format'] == 'midi') ||
               (self['render_opts/format'] == 'mp3')
   midi_instrument = midi_mode && Lydown::Rendering::Staff.midi_instrument(name)
   
-  beaming_mode = Lydown::Rendering::Staff.beaming_mode(name)
-  partial = part['settings'][:pickup] ? "\\partial #{part['settings'][:pickup]}" : ""
+  beaming_mode = Lydown::Rendering::Staff.beaming_mode(self, setting_opts)
+  partial = self.get_setting(:pickup, setting_opts)
+  partial = partial ? "\\partial #{partial}" : ""
   
-  end_barline = Lydown::Rendering::Staff.end_barline(self, movement)
+  end_barline = Lydown::Rendering::Staff.end_barline(self, setting_opts)
 
-  cadenza = part['settings'][:time] == 'unmetered'
+  time = self.get_setting(:time, setting_opts)
+  cadenza = time == 'unmetered'
   
   mode = self['render_opts/mode'] || self['mode']
   skip_bars = (mode == :proof) || (mode == :part)
 
-  instrument_names = self['instrument_names'] || movement['settings/instrument_names']
+  instrument_names = self.get_setting(:instrument_names, setting_opts)
   hide_instrument_names = 
     (instrument_names == 'hide') || 
-    (instrument_names =~ /^inline\-?(.+)$/)
+    (instrument_names =~ /^inline\-?(.+)?$/)
     
-  if instrument_names =~ /^inline\-?(.+)$/
+  if instrument_names =~ /^inline\-?(.+)?$/
     alignment = $1 && "\\#{$1}"
     inline_part_title = Lydown::Rendering::Staff.inline_part_title(
-      self, part: name, alignment: alignment
+      self, setting_opts.merge(alignment: alignment)
     )
   end
-     
-    
-  var_opts = {movement: movement_name, part: name}
 %>
 
 <<
@@ -64,8 +59,8 @@
   <% end %>
     
 
-  <% if part['settings'][:tempo] %>
-    \tempo "<%= part['settings'][:tempo] %>"
+  <% if tempo = self.get_setting(:tempo, setting_opts) %>
+    \tempo "<%= tempo %>"
   <% end %>
 
 <% if score_mode && !hide_instrument_names %>
@@ -86,7 +81,7 @@
   <% end %>
   
   <%= beaming_mode %>
-  \<%= Lydown::Rendering.variable_name(var_opts.merge(stream: :music)) %>
+  \<%= Lydown::Rendering.variable_name(setting_opts.merge(stream: :music)) %>
   
   <% if end_barline %>
     \bar "<%= end_barline %>"
@@ -104,7 +99,7 @@
       <% end %>
       {
         \lyricsto "<%= voice_prefix %><%= voice %>" {
-          \<%= Lydown::Rendering.variable_name(var_opts.merge(stream: :lyrics, voice: voice, idx: idx)) %>
+          \<%= Lydown::Rendering.variable_name(setting_opts.merge(stream: :lyrics, voice: voice, idx: idx)) %>
         }
       }
     <% end %>
@@ -113,6 +108,6 @@
 <% end %>
 
 <% if part['figures'] %>
-  \new FiguredBass { \<%= Lydown::Rendering.variable_name(var_opts.merge(stream: :figures)) %> }
+  \new FiguredBass { \<%= Lydown::Rendering.variable_name(setting_opts.merge(stream: :figures)) %> }
 <% end %>
 >>

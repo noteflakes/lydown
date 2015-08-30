@@ -354,12 +354,14 @@ module Lydown::Parsing
     end
     
     SETTING_KEYS = %w{time key clef pickup}
+    NON_EPHEMERAL_KEYS = %w{time key}
     
     module Key
       def to_stream(cmd, opts)
         cmd[:key] = text_value
         if SETTING_KEYS.include?(text_value)
           cmd[:type] = :setting
+          cmd[:ephemeral] = !NON_EPHEMERAL_KEYS.include?(cmd[:key])
         end
       end
     end

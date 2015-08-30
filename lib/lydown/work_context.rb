@@ -32,14 +32,14 @@ module Lydown
     def reset(mode)
       case mode
       when :work
-        @context[:time] = '4/4'
-        @context[:tempo] = nil
-        @context[:cadenza_mode] = nil
-        @context[:key] = 'c major'
-        @context[:pickup] = nil
-        @context[:beaming] = nil
-        @context[:end_barline] = nil
         @context[:part] = nil
+        set_setting(:time, '4/4')
+        set_setting(:tempo, nil)
+        @context[:cadenza_mode] = nil
+        set_setting(:key, 'c major')
+        set_setting(:pickup, nil)
+        set_setting(:beaming, nil)
+        set_setting(:end_barline, nil)
       when :movement
         @context[:part] = nil
       end
@@ -110,7 +110,7 @@ module Lydown
         end
       end
 
-      filtered
+      WorkContext.new(nil, filtered)
     end
 
     def [](key)
@@ -162,10 +162,31 @@ module Lydown
     
     def query_setting(movement, part, path)
       path = "#{settings_path(movement, part)}/#{path}"
-      @context[path]
+      value = @context[path]
+      unless value.nil?
+        @temp_setting_value = value
+        true
+      else
+        false
+      end
+    end
+    
+    def query_defaults(path)
+      value = DEFAULTS[path]
+      unless value.nil?
+        @temp_setting_value = value
+        true
+      else
+        false
+      end
     end
     
     def get_setting(path, opts = {})
+      # In order to allow false values for settings, we create
+      # a temporary instance variable, and use it to store the
+      # setting value once it's found. That way we can use the
+      # || operator to stop searching once we've found it.
+      @temp_setting_value = nil
       if opts[:part]
         parts_section_path = "parts/#{opts[:part]}/#{path}"
         
@@ -178,12 +199,23 @@ module Lydown
         query_setting(opts[:movement], nil, parts_section_path) ||
         query_setting(nil, nil, parts_section_path) ||
         
-        DEFAULTS["parts/#{opts[:part]}/#{path}"]
+        query_defaults("parts/#{opts[:part]}/#{path}") ||
+        query_defaults(path)
       else
         query_setting(opts[:movement], nil, path) || 
         query_setting(nil, nil, path) || 
-        DEFAULTS["#{path}"]
+        query_defaults(path)
       end
+      @temp_setting_value
+    end
+    
+    # Get setting while code is being translated
+    def get_current_setting(path)
+      get_setting(path, current_setting_opts)
+    end
+    
+    def current_setting_opts
+      {movement: @context[:movement], part: @context[:part]}
     end
     
     def set_setting(path, value)

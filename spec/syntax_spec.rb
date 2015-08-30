@@ -123,6 +123,7 @@ RSpec.describe Lydown do
     path = File.join(EXAMPLES_PATH, 'nested_settings')
 
     work = Lydown::Work.new(path: path)
-    expect(work.context['parts/gamba1/page_break']).to eq("before")
+    page_break = work.context.get_setting(:page_break, part: 'gamba1')
+    expect(page_break).to eq("before")
   end
 end

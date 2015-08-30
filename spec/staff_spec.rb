@@ -2,13 +2,15 @@ require File.join(File.expand_path(File.dirname(__FILE__)), 'spec_helper')
 
 RSpec.describe Lydown::Rendering::Staff do
   it "correctly orders parts in staff groups" do
-    groups = Lydown::Rendering::Staff.staff_groups({}, {}, [
+    context = Lydown::WorkContext.new
+    
+    groups = Lydown::Rendering::Staff.staff_groups(context, {}, [
       'violino2', 'viola', 'violino1'
     ])
     
     expect(groups).to eq([['violino1', 'violino2'], ['viola']])
 
-    groups = Lydown::Rendering::Staff.staff_groups({}, {}, [
+    groups = Lydown::Rendering::Staff.staff_groups(context, {}, [
       ''
     ])
     
@@ -16,7 +18,9 @@ RSpec.describe Lydown::Rendering::Staff do
   end
   
   it "correctly generates staff hierarchy" do
-    groups = Lydown::Rendering::Staff.staff_groups({}, {}, [
+    context = Lydown::WorkContext.new
+    
+    groups = Lydown::Rendering::Staff.staff_groups(context, {}, [
       'violino2', 'viola', 'violino1'
     ])
     
@@ -26,32 +30,42 @@ RSpec.describe Lydown::Rendering::Staff do
   end
   
   it "gives correct clef, beaming mode for different parts" do
-    clef = Lydown::Rendering::Staff.clef('continuo')
+    context = Lydown::WorkContext.new
+    
+    clef = Lydown::Rendering::Staff.clef(context, part: 'continuo')
     expect(clef).to eq('bass')
     
-    clef = Lydown::Rendering::Staff.clef('viola')
+    clef = Lydown::Rendering::Staff.clef(context, part: 'viola')
     expect(clef).to eq('alto')
     
-    mode = Lydown::Rendering::Staff.beaming_mode('violino1')
+    mode = Lydown::Rendering::Staff.beaming_mode(context, part: 'violino1')
     expect(mode).to be_nil
     
-    mode = Lydown::Rendering::Staff.beaming_mode('soprano')
+    mode = Lydown::Rendering::Staff.beaming_mode(context, part: 'soprano')
     expect(mode).to eq('\\set Staff.autoBeaming = ##f')
   end
   
   it "passes the correct end barline when rendering staves" do
-    barline = Lydown::Rendering::Staff.end_barline({'end_barline' => 'none'}, {})
+    context = Lydown::WorkContext.new
+    context.set_setting('end_barline', 'none')
+    barline = Lydown::Rendering::Staff.end_barline(context, {})
     expect(barline).to be_nil
 
     # movement settings have precedence over work settings
-    barline = Lydown::Rendering::Staff.end_barline({'end_barline' => '|:'}, {'end_barline' => '||'})
+    context.set_setting('end_barline', '|:')
+    context[:movement] = '01-intro'
+    context.set_setting('end_barline', '||')
+    barline = Lydown::Rendering::Staff.end_barline(context, {})
+    expect(barline).to eq('|:')
+    barline = Lydown::Rendering::Staff.end_barline(context, movement: '01-intro')
     expect(barline).to eq('||')
 
     # default
-    barline = Lydown::Rendering::Staff.end_barline({}, {})
+    context = Lydown::WorkContext.new
+    barline = Lydown::Rendering::Staff.end_barline(context, {})
     expect(barline).to eq('|.')
 
-    verify_example('end_barline')
+    verify_example('end_barline', nil, inhibit_end_barline: false)
   end
   
   it "renders smallcaps instrument name style" do

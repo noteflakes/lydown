@@ -38,7 +38,11 @@ Lydown::Work::PARALLEL_PROCESS_OPTIONS.delete(:progress)
 def verify_example(name, result_name = nil, opts = {})
   lydown = LydownParser.parse(load_example("#{name}.ld"))
   work = Lydown::Work.new(opts)
-  work.context['end_barline'] = 'none'
+  unless opts[:inhibit_end_barline].nil?
+    work.context['global/settings/inhibit_end_barline'] = opts[:inhibit_end_barline]
+  else
+    work.context['global/settings/inhibit_end_barline'] = true
+  end
   work.translate(lydown)
   ly = work.to_lilypond(opts.merge(no_lib: true)).strip_whitespace
 

@@ -185,3 +185,4 @@ score:
     - [gamba, gamba1, gamba2]
     - [soprano1, soprano2, soprano, alto1, alto2, alto, tenore1, tenore2, tenore, basso1, basso2, basso]
     - continuo
+end_barline: "|."

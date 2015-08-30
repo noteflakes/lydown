@@ -25,7 +25,7 @@ RSpec.describe Lydown::Work do
     lydown_code = LydownParser.parse(load_example('2_part.ld'))
     work = Lydown::Work.new
     work.translate(lydown_code)
-    work.context['end_barline'] = 'none'
+    work.context['global/settings/inhibit_end_barline'] = true
     
     ly = work.to_lilypond(parts: 'violino1', mode: :part, no_lib: true).strip_whitespace
     ex = load_example('2_part_violino1.ly', strip: true)
@@ -43,7 +43,7 @@ RSpec.describe Lydown::Work do
   
   it "processes files if given path" do
     work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'simple'))
-    work.context['end_barline'] = 'none'
+    work.context['global/settings/inhibit_end_barline'] = true
     
     ly = work.to_lilypond(mode: :part, no_lib: true).strip_whitespace
     ex = load_example('simple_part.ly', strip: true)
@@ -52,7 +52,7 @@ RSpec.describe Lydown::Work do
   
   it "handles multipart directories" do
     work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'multipart'))
-    work.context['end_barline'] = 'none'
+    work.context['global/settings/inhibit_end_barline'] = true
     
     ly = work.to_lilypond(parts: 'violino1', mode: :part, no_lib: true).strip_whitespace
     ex = load_example('multipart_violino1.ly', strip: true)
@@ -69,7 +69,7 @@ RSpec.describe Lydown::Work do
   
   it "handles multiple movements" do
     work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, '2_movement.ld'))
-    work.context['end_barline'] = 'none'
+    work.context['global/settings/inhibit_end_barline'] = true
     
     ly = work.to_lilypond(movements: '01-intro', no_lib: true).strip_whitespace
     ex = load_example('2_movement_intro.ly', strip: true)
@@ -144,19 +144,19 @@ RSpec.describe Lydown::Work do
     path = File.join(EXAMPLES_PATH, 'midi_tempo')
 
     work = Lydown::Work.new(path: path)
-    work.context['end_barline'] = 'none'
+    work.context['global/settings/inhibit_end_barline'] = true
     ly = work.to_lilypond(no_lib: true).strip_whitespace
     ex = load_example('midi_tempo_normal.ly', strip: true)
     expect(ly).to eq(ex)
 
     work = Lydown::Work.new(path: path, format: :midi)
-    work.context['end_barline'] = 'none'
+    work.context['global/settings/inhibit_end_barline'] = true
     ly = work.to_lilypond(format: :midi, no_lib: true).strip_whitespace
     ex = load_example('midi_tempo_midi.ly', strip: true)
     expect(ly).to eq(ex)
 
     work = Lydown::Work.new(path: path, format: :mp3)
-    work.context['end_barline'] = 'none'
+    work.context['global/settings/inhibit_end_barline'] = true
     ly = work.to_lilypond(no_lib: true).strip_whitespace
     ex = load_example('midi_tempo_midi.ly', strip: true)
     expect(ly).to eq(ex)

@@ -22,13 +22,13 @@ module Lydown::Rendering
       'before and after' => {before: true, after: true}
     }
     
-    def self.page_breaks(context)
+    def self.page_breaks(context, opts)
       case context['render_opts/mode']
       when :score
-        PAGE_BREAKS[context['score/page_break']] || {}
+        PAGE_BREAKS[context.get_setting('score/page_break', opts)] || {}
       when :part
-        part = context['part']
-        PAGE_BREAKS[context["parts/#{part}/page_break"]] || {}
+        part = context[:part]
+        PAGE_BREAKS[context.get_setting(:page_break, opts.merge(part: part))] || {}
       else
         {}
       end

@@ -39,23 +39,25 @@ module Lydown::Rendering
       value = check_setting_value(key, value)
 
       if level == 0
-        @context[key] = value
         movement = @context[:movement]
-        @context["movements/#{movement}/settings/#{key}"] = value
-        @context.set_setting(key, value)
         case key
         when 'part'
+          @context[key] = value
           @context.set_part_context(value)
           
           # when changing parts we repeat the last set time and key signature
-          render_setting('time', @context[:time]) unless @context[:time] == '4/4'
+          time = @context.get_current_setting(:time)
+          render_setting('time', time) unless time == '4/4' 
           
-          key =  @context[:key]
+          key =  @context.get_current_setting(:key)
           render_setting('key', key) unless key == 'c major'
 
           @context.reset(:part)
         when 'movement'
+          @context[key] = value
           @context.reset(:movement)
+        else
+          @context.set_setting(key, value) unless @event[:ephemeral]
         end
 
         if RENDERABLE_SETTING_KEYS.include?(key)
@@ -68,9 +70,7 @@ module Lydown::Rendering
           path << "#{@context['process/setting_levels'][l]}/"; l += 1
         end
         path << key
-        @context[path] = value
         @context.set_setting(path, value)
-        @context["movements/#{movement}/settings/#{path}"] = value
       end
 
       @context['process/setting_levels'] ||= {}
@@ -124,6 +124,12 @@ module Lydown::Rendering
         setting = "\\#{key} #{note} \\#{mode} "
       when 'clef'
         setting = "\\#{key} \"#{value}\" "
+        # If no music is there, and we're rendering a clef command, we need 
+        # tell lydown to not render a first clef command inside the Staff 
+        # context.
+        unless @context.get_current_setting(:got_music)
+          @context.set_setting(:inhibit_first_clef, true)
+        end
       when 'beams'
         setting = (value == 'manual') ? '\autoBeamOff ' : '\autoBeamOn '
       else

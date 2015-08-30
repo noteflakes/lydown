@@ -198,13 +198,14 @@ module Lydown::Rendering
       translate_expressions
 
       if @event[:multiplier]
-        value = full_bar_value(@context[:time])
+        value = full_bar_value(@context.get_current_setting(:time))
         @context['process/duration_macro'] = nil unless @context['process/macro_group']
         if value
           @event[:rest_value] = "#{value}*#{@event[:multiplier]}"
           @event[:head] = "#{@event[:head]}#{@event[:rest_value]}"
         else
-          @event[:head] = "#{@event[:head]}#{@event[:multiplier]}*#{@context[:time]}"
+          @event[:head] = "#{@event[:head]}#{@event[:multiplier]}*#{
+            @context.get_current_setting(:time)}"
         end
         # reset the last value so the next note will be rendered with its value
         @context['process/last_value'] = nil
@@ -237,7 +238,7 @@ module Lydown::Rendering
       Notes.cleanup_duration_macro(@context)
       
       if @event[:macro] =~ /^[a-zA-Z_]/
-        macro = @context['macros'][@event[:macro]]
+        macro = @context.get_current_setting('macros')[@event[:macro]]
         if macro
           if macro =~ /^\{(.+)\}$/
             macro = $1
