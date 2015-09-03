@@ -90,13 +90,18 @@ module Lydown::Rendering
     end
     
     def self.staff_id(part)
-      title = Lydown::Rendering.part_title(part).gsub(/\s+/, '')
+      title = Lydown::Rendering.default_part_title(part).gsub(/\s+/, '')
       "#{title}Staff"
     end
     
+    def self.qualified_part_title(context, opts)
+      title = context.get_setting("parts/#{opts[:part]}/title", opts) ||
+              Lydown::Rendering.default_part_title(opts[:part])
+      title.strip
+    end
+    
     def self.part_title(context, opts)
-      title = opts[:name] || Lydown::Rendering.part_title(opts[:part])
-      title.strip!
+      title = qualified_part_title(context, opts)
 
       if title.empty?
         "#\"\" "
@@ -110,8 +115,7 @@ module Lydown::Rendering
     end
     
     def self.inline_part_title(context, opts)
-      title = opts[:name] || Lydown::Rendering.part_title(opts[:part])
-      title.strip!
+      title = qualified_part_title(context, opts)
 
       if title.empty?
         "#\"\""

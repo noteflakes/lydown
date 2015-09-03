@@ -41,6 +41,10 @@ RSpec.describe Lydown::Work do
     verify_example('part_settings', nil, mode: :score)
   end
   
+  it "correctly handles custom part titles" do
+    verify_example('part_title', nil, mode: :score)
+  end
+  
   it "processes files if given path" do
     work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'simple'))
     work.context['global/settings/inhibit_end_barline'] = true

@@ -26,7 +26,7 @@ module Lydown::Rendering
       raise LydownError, "Invalid lydown event: #{e.inspect}"
     end
     
-    def part_title(part_name)
+    def default_part_title(part_name)
       if part_name =~ /^([^\d]+)(\d+)$/
         "#{$1.titlize} #{$2.to_i.to_roman}"
       else
