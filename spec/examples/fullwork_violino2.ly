@@ -12,24 +12,26 @@ ldIIoutroViolinoIIMusic = \relative c {
   \header {
   }
 
-  \score {
-    \header {
-      piece = \markup { \bold \large { 1. Intro - tacet } }
-    }
-  }
-
-  \score {
-    \header {
-      piece = \markup { \bold \large { 2. Outro } }
+  \bookpart { 
+    \score {
+      \header {
+        piece = \markup { \bold \large { 1. Intro - tacet } }
+      }
     }
 
-    <<
-    \new Staff = ViolinoIIStaff \with { }
-    \context Staff = ViolinoIIStaff {
-      \clef "treble"
-      \ldIIoutroViolinoIIMusic
-      \bar "|."
+    \score {
+      \header {
+        piece = \markup { \bold \large { 2. Outro } }
+      }
+
+      <<
+      \new Staff = ViolinoIIStaff \with { }
+      \context Staff = ViolinoIIStaff {
+        \clef "treble"
+        \ldIIoutroViolinoIIMusic
+        \bar "|."
+      }
+      >>
     }
-    >>
   }
 }

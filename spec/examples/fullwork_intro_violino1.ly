@@ -12,18 +12,20 @@ ldIintroViolinoIMusic = \relative c {
   \header {
   }
 
-  \score {
-    \header {
-      piece = \markup { \bold \large { 1. Intro } }
-    }
+  \bookpart { 
+    \score {
+      \header {
+        piece = \markup { \bold \large { 1. Intro } }
+      }
 
-    <<
-    \new Staff = ViolinoIStaff \with { }
-    \context Staff = ViolinoIStaff {
-      \clef "treble"
-      \ldIintroViolinoIMusic
-      \bar "|."
+      <<
+      \new Staff = ViolinoIStaff \with { }
+      \context Staff = ViolinoIStaff {
+        \clef "treble"
+        \ldIintroViolinoIMusic
+        \bar "|."
+      }
+      >>
     }
-    >>
   }
 }

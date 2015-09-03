@@ -26,7 +26,7 @@ RSpec.describe Lydown::Rendering::Staff do
     
     hierarchy = Lydown::Rendering::Staff.staff_hierarchy(groups)
     expect(hierarchy).to eq(
-    "#'(SystemStartBracket (SystemStartBrace violino1 violino2) viola )")
+    "#'(SystemStartBar (SystemStartBrace violino1 violino2) viola )")
   end
   
   it "gives correct clef, beaming mode for different parts" do

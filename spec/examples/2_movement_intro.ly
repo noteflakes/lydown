@@ -12,16 +12,18 @@ ldIintroMusic = \relative c {
   \header {
   }
 
-  \score {
-    \header {
-      piece = \markup { \bold \large { 1. Intro } }
-    }
+  \bookpart { 
+    \score {
+      \header {
+        piece = \markup { \bold \large { 1. Intro } }
+      }
 
-    <<
-    \new Staff = Staff \with { }
-    \context Staff = Staff {
-      \ldIintroMusic
+      <<
+      \new Staff = Staff \with { }
+      \context Staff = Staff {
+        \ldIintroMusic
+      }
+      >>
     }
-    >>
   }
 }

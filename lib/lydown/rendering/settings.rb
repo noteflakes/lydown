@@ -1,3 +1,5 @@
+require 'pp'
+
 module Lydown::Rendering
   class Setting < Base
     include Notes
@@ -6,7 +8,7 @@ module Lydown::Rendering
       'key', 'time', 'pickup', 'clef', 'part', 'movement', 'tempo',
       'accidentals', 'beams', 'end_barline', 'macros', 'empty_staves',
       'midi_tempo', 'instrument_names', 'instrument_name_style',
-      'parts', 'score'
+      'parts', 'score', 'movement_source', 'colla_parte'
     ]
 
     RENDERABLE_SETTING_KEYS = [
@@ -19,7 +21,7 @@ module Lydown::Rendering
       'empty_staves' => ['hide', 'show'],
       'instrument_names' => ['hide', 'show', 'inline', 'inline-right-align', 'inline-center-align'],
       'instrument_name_style' => ['normal', 'smallcaps'],
-      'page_break' => ['before', 'after', 'before and after']
+      'page_break' => ['none', 'before', 'after', 'before and after']
     }
 
     def translate
@@ -42,19 +44,19 @@ module Lydown::Rendering
         movement = @context[:movement]
         case key
         when 'part'
-          @context[key] = value
+          @context[:part] = value
           @context.set_part_context(value)
           
           # when changing parts we repeat the last set time and key signature
           time = @context.get_current_setting(:time)
-          render_setting('time', time) unless time == '4/4' 
-          
           key =  @context.get_current_setting(:key)
+
+          render_setting('time', time) unless time == '4/4'
           render_setting('key', key) unless key == 'c major'
 
           @context.reset(:part)
         when 'movement'
-          @context[key] = value
+          @context[:movement] = value
           @context.reset(:movement)
         else
           @context.set_setting(key, value) unless @event[:ephemeral]
@@ -108,7 +110,7 @@ module Lydown::Rendering
 
         unless should_cadence
           signature = value.sub(/[0-9]+$/) { |m| LILYPOND_DURATIONS[m] || m }
-          setting << "\\#{key} #{signature} "
+          setting << "\\time #{signature} "
         end
       when 'key'
         # If the next event is a key signature, no need to emit this one

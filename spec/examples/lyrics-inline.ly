@@ -19,20 +19,22 @@ ldSopranoLyricsVoiceOneII = \lyricmode {
   \header {
   }
 
-  \score {
-    <<
-    \new Staff = SopranoStaff \with { }
-    \context Staff = SopranoStaff {
-      \clef "treble"
-      \set Staff.autoBeaming = ##f
-      \ldSopranoMusic
+  \bookpart { 
+    \score {
+      <<
+      \new Staff = SopranoStaff \with { }
+      \context Staff = SopranoStaff {
+        \clef "treble"
+        \set Staff.autoBeaming = ##f
+        \ldSopranoMusic
+      }
+      \new Lyrics {
+        \lyricsto "soprano_voice1" { \ldSopranoLyricsVoiceOneI }
+      }
+      \new Lyrics {
+        \lyricsto "soprano_voice1" { \ldSopranoLyricsVoiceOneII }
+      }
+      >>
     }
-    \new Lyrics {
-      \lyricsto "soprano_voice1" { \ldSopranoLyricsVoiceOneI }
-    }
-    \new Lyrics {
-      \lyricsto "soprano_voice1" { \ldSopranoLyricsVoiceOneII }
-    }
-    >>
   }
 }

@@ -15,15 +15,17 @@ ldLyricsVoiceOneI = \lyricmode {
   \header {
   }
 
-  \score {
-    <<
-    \new Staff = Staff \with { }
-    \context Staff = Staff {
-      \ldMusic
+  \bookpart { 
+    \score {
+      <<
+      \new Staff = Staff \with { }
+      \context Staff = Staff {
+        \ldMusic
+      }
+      \new Lyrics {
+        \lyricsto "voice1"  { \ldLyricsVoiceOneI }
+      }
+      >>
     }
-    \new Lyrics {
-      \lyricsto "voice1"  { \ldLyricsVoiceOneI }
-    }
-    >>
   }
 }

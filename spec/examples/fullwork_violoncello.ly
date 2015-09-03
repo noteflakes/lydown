@@ -12,24 +12,26 @@ ldIintroVioloncelloMusic = \relative c {
   \header {
   }
 
-  \score {
-    \header {
-      piece = \markup { \bold \large { 1. Intro } }
+  \bookpart { 
+    \score {
+      \header {
+        piece = \markup { \bold \large { 1. Intro } }
+      }
+
+      <<
+      \new Staff = VioloncelloStaff \with { }
+      \context Staff = VioloncelloStaff {
+        \clef "bass"
+        \ldIintroVioloncelloMusic
+        \bar "|."
+      }
+      >>
     }
 
-    <<
-    \new Staff = VioloncelloStaff \with { }
-    \context Staff = VioloncelloStaff {
-      \clef "bass"
-      \ldIintroVioloncelloMusic
-      \bar "|."
-    }
-    >>
-  }
-
-  \score {
-    \header {
-      piece = \markup { \bold \large { 2. Outro - tacet } }
+    \score {
+      \header {
+        piece = \markup { \bold \large { 2. Outro - tacet } }
+      }
     }
   }
 }

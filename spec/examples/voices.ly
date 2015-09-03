@@ -38,23 +38,25 @@ ldLyricsVoiceTwoII = \lyricmode {
   \header {
   }
 
-  \score {
-    <<
-    \new Staff = Staff \with { }
-    \context Staff = Staff {
-      \ldMusic
-    }
-    \new Lyrics \with { alignAboveContext = "Staff" } {
-      \lyricsto "voice1" { \ldLyricsVoiceOneI }
-    }
+  \bookpart { 
+    \score {
+      <<
+      \new Staff = Staff \with { }
+      \context Staff = Staff {
+        \ldMusic
+      }
+      \new Lyrics \with { alignAboveContext = "Staff" } {
+        \lyricsto "voice1" { \ldLyricsVoiceOneI }
+      }
 
-    \new Lyrics {
-      \lyricsto "voice2" { \ldLyricsVoiceTwoI }
-    }
+      \new Lyrics {
+        \lyricsto "voice2" { \ldLyricsVoiceTwoI }
+      }
 
-    \new Lyrics {
-      \lyricsto "voice2" { \ldLyricsVoiceTwoII }
+      \new Lyrics {
+        \lyricsto "voice2" { \ldLyricsVoiceTwoII }
+      }
+      >>
     }
-    >>
   }
 }

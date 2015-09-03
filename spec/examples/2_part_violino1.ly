@@ -11,14 +11,16 @@ ldViolinoIMusic = \relative c {
   \header {
   }
 
-  \score {
-    <<
-    \new Staff = ViolinoIStaff \with { }
-    \context Staff = ViolinoIStaff {
-      \set Score.skipBars = ##t 
-      \clef "treble"
-      \ldViolinoIMusic
+  \bookpart { 
+    \score {
+      <<
+      \new Staff = ViolinoIStaff \with { }
+      \context Staff = ViolinoIStaff {
+        \set Score.skipBars = ##t 
+        \clef "treble"
+        \ldViolinoIMusic
+      }
+      >>
     }
-    >>
   }
 }

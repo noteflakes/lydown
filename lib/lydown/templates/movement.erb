@@ -12,6 +12,7 @@
   end
   
   movement_title = Lydown::Rendering::Movement.movement_title(self, name)
+  movement_source = self.get_setting(:movement_source , movement: name)
   
   format = self['options/format'] || self['render_opts/format'] || :pdf
   midi_mode = (format == :midi) || (format == :mp3)
@@ -20,11 +21,18 @@
   
   page_breaks = Lydown::Rendering::Movement.page_breaks(self, movement: name)
 %>
-<% if page_breaks[:before] %>\pageBreak <% end %>
+<% if page_breaks[:before] %>
+} \bookpart {
+<% end %>
 \score {
   <% if movement_title %>
     \header { 
-      piece = \markup { \bold \large { <%= movement_title %> } }
+      piece = \markup { 
+        \bold \large { <%= movement_title %> } 
+        <% if movement_source %>
+          \hspace #1 \italic { <%= movement_source %> }
+        <% end %>
+      }
     }
   <% end %>
   

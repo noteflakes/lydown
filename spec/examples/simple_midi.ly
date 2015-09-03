@@ -10,18 +10,20 @@ ldMusic = \relative c {
   \header {
   }
 
-  \score {
-    \new StaffGroup << 
-      \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBracket )
-      <<
-        \new Staff = Staff \with { }
-        \context Staff = Staff {
-          \set Staff.instrumentName = #""
-          \ldMusic
-          \bar "|."
-        }
+  \bookpart { 
+    \score {
+      \new StaffGroup << 
+        \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBar )
+        <<
+          \new Staff = Staff \with { }
+          \context Staff = Staff {
+            \set Staff.instrumentName = #""
+            \ldMusic
+            \bar "|."
+          }
+        >>
       >>
-    >>
-    \midi { \tempo 4=75 }
+      \midi { \tempo 4=75 }
+    }
   }
 }

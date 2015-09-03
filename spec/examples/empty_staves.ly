@@ -10,24 +10,26 @@ ldMusic = \relative c {
   \header {
   }
 
-  \score {
-    \layout {
-      \context {
-        \RemoveEmptyStaffContext
-        \override VerticalAxisGroup #'remove-first = ##t
-      }
-    }      
+  \bookpart { 
+    \score {
+      \layout {
+        \context {
+          \RemoveEmptyStaffContext
+          \override VerticalAxisGroup #'remove-first = ##t
+        }
+      }      
     
     
-    \new StaffGroup <<
-      \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBracket )
-      <<
-      \new Staff = Staff \with { }
-      \context Staff = Staff {
-        \set Staff.instrumentName = #""
-        \ldMusic
-      }
+      \new StaffGroup <<
+        \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBar )
+        <<
+        \new Staff = Staff \with { }
+        \context Staff = Staff {
+          \set Staff.instrumentName = #""
+          \ldMusic
+        }
+        >>
       >>
-    >>
+    }
   }
 }

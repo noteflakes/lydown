@@ -17,21 +17,23 @@ ldContinuoMusic = \relative c {
   \header {
   }
 
-  \score {
-    <<
-    \new Staff = ViolinoIStaff \with { }
-    \context Staff = ViolinoIStaff {
-      \clef "treble"
-      \ldViolinoIMusic
-    }
-    >>
+  \bookpart { 
+    \score {
+      <<
+      \new Staff = ViolinoIStaff \with { }
+      \context Staff = ViolinoIStaff {
+        \clef "treble"
+        \ldViolinoIMusic
+      }
+      >>
 
-    <<
-    \new Staff = ContinuoStaff \with { \override VerticalAxisGroup.remove-empty = ##f }
-    \context Staff = ContinuoStaff {
-      \clef "bass"
-      \ldContinuoMusic
+      <<
+      \new Staff = ContinuoStaff \with { \override VerticalAxisGroup.remove-empty = ##f }
+      \context Staff = ContinuoStaff {
+        \clef "bass"
+        \ldContinuoMusic
+      }
+      >>
     }
-    >>
   }
 }

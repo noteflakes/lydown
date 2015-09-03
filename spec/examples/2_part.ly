@@ -17,26 +17,28 @@ ldViolinoIIMusic = \relative c {
   \header {
   }
 
-  \score {
-    \new StaffGroup <<
-      \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBracket (SystemStartBrace violino1 violino2) )
-      <<
-      \new Staff = ViolinoIStaff \with { }
-      \context Staff = ViolinoIStaff {
-        \set Staff.instrumentName = #"Violino I"
-        \clef "treble"
-        \ldViolinoIMusic
-      }
-      >>
+  \bookpart { 
+    \score {
+      \new StaffGroup <<
+        \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBar (SystemStartBrace violino1 violino2) )
+        <<
+        \new Staff = ViolinoIStaff \with { }
+        \context Staff = ViolinoIStaff {
+          \set Staff.instrumentName = #"Violino I"
+          \clef "treble"
+          \ldViolinoIMusic
+        }
+        >>
 
-      <<
-      \new Staff = ViolinoIIStaff \with { }
-      \context Staff = ViolinoIIStaff {
-        \set Staff.instrumentName = #"Violino II"
-        \clef "treble"
-        \ldViolinoIIMusic
-      }
+        <<
+        \new Staff = ViolinoIIStaff \with { }
+        \context Staff = ViolinoIIStaff {
+          \set Staff.instrumentName = #"Violino II"
+          \clef "treble"
+          \ldViolinoIIMusic
+        }
+        >>
       >>
-    >>
+    }
   }
 }

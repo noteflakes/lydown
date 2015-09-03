@@ -10,13 +10,15 @@ ldMusic = \relative c {
   \header {
   }
 
-  \score {
-    <<
-    \new Staff = Staff \with { }
-    \context Staff = Staff {
-      \set Score.skipBars = ##t 
-      \ldMusic
+  \bookpart { 
+    \score {
+      <<
+      \new Staff = Staff \with { }
+      \context Staff = Staff {
+        \set Score.skipBars = ##t 
+        \ldMusic
+      }
+      >>
     }
-    >>
   }
 }

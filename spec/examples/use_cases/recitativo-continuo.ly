@@ -11,13 +11,15 @@ ldFigures = \figuremode { <_+>4 s s2 s1*1 <4+ 2>4 s s2 <7 _+>4 s s2 <6 4>4 s s2 
   \header {
   }
 
-  \score {
-    <<
-    \new Staff = Staff \with { }
-    \context Staff = Staff {
-      \ldMusic
+  \bookpart { 
+    \score {
+      <<
+      \new Staff = Staff \with { }
+      \context Staff = Staff {
+        \ldMusic
+      }
+      \new FiguredBass { \ldFigures }
+      >>
     }
-    \new FiguredBass { \ldFigures }
-    >>
   }
 }

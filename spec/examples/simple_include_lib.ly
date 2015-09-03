@@ -12,13 +12,15 @@ ldMusic = \relative c {
   \header {
   }
 
-  \score {
-    <<
-    \new Staff = Staff \with { }
-    \context Staff = Staff {
-      \ldMusic
-      \bar "|."
+  \bookpart { 
+    \score {
+      <<
+      \new Staff = Staff \with { }
+      \context Staff = Staff {
+        \ldMusic
+        \bar "|."
+      }
+      >>
     }
-    >>
   }
 }

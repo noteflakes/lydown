@@ -22,33 +22,35 @@ ldContinuoMusic = \relative c {
   \header {
   }
 
-  \score {
-    \new StaffGroup <<
-      \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBracket flute1 violino2 continuo )
-      <<
-      \new Staff = FluteIStaff \with { }
-      \context Staff = FluteIStaff {
-        \ldFluteIMusic
-      }
-      >>
+  \bookpart { 
+    \score {
+      \new StaffGroup <<
+        \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBar flute1 violino2 continuo )
+        <<
+        \new Staff = FluteIStaff \with { }
+        \context Staff = FluteIStaff {
+          \ldFluteIMusic
+        }
+        >>
 
-      <<
-      \new Staff = ViolinoIIStaff \with {  }
-      \context Staff = ViolinoIIStaff {
-        \clef "treble"
-        \ldViolinoIIMusic
-      }
-      >>
+        <<
+        \new Staff = ViolinoIIStaff \with {  }
+        \context Staff = ViolinoIIStaff {
+          \clef "treble"
+          \ldViolinoIIMusic
+        }
+        >>
 
-      <<
-      \new Staff = ContinuoStaff \with { 
-        \override VerticalAxisGroup.remove-empty = ##f  
-      }
-      \context Staff = ContinuoStaff {
-        \clef "bass"
-        \ldContinuoMusic
-      }
+        <<
+        \new Staff = ContinuoStaff \with { 
+          \override VerticalAxisGroup.remove-empty = ##f  
+        }
+        \context Staff = ContinuoStaff {
+          \clef "bass"
+          \ldContinuoMusic
+        }
+        >>
       >>
-    >>
+    }
   }
 }

@@ -18,27 +18,29 @@ ldContinuoMusic = \relative c {
   \header {
   }
 
-  \score {
-    \new StaffGroup <<
-      \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBracket soprano continuo )
-      <<
-      \new Staff = SopranoStaff \with { }
-      \context Staff = SopranoStaff {
-        \set Staff.instrumentName = #"Soprano"
-        \clef "treble"
-        \set Staff.autoBeaming = ##f
-        \ldSopranoMusic
-      }
-      >>
+  \bookpart { 
+    \score {
+      \new StaffGroup <<
+        \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBar soprano continuo )
+        <<
+        \new Staff = SopranoStaff \with { }
+        \context Staff = SopranoStaff {
+          \set Staff.instrumentName = #"Soprano"
+          \clef "treble"
+          \set Staff.autoBeaming = ##f
+          \ldSopranoMusic
+        }
+        >>
 
-      <<
-      \new Staff = ContinuoStaff \with { \override VerticalAxisGroup.remove-empty = ##f }
-      \context Staff = ContinuoStaff {
-        \set Staff.instrumentName = #"Continuo"
-        \clef "bass"
-        \ldContinuoMusic
-      }
+        <<
+        \new Staff = ContinuoStaff \with { \override VerticalAxisGroup.remove-empty = ##f }
+        \context Staff = ContinuoStaff {
+          \set Staff.instrumentName = #"Continuo"
+          \clef "bass"
+          \ldContinuoMusic
+        }
+        >>
       >>
-    >>
+    }
   }
 }

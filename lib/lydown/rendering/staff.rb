@@ -58,7 +58,7 @@ module Lydown::Rendering
         # If all staves are already group, no need to add the system bracket
         "#'#{expr}"
       else
-        "#'(SystemStartBracket #{expr})"
+        "#'(SystemStartBar #{expr})"
       end
     end
     

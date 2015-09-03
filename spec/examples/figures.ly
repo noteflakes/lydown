@@ -28,17 +28,19 @@ ldContinuoFigures = \figuremode {
   \header {
   }
 
-  \score {
-    <<
-    \new Staff = ContinuoStaff \with { \override VerticalAxisGroup.remove-empty = ##f }
+  \bookpart { 
+    \score {
+      <<
+      \new Staff = ContinuoStaff \with { \override VerticalAxisGroup.remove-empty = ##f }
 
-    \context Staff = ContinuoStaff {
-      \clef "bass"
-      \ldContinuoMusic
+      \context Staff = ContinuoStaff {
+        \clef "bass"
+        \ldContinuoMusic
+      }
+
+      \new FiguredBass { \ldContinuoFigures }
+
+      >>
     }
-
-    \new FiguredBass { \ldContinuoFigures }
-
-    >>
   }
 }

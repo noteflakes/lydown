@@ -19,30 +19,32 @@ ldIIoutroMusic = \relative c {
   \header {
   }
 
-  \score {
-    \header {
-      piece = \markup { \bold \large { 1. Intro } }
-    }
-
-      <<
-      \new Staff = Staff \with { }
-      \context Staff = Staff {
-        \set Score.skipBars = ##t 
-        \ldIintroMusic
+  \bookpart { 
+    \score {
+      \header {
+        piece = \markup { \bold \large { 1. Intro } }
       }
-      >>
-  }
-  \score {
-    \header {
-      piece = \markup { \bold \large { 2. Outro } }
-    }
 
-      <<
-      \new Staff = Staff \with { }
-      \context Staff = Staff {
-        \set Score.skipBars = ##t 
-        \ldIIoutroMusic
+        <<
+        \new Staff = Staff \with { }
+        \context Staff = Staff {
+          \set Score.skipBars = ##t 
+          \ldIintroMusic
+        }
+        >>
+    }
+    \score {
+      \header {
+        piece = \markup { \bold \large { 2. Outro } }
       }
-      >>
+
+        <<
+        \new Staff = Staff \with { }
+        \context Staff = Staff {
+          \set Score.skipBars = ##t 
+          \ldIIoutroMusic
+        }
+        >>
+    }
   }
 }

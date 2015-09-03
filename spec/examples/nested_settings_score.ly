@@ -9,18 +9,20 @@ ldGambaIMusic = \relative c {
 \book {
   \header {
   }
-  \score {
-    \new StaffGroup << \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBracket gamba1 )
-      <<
-      \new Staff = GambaIStaff \with { }
-      \context Staff = GambaIStaff {
-        \set Staff.instrumentName = #"Gamba I" 
-        \clef "alto"
-        \ldGambaIMusic
-        \bar "|."
-      }
+  \bookpart { 
+    \score {
+      \new StaffGroup << \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBar gamba1 )
+        <<
+        \new Staff = GambaIStaff \with { }
+        \context Staff = GambaIStaff {
+          \set Staff.instrumentName = #"Gamba I" 
+          \clef "alto"
+          \ldGambaIMusic
+          \bar "|."
+        }
+        >>
       >>
-    >>
+    }
+    \pageBreak
   }
-  \pageBreak
 }

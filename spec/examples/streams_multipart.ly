@@ -21,34 +21,36 @@ ldSopranoIILyricsVoiceOneI = \lyricmode {
   \header {
   }
 
-  \score {
-    \new StaffGroup <<
-      \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBracket soprano1 soprano2)
-      <<
-      \new Staff = SopranoIStaff \with { }
-      \context Staff = SopranoIStaff {
-        \set Staff.instrumentName = #"Soprano I"
-        \clef "treble"
-        \set Staff.autoBeaming = ##f
-        \ldSopranoIMusic
-      }
-      \new Lyrics {
-        \lyricsto "soprano1_voice1" { \ldSopranoILyricsVoiceOneI }
-      }
-      >>
+  \bookpart { 
+    \score {
+      \new StaffGroup <<
+        \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBracket soprano1 soprano2)
+        <<
+        \new Staff = SopranoIStaff \with { }
+        \context Staff = SopranoIStaff {
+          \set Staff.instrumentName = #"Soprano I"
+          \clef "treble"
+          \set Staff.autoBeaming = ##f
+          \ldSopranoIMusic
+        }
+        \new Lyrics {
+          \lyricsto "soprano1_voice1" { \ldSopranoILyricsVoiceOneI }
+        }
+        >>
 
-      <<
-      \new Staff = SopranoIIStaff \with { }
-      \context Staff = SopranoIIStaff {
-        \set Staff.instrumentName = #"Soprano II"
-        \clef "treble"
-        \set Staff.autoBeaming = ##f
-        \ldSopranoIIMusic
-      }
-      \new Lyrics {
-        \lyricsto "soprano2_voice1" { \ldSopranoIILyricsVoiceOneI }
-      }
+        <<
+        \new Staff = SopranoIIStaff \with { }
+        \context Staff = SopranoIIStaff {
+          \set Staff.instrumentName = #"Soprano II"
+          \clef "treble"
+          \set Staff.autoBeaming = ##f
+          \ldSopranoIIMusic
+        }
+        \new Lyrics {
+          \lyricsto "soprano2_voice1" { \ldSopranoIILyricsVoiceOneI }
+        }
+        >>
       >>
-    >>
+    }
   }
 }

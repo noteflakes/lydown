@@ -19,32 +19,34 @@ ldIintroVioloncelloMusic = \relative c {
   \header {
   }
 
-  \score {
-    \header {
-      piece = \markup { \bold \large { 1. Intro } }
+  \bookpart { 
+    \score {
+      \header {
+        piece = \markup { \bold \large { 1. Intro } }
+      }
+
+      \new StaffGroup <<
+        \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBar violino1 violoncello )
+        <<
+        \new Staff = ViolinoIStaff \with { }
+        \context Staff = ViolinoIStaff {
+          \set Staff.instrumentName = #"Violino I"
+          \clef "treble"
+          \ldIintroViolinoIMusic
+          \bar "|."
+        }
+        >>
+
+        <<
+        \new Staff = VioloncelloStaff \with { }
+        \context Staff = VioloncelloStaff {
+          \set Staff.instrumentName = #"Violoncello"
+          \clef "bass"
+          \ldIintroVioloncelloMusic
+          \bar "|."
+        }
+        >>
+      >>
     }
-
-    \new StaffGroup <<
-      \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBracket violino1 violoncello )
-      <<
-      \new Staff = ViolinoIStaff \with { }
-      \context Staff = ViolinoIStaff {
-        \set Staff.instrumentName = #"Violino I"
-        \clef "treble"
-        \ldIintroViolinoIMusic
-        \bar "|."
-      }
-      >>
-
-      <<
-      \new Staff = VioloncelloStaff \with { }
-      \context Staff = VioloncelloStaff {
-        \set Staff.instrumentName = #"Violoncello"
-        \clef "bass"
-        \ldIintroVioloncelloMusic
-        \bar "|."
-      }
-      >>
-    >>
   }
 }

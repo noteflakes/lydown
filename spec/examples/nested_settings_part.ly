@@ -9,16 +9,19 @@ ldGambaIMusic = \relative c {
 \book {
   \header {
   }
-  \pageBreak
-  \score {
-      <<
-      \new Staff = GambaIStaff \with { }
-      \context Staff = GambaIStaff {
-        \set Score.skipBars = ##t 
-        \clef "alto"
-        \ldGambaIMusic
-        \bar "|."
-      }
-      >>
+  \bookpart { 
+  }
+  \bookpart { 
+    \score {
+        <<
+        \new Staff = GambaIStaff \with { }
+        \context Staff = GambaIStaff {
+          \set Score.skipBars = ##t 
+          \clef "alto"
+          \ldGambaIMusic
+          \bar "|."
+        }
+        >>
+    }
   }
 }

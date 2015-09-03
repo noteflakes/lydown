@@ -10,13 +10,15 @@ ldMusic = \relative c {
   \header {
   }
 
-  \score {
-    <<
-    \new Staff = Staff \with { }
-    \context Staff = Staff {
-      \tempo "Allegretto"
-      \ldMusic
+  \bookpart { 
+    \score {
+      <<
+      \new Staff = Staff \with { }
+      \context Staff = Staff {
+        \tempo "Allegretto"
+        \ldMusic
+      }
+      >>
     }
-    >>
   }
 }

@@ -31,38 +31,40 @@ ldBassoMusic = \relative c {
 
 \book {
   \header { } 
-  \score { 
-    << 
-      \new Staff = SopranoStaff \with { } 
-      \context Staff = SopranoStaff { 
-        \clef "treble"
-        \set Staff.autoBeaming = ##f
-        \ldSopranoMusic 
-      } 
-    >> 
-    << 
-      \new Staff = AltoStaff \with { } 
-      \context Staff = AltoStaff { 
-        \clef "treble"
-        \set Staff.autoBeaming = ##f
-        \ldAltoMusic 
-      } 
-    >> 
-    << 
-      \new Staff = TenoreStaff \with { } 
-      \context Staff = TenoreStaff { 
-        \clef "treble_8"
-        \set Staff.autoBeaming = ##f
-        \ldTenoreMusic 
-      } 
-    >> 
-    << 
-      \new Staff = BassoStaff \with { } 
-      \context Staff = BassoStaff { 
-        \clef "bass"
-        \set Staff.autoBeaming = ##f
-        \ldBassoMusic
-      }
-    >>
+  \bookpart { 
+    \score { 
+      << 
+        \new Staff = SopranoStaff \with { } 
+        \context Staff = SopranoStaff { 
+          \clef "treble"
+          \set Staff.autoBeaming = ##f
+          \ldSopranoMusic 
+        } 
+      >> 
+      << 
+        \new Staff = AltoStaff \with { } 
+        \context Staff = AltoStaff { 
+          \clef "treble"
+          \set Staff.autoBeaming = ##f
+          \ldAltoMusic 
+        } 
+      >> 
+      << 
+        \new Staff = TenoreStaff \with { } 
+        \context Staff = TenoreStaff { 
+          \clef "treble_8"
+          \set Staff.autoBeaming = ##f
+          \ldTenoreMusic 
+        } 
+      >> 
+      << 
+        \new Staff = BassoStaff \with { } 
+        \context Staff = BassoStaff { 
+          \clef "bass"
+          \set Staff.autoBeaming = ##f
+          \ldBassoMusic
+        }
+      >>
+    }
   }
 }

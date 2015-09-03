@@ -25,61 +25,63 @@ ldIIoutroViolinoIIMusic = \relative c {
   \header {
   }
 
-  \score {
-    \header {
-      piece = \markup { \bold \large { 1. Intro } }
+  \bookpart { 
+    \score {
+      \header {
+        piece = \markup { \bold \large { 1. Intro } }
+      }
+
+      \new StaffGroup <<
+        \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBar violino1 violoncello )
+        <<
+        \new Staff = ViolinoIStaff \with { }
+        \context Staff = ViolinoIStaff {
+          \set Staff.instrumentName = #"Violino I"
+          \clef "treble"
+          \ldIintroViolinoIMusic
+          \bar "|."
+        }
+        >>
+
+        <<
+        \new Staff = VioloncelloStaff \with { }
+        \context Staff = VioloncelloStaff {
+          \set Staff.instrumentName = #"Violoncello"
+          \clef "bass"
+          \ldIintroVioloncelloMusic
+          \bar "|."
+        }
+        >>
+      >>
     }
 
-    \new StaffGroup <<
-      \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBracket violino1 violoncello )
-      <<
-      \new Staff = ViolinoIStaff \with { }
-      \context Staff = ViolinoIStaff {
-        \set Staff.instrumentName = #"Violino I"
-        \clef "treble"
-        \ldIintroViolinoIMusic
-        \bar "|."
+    \score {
+      \header {
+        piece = \markup { \bold \large { 2. Outro } }
       }
-      >>
 
-      <<
-      \new Staff = VioloncelloStaff \with { }
-      \context Staff = VioloncelloStaff {
-        \set Staff.instrumentName = #"Violoncello"
-        \clef "bass"
-        \ldIintroVioloncelloMusic
-        \bar "|."
-      }
-      >>
-    >>
-  }
+      \new StaffGroup <<
+        \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBar (SystemStartBrace violino1 violino2) )
+        <<
+        \new Staff = ViolinoIStaff \with { }
+        \context Staff = ViolinoIStaff {
+          \set Staff.instrumentName = #"Violino I"
+          \clef "treble"
+          \ldIIoutroViolinoIMusic
+          \bar "|."
+        }
+        >>
 
-  \score {
-    \header {
-      piece = \markup { \bold \large { 2. Outro } }
+        <<
+        \new Staff = ViolinoIIStaff \with { }
+        \context Staff = ViolinoIIStaff {
+          \set Staff.instrumentName = #"Violino II"
+          \clef "treble"
+          \ldIIoutroViolinoIIMusic
+          \bar "|."
+        }
+        >>
+      >>
     }
-
-    \new StaffGroup <<
-      \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBracket (SystemStartBrace violino1 violino2) )
-      <<
-      \new Staff = ViolinoIStaff \with { }
-      \context Staff = ViolinoIStaff {
-        \set Staff.instrumentName = #"Violino I"
-        \clef "treble"
-        \ldIIoutroViolinoIMusic
-        \bar "|."
-      }
-      >>
-
-      <<
-      \new Staff = ViolinoIIStaff \with { }
-      \context Staff = ViolinoIIStaff {
-        \set Staff.instrumentName = #"Violino II"
-        \clef "treble"
-        \ldIIoutroViolinoIIMusic
-        \bar "|."
-      }
-      >>
-    >>
   }
 }
