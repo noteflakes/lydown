@@ -97,22 +97,34 @@ module Lydown
         filter = [filter] unless filter.is_a?(Array)
         filter += opts[:include_parts] if opts[:include_parts]
       end
-      filtered[:movements].each do |name, m|
+      filtered[:movements].each do |movement_name, m|
         # delete default part if other parts are present
         if m[:parts].size > 1
           m[:parts].delete('')
         end
 
         if filter
-          m[:parts].select! do |pname, p|
-            filter.include?(pname.to_s)
+          m[:parts].select! {|part_name, p| filter.include?(part_name)}
+          
+          # go over filter and check for colla parte
+          filter.each do |part_name|
+            unless m[:parts].keys.include?(part_name)
+              if source = part_source(movement_name, part_name)
+                part_path = "parts/#{part_name}"
+                source_path = "movements/#{movement_name}/parts/#{source}"
+                m[part_path] = {
+                  'settings' => self["#{source_path}/settings"],
+                  'music' => self["#{source_path}/music"]
+                }.deep!
+              end
+            end
           end
         end
       end
 
       WorkContext.new(nil, filtered)
     end
-
+    
     def [](key)
       @context[key]
     end
@@ -181,6 +193,11 @@ module Lydown
       end
     end
     
+    def query_setting_tree(movement, part, path)
+      path = "#{settings_path(movement, part)}/#{path}"
+      @context[path] || {}
+    end
+    
     def get_setting(path, opts = {})
       # In order to allow false values for settings, we create
       # a temporary instance variable, and use it to store the
@@ -212,6 +229,53 @@ module Lydown
     # Get setting while code is being translated
     def get_current_setting(path)
       get_setting(path, current_setting_opts)
+    end
+    
+    # Returns a merged tree of the settings from different levels
+    def get_merged_setting_tree(path, opts)
+      tree = (DEFAULTS[path] || {}).deep_merge(
+              query_setting_tree(nil, nil, path))
+
+      if opts[:movement]
+        tree.deep_merge! query_setting_tree(opts[:movement], nil, path)
+      else
+        tree.deep!
+      end
+    end
+    
+    def colla_parte_map(movement_name)
+      parts_settings = get_merged_setting_tree(:parts, movement: movement_name)
+      colla_parte = get_merged_setting_tree(:colla_parte, movement: movement_name)
+      
+      map = Hash.new {|h, k| h[k] = []}
+      parts_settings.each do |name, settings|
+        if source = settings['source']
+          map[source] << name
+        end
+      end
+      
+      colla_parte.each do |source, parts|
+        parts.split(',').map(&:strip).inject(map[source]) do |m, p|
+          m << p unless m.include?(p); m
+        end
+      end
+      
+      map
+    end
+    
+    def part_source(movement_name, part_name)
+      parts_settings = get_merged_setting_tree(:parts, movement: movement_name)
+      if source = parts_settings["#{part_name}/source"]
+        return source
+      else
+        colla_parte = get_merged_setting_tree(:colla_parte, movement: movement_name)
+        colla_parte.each do |source, parts|
+          if parts.split(',').map(&:strip).include?(part_name)
+            return source
+          end
+        end
+      end 
+      nil
     end
     
     def current_setting_opts

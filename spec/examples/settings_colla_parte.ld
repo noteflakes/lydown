@@ -1,0 +1,3 @@
+- colla_parte:
+  - alto: violino2, oboe2
+  - continuo: violoncello

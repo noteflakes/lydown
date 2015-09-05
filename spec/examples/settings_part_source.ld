@@ -1,0 +1,7 @@
+- parts:
+  - violino1:
+    - source: soprano
+  - violino2:
+    - source: soprano
+  - violoncello:
+    - source: continuo

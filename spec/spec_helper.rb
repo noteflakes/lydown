@@ -48,7 +48,13 @@ def verify_example(name, result_name = nil, opts = {})
 
   ex = load_example("#{result_name || name}.ly", strip: true)
   expect(ly).to eq(ex)
-  # expect {Lydown::Lilypond.compile(ly)}.not_to raise_error
+  if opts[:compile]
+    expect {Lydown::Lilypond.compile(ly)}.not_to raise_error
+  end
+end
+
+def work_from_example(name)
+  Lydown::Work.new(path: File.join(EXAMPLES_PATH, name.to_s))
 end
 
 require 'fileutils'

@@ -178,4 +178,11 @@ RSpec.describe Lydown::Work do
     expect(ly).to eq(ex)
   end
 
+  it "handles part source settings" do
+    verify_example('part_source', nil, parts: 'oboe1', mode: :part)
+  end
+
+  it "handles colla_parte settings" do
+    verify_example('colla_parte', nil, parts: 'viola', mode: :part)
+  end
 end

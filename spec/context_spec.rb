@@ -19,5 +19,44 @@ RSpec.describe "Lydown::WorkContext#get_setting" do
     clef = work.context.get_setting('clef', part: 'gamba1')
     expect(clef).to eq('bass')
   end
-    
+end
+
+RSpec.describe "Lydown::WorkContext#colla_parte_map" do
+  it "returns an empty hash by default" do
+    work = Lydown::Work.new
+
+    map = work.context.colla_parte_map(nil)
+    expect(map).to eq({})
+  end
+
+  it "correctly parses part source settings" do
+    work = work_from_example(:settings_part_source)
+
+    map = work.context.colla_parte_map(nil)
+    expect(map).to eq({
+      'soprano' => ['violino1', 'violino2'],
+      'continuo' => ['violoncello']
+    })
+  end
+
+  it "correctly parses colla parte settings" do
+    work = work_from_example(:settings_colla_parte)
+
+    map = work.context.colla_parte_map(nil)
+    expect(map).to eq({
+      'alto' => ['violino2', 'oboe2'],
+      'continuo' => ['violoncello']
+    })
+  end
+  
+  it "removes any duplicates in colla parte, part source settings" do
+    work = work_from_example(:settings_colla_parte_source)
+
+    map = work.context.colla_parte_map(nil)
+    expect(map).to eq({
+      'soprano' => ['violino1'],
+      'alto' => ['violino2', 'oboe2'],
+      'continuo' => ['violone', 'violoncello']
+    })
+  end
 end
