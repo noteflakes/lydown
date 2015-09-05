@@ -1,16 +1,16 @@
 \header {
-  tagline = \markup {
-    Engraved using \bold {
-      \with-url #"http://github.com/ciconia/lydown" {
-        Lydown
-      }
-    }
-    and \bold {
-      \with-url #"http://lilypond.org/" {
-        Lilypond
-      }
-    }
-  }
+  tagline = ##f% \markup {
+%     Engraved using \bold {
+%       \with-url #"http://github.com/ciconia/lydown" {
+%         Lydown
+%       }
+%     }
+%     and \bold {
+%       \with-url #"http://lilypond.org/" {
+%         Lilypond
+%       }
+%     }
+%   }
 }
 
 segno = {
@@ -44,6 +44,21 @@ dalsegnoadlib = {
   \once \override Score.RehearsalMark #'self-alignment-X = #LEFT
   \once \override Score.RehearsalMark #'font-size = #-2
   \mark \markup { \musicglyph #"scripts.segno" ad lib }
+}
+
+finedellaparteprima = {
+  \once \override Score.RehearsalMark #'break-visibility = #begin-of-line-invisible
+  \once \override Score.RehearsalMark #'direction = #DOWN
+  \once \override Score.RehearsalMark #'self-alignment-X = #RIGHT
+  \mark \markup {\bold {\italic {"Fine della parte prima"}}}
+}
+
+padbarlinebefore = {
+  \once \override Staff.BarLine #'extra-spacing-width = #'(-2 . 0)
+}
+
+padbarlineafter = {
+  \once \override Staff.BarLine #'extra-spacing-width = #'(0 . 2)
 }
 
 editF = \markup { \center-align \concat { \bold { \italic ( }
@@ -139,6 +154,35 @@ ficta = {
   outer-margin = 2\cm
   
   markup-system-spacing #'padding = #3
+  markup-system-spacing #'stretchability = #10
+  score-markup-spacing #'padding = #7
+  top-system-spacing #'padding = #3
+  top-markup-spacing #'padding = #3
+  system-system-spacing #'minimum-distance = #9
+  system-system-spacing #'stretchability = #15
+  
+  
+%   ragged-last-bottom = ##t
+  ragged-bottom = ##f
+  
+  print-first-page-number = ##t
+
+	oddHeaderMarkup = \markup
+	\fill-line {
+	  %% force the header to take some space, otherwise the
+	  %% page layout becomes a complete mess.
+	  " "
+%     \on-the-fly #not-first-page {
+	  	\on-the-fly #print-page-number-check-first \fromproperty #'page:page-number-string
+%     }
+	}
+
+	evenHeaderMarkup = \markup
+	\fill-line {
+	  \on-the-fly #print-page-number-check-first \fromproperty #'page:page-number-string
+	  " "
+	}
+
 }
 
 % trill = #(make-articulation "stopped")
@@ -244,6 +288,17 @@ prallupbefore = {
   \context { 
     \FiguredBass 
     figuredBassFormatter = #better-format-bass-figure
+    \override BassFigure #'font-size = #-1
 %     \override BassFigure #'font-name = #"Georgia"
+  }
+  
+  \context {
+    \StaffGroup
+    \override StaffGrouper.staff-staff-spacing = 
+      #'((basic-distance . 10)
+         (minimum-distance . 7)
+         (padding . 0)
+         (stretchability . 7))
+    
   }
 }
