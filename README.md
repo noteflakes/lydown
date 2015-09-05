@@ -459,6 +459,24 @@ To extract a specific part, we use the -p  switch:
 
 lydown -o -p violino1 score.lydown
 
+## Colla parte and part sources
+
+lydown provides two ways to reuse a part's music in another part. The first is by defining a part source:
+
+    - parts:
+      - violino1:
+        - source: soprano
+
+When dealing situations such as a choral being doubled by many instruments, a more convenient approach would be the <code>colla_parte</code> setting:
+
+    - colla_parte:
+      - soprano: violino1, flute1, flute2, oboe1
+      - alto: violino2, oboe2
+      - tenor: viola, gamba1
+      - basso: gamba2
+
+It is important to remember that the <code>colla_parte</code> setting is the opposite of the part source. Instead of defining a source for a part, it defines the parts that follow the source part.
+
 ## Staff and system appearance
 
 Numerous settings can be used to control the way staves and systems are displayed. Normally, lydown will follow standard conventions when putting together a score: the different parts will be ordered correctly (e.g. flutes, then oboes, then strings, then vocal parts, then continuo), and braced/bracketed according to convention.
