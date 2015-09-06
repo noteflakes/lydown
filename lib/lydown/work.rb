@@ -40,8 +40,7 @@ module Lydown
         filtered.extend(TemplateBinding)
 
         # Remove empty lines from the rendered code
-        Lydown::Templates.render(:lilypond_doc, filtered).
-          gsub(/^\s+$/, '').gsub(/\n+/m, "\n")
+        Lydown::Templates.render(:lilypond_doc, filtered)
       end
     end
 
@@ -146,7 +145,7 @@ module Lydown
     
     PARALLEL_PROCESS_OPTIONS = {
       progress: {
-        title: 'Process',
+        title: 'Render',
         format: Lydown::CLI::PROGRESS_FORMAT
       }
     }

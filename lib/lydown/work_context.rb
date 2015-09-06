@@ -231,6 +231,10 @@ module Lydown
       get_setting(path, current_setting_opts)
     end
     
+    def current_setting_opts
+      {movement: @context[:movement], part: @context[:part]}
+    end
+    
     # Returns a merged tree of the settings from different levels
     def get_merged_setting_tree(path, opts)
       tree = (DEFAULTS[path] || {}).deep_merge(
@@ -278,13 +282,13 @@ module Lydown
       nil
     end
     
-    def current_setting_opts
-      {movement: @context[:movement], part: @context[:part]}
-    end
-    
     def set_setting(path, value)
       path = "#{settings_path(@context[:movement], @context[:part])}/#{path}"
       @context[path] = value
+    end
+    
+    def render_mode
+      self['options/mode'] || self['render_opts/mode']
     end
   end
 end

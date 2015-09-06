@@ -50,7 +50,7 @@ module Lydown::Rendering
     end
     
     def cmd_instr
-      return unless (@context['options/mode'] == :score)
+      return unless (@context.render_mode == :score)
       markup = Staff.inline_part_title(
         @context,
         part: @context[:part], 

@@ -1,4 +1,6 @@
 <%
+  render_mode = self.render_mode
+
   setting_opts = {movement: movement_name, part: name}
 
   inline_part_title = nil
@@ -11,7 +13,7 @@
   end
   staff_id = Lydown::Rendering::Staff.staff_id(name)
 
-  score_mode = self['render_opts/mode'] == :score
+  score_mode = render_mode == :score
   
   clef = Lydown::Rendering::Staff.clef(self, setting_opts)
   prevent_remove_empty = Lydown::Rendering::Staff.prevent_remove_empty(self, setting_opts) == false
@@ -29,8 +31,7 @@
   time = self.get_setting(:time, setting_opts)
   cadenza = time == 'unmetered'
   
-  mode = self['render_opts/mode'] || self['mode']
-  skip_bars = (mode == :proof) || (mode == :part)
+  skip_bars = (render_mode == :proof) || (render_mode == :part)
 
   instrument_names = self.get_setting(:instrument_names, setting_opts)
   hide_instrument_names = 
@@ -76,7 +77,7 @@
   <% end %>
   <%= partial %>
 
-  <% if (mode == :score) && inline_part_title %>
+  <% if score_mode && inline_part_title %>
     <%= inline_part_title %>
   <% end %>
   
