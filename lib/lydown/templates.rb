@@ -8,7 +8,9 @@ module Lydown
     
     def self.render(name, ctx, locals = {})
       _binding = ctx.respond_to?(:template_binding) ? ctx.template_binding(locals) : binding
-      template(name).result(_binding)
+
+      # remove trailing white space and superfluous new lines
+      template(name).result(_binding).gsub(/^\s+$/, '').gsub(/\n+/m, "\n")
     end
     
     def self.template(name)
@@ -16,7 +18,11 @@ module Lydown
     end
     
     def self.load_template(name)
-      ERB.new IO.read(File.join(TEMPLATES_DIR, "#{name}.erb")), 0, '<>'
+      fn = name.is_a?(Symbol) ? 
+        File.join(TEMPLATES_DIR, "#{name}.erb") :
+        name
+      
+      ERB.new IO.read(fn), 0, '<>'
     end
   end
   

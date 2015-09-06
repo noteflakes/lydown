@@ -8,7 +8,7 @@ module Lydown::Rendering
       'key', 'time', 'pickup', 'clef', 'part', 'movement', 'tempo',
       'accidentals', 'beams', 'end_barline', 'macros', 'empty_staves',
       'midi_tempo', 'instrument_names', 'instrument_name_style',
-      'parts', 'score', 'movement_source', 'colla_parte'
+      'parts', 'score', 'movement_source', 'colla_parte', 'include'
     ]
 
     RENDERABLE_SETTING_KEYS = [
@@ -58,6 +58,11 @@ module Lydown::Rendering
         when 'movement'
           @context[:movement] = value
           @context.reset(:movement)
+        when 'include'
+          includes = @context.get_current_setting(:includes) 
+          includes ||= []
+          includes << value
+          @context.set_setting(:includes, includes)
         else
           @context.set_setting(key, value) unless @event[:ephemeral]
         end

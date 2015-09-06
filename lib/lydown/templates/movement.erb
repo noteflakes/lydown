@@ -21,68 +21,72 @@
   empty_staves = self.get_setting(:empty_staves, movement: name)
   
   page_breaks = Lydown::Rendering::Movement.page_breaks(self, movement: name)
+  
+  includes = Lydown::Rendering::Movement.include_files(self, movement: name)
 %>
+
 <% if page_breaks[:before] %>
-} \bookpart {
+  } \bookpart {
+<% end %>
+
+<% includes.each do |i| %>
+  <%= i %>
 <% end %>
 
 <% unless tacet %>
-\score {
-  <% if movement_title %>
-    \header { 
-      piece = \markup { 
-        \bold \large { <%= movement_title %> } 
-        <% if movement_source %>
-          \hspace #1 \italic { <%= movement_source %> }
-        <% end %>
-      }
-    }
-  <% end %>
-  
-  <% if score_mode %>
-    <% if empty_staves == 'hide' %>
-      \layout {
-        \context {
-          \RemoveEmptyStaffContext
-          \override VerticalAxisGroup #'remove-first = ##t
+  \score {
+    <% if movement_title %>
+      \header { 
+        piece = \markup { 
+          \bold \large { <%= movement_title %> } 
+          <% if movement_source %>
+            \hspace #1 \italic { <%= movement_source %> }
+          <% end %>
         }
-      }      
+      }
     <% end %>
-    
-    \new StaffGroup <<
-      \set StaffGroup.systemStartDelimiterHierarchy = <%= staff_hierarchy %>
-  <% end %>
-    
-      <% if n = movement['bar_number'] %>
-        \set Score.currentBarNumber = #<%= n %>
-        \set Score.barNumberVisibility = #all-bar-numbers-visible
-        \bar ""
-      <% end %>
-      
-      <% parts.each do |n, p| %>
-        <%= Lydown::Templates.render(:part, self, 
-          name: n, part: p, movement: movement, movement_name: name) %>
-      <% end %>
   
-  <% if score_mode %>
-    >>
-  <% end %>
-  <% if midi_mode %>
-  \midi {
-    <% if tempo = self.get_setting(:midi_tempo, movement: name) %>
-      \tempo <%= tempo %>
+    <% if score_mode %>
+      <% if empty_staves == 'hide' %>
+        \layout {
+          \context {
+            \RemoveEmptyStaffContext
+            \override VerticalAxisGroup #'remove-first = ##t
+          }
+        }      
+      <% end %>
+    
+      \new StaffGroup <<
+        \set StaffGroup.systemStartDelimiterHierarchy = <%= staff_hierarchy %>
     <% end %>
-  }
-  <% end %> 
-}
-<% else # tacet %>
-  <% if page_breaks[:before] %>
-    } \bookpart {
-  <% end %>
-    \markup { 
-      \line { \bold \large { <%= movement_title %> } }
-      \line { \pad-markup #3 " " }
+    
+        <% if n = movement['bar_number'] %>
+          \set Score.currentBarNumber = #<%= n %>
+          \set Score.barNumberVisibility = #all-bar-numbers-visible
+          \bar ""
+        <% end %>
       
+        <% parts.each do |n, p| %>
+          <%= Lydown::Templates.render(:part, self, 
+            name: n, part: p, movement: movement, movement_name: name) %>
+        <% end %>
+  
+    <% if score_mode %>
+      >>
+    <% end %>
+    <% if midi_mode %>
+    \midi {
+      <% if tempo = self.get_setting(:midi_tempo, movement: name) %>
+        \tempo <%= tempo %>
+      <% end %>
     }
+    <% end %> 
+  }
+<% else # tacet %>
+  \markup { 
+    \line { \bold \large { <%= movement_title %> } }
+    \line { \pad-markup #3 " " }
+    
+  }
 <% end %>
 <% if page_breaks[:after] %>\pageBreak <% end %>

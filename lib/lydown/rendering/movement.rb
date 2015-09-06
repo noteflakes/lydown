@@ -36,6 +36,16 @@ module Lydown::Rendering
       else
         {}
       end
+    
+    def self.include_files(context, opts)
+      (context.get_setting(:includes, opts) || []).map do |fn|
+        case File.extname(fn)
+        when '.ely'
+          Lydown::Templates.render(fn, context)
+        else
+          "\\include \"#{fn}\""
+        end
+      end
     end
   end
 end
