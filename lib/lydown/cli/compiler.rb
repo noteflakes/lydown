@@ -5,8 +5,11 @@ module Lydown::CLI::Compiler
       if opts[:movements] && opts[:movements].size == 1
         fn << "-#{opts[:movements].first}"
       end
-      if opts[:parts] && opts[:parts].size == 1
-        fn << "-#{opts[:parts].first}"
+      if opts[:parts] && (opts[:parts].is_a?(String) || (opts[:parts].size == 1))
+        part_name = opts[:parts].is_a?(String) ? opts[:parts] : opts[:parts].first
+        fn << "-#{part_name}"
+      else
+        fn << '-score'
       end
       fn
     end
