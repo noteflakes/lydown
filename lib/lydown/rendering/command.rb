@@ -74,5 +74,9 @@ module Lydown::Rendering
       
       @context.emit(:music, "\\tempo #{tempo} ")
     end
+    
+    def cmd_partBreak
+      @context.emit(:music, "\\break ") if (@context.render_mode == :part)
+    end
   end
 end
