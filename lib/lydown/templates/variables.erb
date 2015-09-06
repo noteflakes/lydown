@@ -11,7 +11,7 @@
 <%= var_name[var_opts.merge(stream: :music)] %> = \relative c {
   <<
     \new Voice = "<%= voice_prefix %>voice1" {
-      <%= part[:music] %>
+      <%= part['music'] %>
     }
   >>
 }

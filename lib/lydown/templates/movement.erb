@@ -1,6 +1,5 @@
 <%
   render_mode = self.render_mode
-  score_mode = (render_mode == :score) || (render_mode == :proof)
   staff_groups = Lydown::Rendering::Staff.staff_groups(
     self, {movement: name}, movement['parts'].keys)
   parts_in_order = staff_groups.flatten
@@ -10,6 +9,9 @@
     m[p] = movement['parts'][p]
     m
   end
+
+  score_mode = (render_mode == :score) || 
+    (render_mode == :proof) || (parts.size > 1)
   
   tacet = Lydown::Rendering::Movement.tacet?(self, name)
   movement_title = Lydown::Rendering::Movement.movement_title(self, name)

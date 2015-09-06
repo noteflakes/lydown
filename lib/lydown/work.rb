@@ -25,7 +25,7 @@ module Lydown
     end
 
     def to_lilypond(opts = {})
-      @context[:render_opts] = opts
+      @context[:render_opts] = opts.stringify_keys
       @context[:variables] = {}
 
       if opts[:stream_path]

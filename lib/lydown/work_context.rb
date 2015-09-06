@@ -97,32 +97,50 @@ module Lydown
         filter = [filter] unless filter.is_a?(Array)
         filter += opts[:include_parts] if opts[:include_parts]
       end
+      
       filtered[:movements].each do |movement_name, m|
         # delete default part if other parts are present
         if m[:parts].size > 1
           m[:parts].delete('')
         end
 
-        if filter
-          m[:parts].select! {|part_name, p| filter.include?(part_name)}
-          
-          # go over filter and check for colla parte
-          filter.each do |part_name|
-            unless m[:parts].keys.include?(part_name)
-              if source = part_source(movement_name, part_name)
-                part_path = "parts/#{part_name}"
-                source_path = "movements/#{movement_name}/parts/#{source}"
-                m[part_path] = {
-                  'settings' => self["#{source_path}/settings"],
-                  'music' => self["#{source_path}/music"]
-                }.deep!
-              end
-            end
-          end
-        end
+        filter_movement_parts(movement_name, m, filter) if filter
       end
 
       WorkContext.new(nil, filtered)
+    end
+    
+    def filter_movement_parts(movement_name, m, filter)
+      m[:parts].select! {|part_name, p| filter.include?(part_name)}
+      
+      # go over filter and check for colla parte
+      filter.each do |part_name|
+        unless m[:parts].keys.include?(part_name)
+          if source = part_source(movement_name, part_name)
+            part_path = "parts/#{part_name}"
+            source_path = "movements/#{movement_name}/parts/#{source}"
+            m[part_path] = {
+              'settings' => self["#{source_path}/settings"],
+              'music' => self["#{source_path}/music"]
+            }.deep!
+          end
+        end
+      end
+      
+      # check for part includes
+      if part = self['options/parts']
+        includes = get_setting(:include_parts, 
+          movement: movement_name, part: part)
+          
+        return unless includes
+        
+        includes = includes.split(',').map(&:strip)
+        
+        includes.each do |included_part|
+          source_path = "movements/#{movement_name}/parts/#{included_part}"
+          m["parts/#{included_part}"] ||= self[source_path]
+        end
+      end
     end
     
     def [](key)

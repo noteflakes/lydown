@@ -189,4 +189,9 @@ RSpec.describe Lydown::Work do
   it "handles include settings" do
     verify_example('settings_includes')
   end
+
+  it "handles include_parts settings" do
+    # verify_example('part_include', nil, mode: :score)
+    verify_example('part_include', nil, parts: 'violoncello', mode: :part)
+  end
 end
