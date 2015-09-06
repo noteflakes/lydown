@@ -27,15 +27,19 @@ module Lydown::Rendering
     }
     
     def self.page_breaks(context, opts)
-      case context['render_opts/mode']
+      setting = case context.render_mode
       when :score
-        PAGE_BREAKS[context.get_setting('score/page_break', opts)] || {}
+        context.get_setting('score/page_break', opts)
       when :part
-        part = context[:part]
-        PAGE_BREAKS[context.get_setting(:page_break, opts.merge(part: part))] || {}
+        part = context[:part] || context['options/parts']
+        context.get_setting(:page_break, opts.merge(part: part)) ||
+          context.get_setting('parts/page_break', opts)
       else
         {}
       end
+      
+      PAGE_BREAKS[setting] || {}
+    end
     
     def self.include_files(context, opts)
       (context.get_setting(:includes, opts) || []).map do |fn|
