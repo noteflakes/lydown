@@ -11,6 +11,7 @@
     m
   end
   
+  tacet = Lydown::Rendering::Movement.tacet?(self, name)
   movement_title = Lydown::Rendering::Movement.movement_title(self, name)
   movement_source = self.get_setting(:movement_source , movement: name)
   
@@ -24,6 +25,8 @@
 <% if page_breaks[:before] %>
 } \bookpart {
 <% end %>
+
+<% unless tacet %>
 \score {
   <% if movement_title %>
     \header { 
@@ -72,4 +75,14 @@
   }
   <% end %> 
 }
+<% else # tacet %>
+  <% if page_breaks[:before] %>
+    } \bookpart {
+  <% end %>
+    \markup { 
+      \line { \bold \large { <%= movement_title %> } }
+      \line { \pad-markup #3 " " }
+      
+    }
+<% end %>
 <% if page_breaks[:after] %>\pageBreak <% end %>

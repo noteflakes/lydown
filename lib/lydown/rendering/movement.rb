@@ -16,6 +16,10 @@ module Lydown::Rendering
       title
     end
     
+    def self.tacet?(context, name)
+      context["movements/#{name}/parts"].empty?      
+    end
+    
     PAGE_BREAKS = {
       'before' => {before: true},
       'after'  => {after: true},

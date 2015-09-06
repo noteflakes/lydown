@@ -119,7 +119,9 @@ module Lydown
           state[:movements][state[:current_movement]][part] = entry
         end
       elsif File.directory?(entry) && recursive
+        # handle movement subdirectory
         movement = File.basename(entry)
+        state[:movements][movement] ||= {}.deep!
         unless skip_movement?(movement, state)
           state[:current_movement] = movement
           read_directory(entry, false, state)
@@ -128,8 +130,7 @@ module Lydown
     end
     
     def skip_part?(part, state)
-      DEFAULT_BASENAMES.include?(part) ||
-        state[:part_filter] && !state[:part_filter].include?(part)
+      DEFAULT_BASENAMES.include?(part)
     end
     
     def skip_movement?(mvmt, state)

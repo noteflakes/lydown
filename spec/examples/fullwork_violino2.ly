@@ -13,12 +13,11 @@ ldIIoutroViolinoIIMusic = \relative c {
   }
 
   \bookpart { 
-    \score {
-      \header {
-        piece = \markup { \bold \large { 1. Intro - tacet } }
-      }
+    \markup { 
+      \line { \bold \large { 1. Intro - tacet } }
+      \line { \pad-markup #3 " " }
     }
-
+    
     \score {
       \header {
         piece = \markup { \bold \large { 2. Outro } }

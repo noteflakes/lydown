@@ -28,10 +28,10 @@ ldIintroVioloncelloMusic = \relative c {
       >>
     }
 
-    \score {
-      \header {
-        piece = \markup { \bold \large { 2. Outro - tacet } }
-      }
+    \markup { 
+      \line { \bold \large { 2. Outro - tacet } }
+      \line { \pad-markup #3 " " }
     }
+    
   }
 }
