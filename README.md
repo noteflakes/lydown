@@ -477,6 +477,26 @@ When dealing situations such as a choral being doubled by many instruments, a mo
 
 It is important to remember that the <code>colla_parte</code> setting is the opposite of the part source. Instead of defining a source for a part, it defines the parts that follow the source part.
 
+## Including another part when extracting parts
+
+When extracing parts, some cases, such as recitatives, require displaying another part together with the part to be extracted. Parts can be included in extracted parts using the <code>include_parts</code> setting:
+
+    - parts:
+      - continuo:
+        - include_parts: tenore
+        
+multiple parts can be specified by comma separating them.
+
+## Mode specific code
+
+The <code>\mode</code> and <code>\nomode</code> commands can be used to render code for specific modes. This can be useful when the extracted part should display a different music than the score. The mode command causes anything after it to be rendered only when the rendering mode matches the specified mode.
+
+    \mode:score 4cege \mode:part 4cded \mode:none 1c
+    
+The example above will be render as <code>4cege1c</code> when in score mode, and as <code>4cded1c</code> in the extracted part.
+
+To cancel a mode, use either <code>\mode:none</code> or <code>\nomode</code>
+
 ## Staff and system appearance
 
 Numerous settings can be used to control the way staves and systems are displayed. Normally, lydown will follow standard conventions when putting together a score: the different parts will be ordered correctly (e.g. flutes, then oboes, then strings, then vocal parts, then continuo), and braced/bracketed according to convention.

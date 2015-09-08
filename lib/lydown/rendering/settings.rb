@@ -8,7 +8,8 @@ module Lydown::Rendering
       'key', 'time', 'pickup', 'clef', 'part', 'movement', 'tempo',
       'accidentals', 'beams', 'end_barline', 'macros', 'empty_staves',
       'midi_tempo', 'instrument_names', 'instrument_name_style',
-      'parts', 'score', 'movement_source', 'colla_parte', 'include'
+      'parts', 'score', 'movement_source', 'colla_parte', 'include',
+      'mode', 'nomode'
     ]
 
     RENDERABLE_SETTING_KEYS = [
@@ -21,7 +22,8 @@ module Lydown::Rendering
       'empty_staves' => ['hide', 'show'],
       'instrument_names' => ['hide', 'show', 'inline', 'inline-right-align', 'inline-center-align'],
       'instrument_name_style' => ['normal', 'smallcaps'],
-      'page_break' => ['none', 'before', 'after', 'before and after']
+      'page_break' => ['none', 'before', 'after', 'before and after'],
+      'mode' => ['score', 'part', 'none']
     }
 
     def translate
@@ -63,6 +65,10 @@ module Lydown::Rendering
           includes ||= []
           includes << value
           @context.set_setting(:includes, includes)
+        when 'mode'
+          set_mode(value.nil? ? :none : value.to_sym)
+        when 'nomode'
+          set_mode(:none)
         else
           @context.set_setting(key, value) unless @event[:ephemeral]
         end
@@ -144,6 +150,10 @@ module Lydown::Rendering
       end
 
       @context.emit(:music, setting)
+    end
+    
+    def set_mode(mode)
+      @context['process/mode'] = (mode == :none) ? nil : mode
     end
   end
 end

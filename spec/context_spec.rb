@@ -59,4 +59,10 @@ RSpec.describe "Lydown::WorkContext#colla_parte_map" do
       'continuo' => ['violone', 'violoncello']
     })
   end
+  
+  it "it renders according to \\mode commands and render mode" do
+    verify_example(:mode, :mode_score, mode: :score)
+
+    verify_example(:mode, :mode_part, mode: :part, parts: 'viola')
+  end
 end

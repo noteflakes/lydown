@@ -152,6 +152,10 @@ module Lydown
     end
     
     def emit(path, *content)
+      if self['process/mode']
+        return unless self['process/mode'] == render_mode
+      end
+      
       stream = current_stream(path)
 
       content.each {|c| stream << c}

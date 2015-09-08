@@ -353,7 +353,7 @@ module Lydown::Parsing
       stream << cmd
     end
     
-    SETTING_KEYS = %w{time key clef pickup}
+    SETTING_KEYS = %w{time key clef pickup mode nomode}
     NON_EPHEMERAL_KEYS = %w{time key}
     
     module Key
