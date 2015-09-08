@@ -11,6 +11,8 @@ ldMusic = \relative c {
     g^\markup { \right-align { \italic { right-aligned } } } 
     b_\markup { \left-align { \italic { left-aligned } } } 
     d^\markup { \center-align { \italic { centered } } }
+    R1*1^\markup { fullbar }
+    R1*2^\markup { double fullbar }
   } >>
 }
 

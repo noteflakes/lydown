@@ -2,3 +2,5 @@
 e\"_italic_" f+\"__bold__"
 g\p r\"Jünger (\"alto\"):" r\"_bl ah_" r\_"bleh"
 g\<"_right-aligned_" b\_>"_left-aligned_" d\|"_centered_"
+R\"fullbar"
+R*2\"double fullbar"
