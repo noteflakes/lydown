@@ -68,7 +68,12 @@ module Lydown::Rendering
     end
     
     def self.prevent_remove_empty(context, opts)
-      context.get_setting(:remove_empty, opts)
+      case context.get_setting(:remove_empty, opts)
+      when false, 'false'
+        true
+      else
+        false
+      end
     end
     
     def self.midi_instrument(context, opts)
