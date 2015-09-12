@@ -1,5 +1,3 @@
-require 'pp'
-
 module Lydown::Rendering
   class Setting < Base
     include Notes
@@ -22,7 +20,7 @@ module Lydown::Rendering
       'empty_staves' => ['hide', 'show'],
       'instrument_names' => ['hide', 'show', 'inline', 'inline-right-align', 'inline-center-align'],
       'instrument_name_style' => ['normal', 'smallcaps'],
-      'page_break' => ['none', 'before', 'after', 'before and after'],
+      'page_break' => ['none', 'before', 'after', 'before and after', 'blank page before'],
       'mode' => ['score', 'part', 'none']
     }
 

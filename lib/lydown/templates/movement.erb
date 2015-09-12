@@ -27,7 +27,18 @@
   includes = Lydown::Rendering::Movement.include_files(self, movement: name)
 %>
 
-<% if page_breaks[:before] %>
+<% if page_breaks[:blank_page_before] %>
+} \bookpart {
+  \markup \column {
+  \null \null \null \null \null \null
+  \null \null \null \null \null \null
+  \null \null \null \null \null \null
+  \null \null \null \null \null \null
+  \fill-line { "(this page has been left blank to facilitate page turning)" } 
+  }
+} \bookpart {
+\pageBreak
+<% elsif page_breaks[:before] %>
   } \bookpart {
 <% end %>
 

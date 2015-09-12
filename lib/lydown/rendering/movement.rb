@@ -23,7 +23,8 @@ module Lydown::Rendering
     PAGE_BREAKS = {
       'before' => {before: true},
       'after'  => {after: true},
-      'before and after' => {before: true, after: true}
+      'before and after' => {before: true, after: true},
+      'blank page before' => {blank_page_before: true}
     }
     
     def self.page_breaks(context, opts)
