@@ -1,6 +1,6 @@
 \version "2.18.2"
 
-ldViolinoIMusic = \relative c {
+"/violino1/music" = \relative c {
   << \new Voice = "violino1_voice1" {
     \time 3/8
     c'8 e g g4.
@@ -18,7 +18,7 @@ ldViolinoIMusic = \relative c {
       \context Staff = ViolinoIStaff {
         \set Score.skipBars = ##t 
         \clef "treble"
-        \ldViolinoIMusic
+        \"/violino1/music"
       }
       >>
     }

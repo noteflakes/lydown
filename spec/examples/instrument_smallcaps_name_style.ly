@@ -1,11 +1,11 @@
 \version "2.18.2"
 
-ldFluteIMusic = \relative c {
+"/flute1/music" = \relative c {
   << \new Voice = "flute1_voice1" {
     c4 d e f
   } >>
 }
-ldViolinoIIMusic = \relative c {
+"/violino2/music" = \relative c {
   << \new Voice = "violino2_voice1" {
     g'4 a b c
   } >>
@@ -23,7 +23,7 @@ ldViolinoIIMusic = \relative c {
         \new Staff = FluteIStaff \with { }
         \context Staff = FluteIStaff {
           \set Staff.instrumentName = \markup { \smallCaps { Flute I } }
-          \ldFluteIMusic
+          \"/flute1/music"
         }
         >>
 
@@ -32,7 +32,7 @@ ldViolinoIIMusic = \relative c {
         \context Staff = ViolinoIIStaff {
           \set Staff.instrumentName = \markup { \smallCaps { Violino II } }
           \clef "treble"
-          \ldViolinoIIMusic
+          \"/violino2/music"
         }
         >>
       >>

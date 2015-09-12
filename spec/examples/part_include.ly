@@ -1,20 +1,20 @@
 \version "2.18.2"
 
-ldVioloncelloMusic = \relative c {
+"/violoncello/music" = \relative c {
   << \new Voice = "violoncello_voice1" {
     \time 3/8
     d4. ~ d
   } >>
 }
 
-ldSopranoMusic = \relative c {
+"/soprano/music" = \relative c {
   << \new Voice = "soprano_voice1" {
     \time 3/8
     c'8 e g g4.
   } >>
 }
 
-ldSopranoLyricsVoiceOneI = \lyricmode {
+"/soprano/lyrics/voice1/1" = \lyricmode {
   la la la la!
 }
 
@@ -34,10 +34,10 @@ ldSopranoLyricsVoiceOneI = \lyricmode {
           \set Score.skipBars = ##t 
           \clef "treble"
           \set Staff.autoBeaming = ##f
-          \ldSopranoMusic
+          \"/soprano/music"
         }
         \new Lyrics {
-          \lyricsto "soprano_voice1" { \ldSopranoLyricsVoiceOneI }
+          \lyricsto "soprano_voice1" { \"/soprano/lyrics/voice1/1" }
         }
         >>
 
@@ -46,7 +46,7 @@ ldSopranoLyricsVoiceOneI = \lyricmode {
         \context Staff = VioloncelloStaff {
           \set Score.skipBars = ##t 
           \clef "bass"
-          \ldVioloncelloMusic
+          \"/violoncello/music"
         }
         >>
       >>

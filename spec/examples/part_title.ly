@@ -1,12 +1,12 @@
 \version "2.18.2"
 
-ldSopranoMusic = \relative c {
+"/soprano/music" = \relative c {
   << \new Voice = "soprano_voice1" {
     \time 3/8
     c'8 e g g4.
   } >>
 }
-ldContinuoMusic = \relative c {
+"/continuo/music" = \relative c {
   << \new Voice = "continuo_voice1" {
     \time 3/8
     r4. b''8 d g
@@ -28,7 +28,7 @@ ldContinuoMusic = \relative c {
           \set Staff.instrumentName = #"Soprano, Oboe I"
           \clef "treble"
           \set Staff.autoBeaming = ##f
-          \ldSopranoMusic
+          \"/soprano/music"
         }
         >>
 
@@ -37,7 +37,7 @@ ldContinuoMusic = \relative c {
         \context Staff = ContinuoStaff {
           \set Staff.instrumentName = #"Continuo"
           \clef "bass"
-          \ldContinuoMusic
+          \"/continuo/music"
         }
         >>
       >>

@@ -1,6 +1,6 @@
 \version "2.18.2"
 
-ldMusic = \relative c {
+"//music" = \relative c {
   << \new Voice = "voice1" {
     r8 \acciaccatura { c16 d } e8 d16[ c] b[ a] g[ e] f8 r d
     
@@ -17,7 +17,7 @@ ldMusic = \relative c {
       <<
       \new Staff = Staff \with { }
       \context Staff = Staff {
-        \ldMusic
+        \"//music"
       }
       >>
     }

@@ -1,6 +1,6 @@
 \version "2.18.2"
 
-ldGambaIMusic = \relative c {
+"/gamba1/music" = \relative c {
   << \new Voice = "gamba1_voice1" {
     c4 d e f g1
   } >>
@@ -18,7 +18,7 @@ ldGambaIMusic = \relative c {
         \context Staff = GambaIStaff {
           \set Score.skipBars = ##t 
           \clef "alto"
-          \ldGambaIMusic
+          \"/gamba1/music"
           \bar "|."
         }
         >>

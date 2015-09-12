@@ -1,6 +1,6 @@
 \version "2.18.2"
 
-ldViolaMusic = \relative c {
+"/viola/music" = \relative c {
   << \new Voice = "viola_voice1" {
     c4 e8 g c2 R1*1
   } >>
@@ -19,7 +19,7 @@ ldViolaMusic = \relative c {
         \context Staff = ViolaStaff {
           \set Staff.instrumentName = #"Viola"
           \clef "alto"
-          \ldViolaMusic
+          \"/viola/music"
         }
         >>
       >>

@@ -1,17 +1,17 @@
 \version "2.18.2"
 
-ldFluteIMusic = \relative c {
+"/flute1/music" = \relative c {
   << \new Voice = "flute1_voice1" {
   c4 d <>^\markup { \smallCaps { Flute I } } e f
   } >>
 }
-ldViolinoIIMusic = \relative c {
+"/violino2/music" = \relative c {
   << \new Voice = "violino2_voice1" {
   <>^\markup { \smallCaps { Violino II } } 
     g'4 a b c
   } >>
 }
-ldContinuoMusic = \relative c {
+"/continuo/music" = \relative c {
   << \new Voice = "continuo_voice1" {
   <>^\markup { \right-align \smallCaps { Continuo } } 
     e4
@@ -29,7 +29,7 @@ ldContinuoMusic = \relative c {
         <<
         \new Staff = FluteIStaff \with { }
         \context Staff = FluteIStaff {
-          \ldFluteIMusic
+          \"/flute1/music"
         }
         >>
 
@@ -37,7 +37,7 @@ ldContinuoMusic = \relative c {
         \new Staff = ViolinoIIStaff \with {  }
         \context Staff = ViolinoIIStaff {
           \clef "treble"
-          \ldViolinoIIMusic
+          \"/violino2/music"
         }
         >>
 
@@ -47,7 +47,7 @@ ldContinuoMusic = \relative c {
         }
         \context Staff = ContinuoStaff {
           \clef "bass"
-          \ldContinuoMusic
+          \"/continuo/music"
         }
         >>
       >>

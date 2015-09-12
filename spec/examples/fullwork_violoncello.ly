@@ -1,6 +1,6 @@
 \version "2.18.2"
 
-ldIintroVioloncelloMusic = \relative c {
+"01-intro/violoncello/music" = \relative c {
   << \new Voice = "violoncello_voice1" {
     \time 3/4
     \key d \major
@@ -22,7 +22,7 @@ ldIintroVioloncelloMusic = \relative c {
       \new Staff = VioloncelloStaff \with { }
       \context Staff = VioloncelloStaff {
         \clef "bass"
-        \ldIintroVioloncelloMusic
+        \"01-intro/violoncello/music"
         \bar "|."
       }
       >>

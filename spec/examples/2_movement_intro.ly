@@ -1,6 +1,6 @@
 \version "2.18.2"
 
-ldIintroMusic = \relative c {
+"01-intro//music" = \relative c {
   << \new Voice = "voice1" {
     \time 3/8
     \key c \minor
@@ -21,7 +21,7 @@ ldIintroMusic = \relative c {
       <<
       \new Staff = Staff \with { }
       \context Staff = Staff {
-        \ldIintroMusic
+        \"01-intro//music"
       }
       >>
     }

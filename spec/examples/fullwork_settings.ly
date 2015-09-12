@@ -1,6 +1,6 @@
 \version "2.18.2"
 
-ldIintroViolinoIMusic = \relative c {
+"01-intro/violino1/music" = \relative c {
   << \new Voice = "violino1_voice1" {
     \time 3/4
     \key bes \major
@@ -9,7 +9,7 @@ ldIintroViolinoIMusic = \relative c {
     a b cis d
   } >>
 }
-ldIintroVioloncelloMusic = \relative c {
+"01-intro/violoncello/music" = \relative c {
   << \new Voice = "violoncello_voice1" {
     \time 3/4
     \key bes \major
@@ -18,7 +18,7 @@ ldIintroVioloncelloMusic = \relative c {
     e fis g a
   } >>
 }
-ldIIoutroViolinoIMusic = \relative c {
+"02-outro/violino1/music" = \relative c {
   << \new Voice = "violino1_voice1" {
     \time 2/4
     \key bes \major
@@ -27,7 +27,7 @@ ldIIoutroViolinoIMusic = \relative c {
     c d
   } >>
 }
-ldIIoutroViolinoIIMusic = \relative c {
+"02-outro/violino2/music" = \relative c {
   << \new Voice = "violino2_voice1" {
     \time 2/4
     \key bes \major
@@ -55,7 +55,7 @@ ldIIoutroViolinoIIMusic = \relative c {
           \set Staff.instrumentName = #"Violino I"
           \clef "treble"
           \partial 8
-          \ldIintroViolinoIMusic
+          \"01-intro/violino1/music"
           \bar "|."
         }
         >>
@@ -66,7 +66,7 @@ ldIIoutroViolinoIIMusic = \relative c {
           \set Staff.instrumentName = #"Violoncello"
           \clef "bass"
           \partial 8
-          \ldIintroVioloncelloMusic
+          \"01-intro/violoncello/music"
           \bar "|."
         }
         >>
@@ -85,7 +85,7 @@ ldIIoutroViolinoIIMusic = \relative c {
         \context Staff = ViolinoIStaff {
           \set Staff.instrumentName = #"Violino I"
           \clef "treble"
-          \ldIIoutroViolinoIMusic
+          \"02-outro/violino1/music"
           \bar "|."
         }
         >>
@@ -95,7 +95,7 @@ ldIIoutroViolinoIIMusic = \relative c {
         \context Staff = ViolinoIIStaff {
           \set Staff.instrumentName = #"Violino II"
           \clef "treble"
-          \ldIIoutroViolinoIIMusic
+          \"02-outro/violino2/music"
           \bar "|."
         }
         >>

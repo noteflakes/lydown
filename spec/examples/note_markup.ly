@@ -1,6 +1,6 @@
 \version "2.18.2"
 
-ldMusic = \relative c {
+"//music" = \relative c {
   << \new Voice = "voice1" {
     c1^\markup { blah } d_\markup { tralla } dis^\markup { no backslash }
     e^\markup { \italic { italic } }
@@ -25,7 +25,7 @@ ldMusic = \relative c {
       <<
       \new Staff = Staff \with { }
       \context Staff = Staff {
-        \ldMusic
+        \"//music"
       }
       >>
     }

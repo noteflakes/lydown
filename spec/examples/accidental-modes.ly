@@ -1,6 +1,6 @@
 \version "2.18.2"
 
-ldMusic = \relative c {
+"//music" = \relative c {
   << \new Voice = "voice1" {
     \key ees \major %{by default accidentals are relative to key signature%}
     ees4 g bes ees
@@ -20,7 +20,7 @@ ldMusic = \relative c {
       <<
       \new Staff = Staff \with { }
       \context Staff = Staff {
-        \ldMusic
+        \"//music"
       }
       >>
     }

@@ -1,6 +1,6 @@
 \version "2.18.2"
 
-ldOboeIMusic = \relative c {
+"/oboe1/music" = \relative c {
   << \new Voice = "oboe1_voice1" {
     \time 3/8
     c'8 e g g4.
@@ -18,7 +18,7 @@ ldOboeIMusic = \relative c {
       \context Staff = OboeIStaff {
         \set Score.skipBars = ##t
         \clef "treble"
-        \ldOboeIMusic
+        \"/oboe1/music"
       }
       >>
     }

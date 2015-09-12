@@ -1,6 +1,6 @@
 \version "2.18.2"
 
-ldViolaMusic = \relative c {
+"/viola/music" = \relative c {
   << \new Voice = "viola_voice1" {
     \time 3/8
     r4. b''8 d g
@@ -18,7 +18,7 @@ ldViolaMusic = \relative c {
       \context Staff = ViolaStaff {
         \set Score.skipBars = ##t 
         \clef "alto"
-        \ldViolaMusic
+        \"/viola/music"
       }
       >>
     }

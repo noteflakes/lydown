@@ -1,6 +1,6 @@
 \version "2.18.2"
 
-ldIIoutroMusic = \relative c {
+"02-outro//music" = \relative c {
   << \new Voice = "voice1" {
     \time 4/4
     \key b \major
@@ -22,7 +22,7 @@ ldIIoutroMusic = \relative c {
       \new Staff = Staff \with { }
       \context Staff = Staff {
         \set Score.skipBars = ##t 
-        \ldIIoutroMusic
+        \"02-outro//music"
       }
       >>
     }

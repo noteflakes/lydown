@@ -1,12 +1,12 @@
 \version "2.18.2"
 
-ldViolinoIMusic = \relative c {
+"/violino1/music" = \relative c {
   << \new Voice = "violino1_voice1" {
     \time 3/8
     c'8 e g g4.
   } >>
 }
-ldViolinoIIMusic = \relative c {
+"/violino2/music" = \relative c {
   << \new Voice = "violino2_voice1" {
     \time 3/8
     r4. b''8 d g
@@ -26,7 +26,7 @@ ldViolinoIIMusic = \relative c {
         \context Staff = ViolinoIStaff {
           \set Staff.instrumentName = #"Violino I"
           \clef "treble"
-          \ldViolinoIMusic
+          \"/violino1/music"
         }
         >>
 
@@ -35,7 +35,7 @@ ldViolinoIIMusic = \relative c {
         \context Staff = ViolinoIIStaff {
           \set Staff.instrumentName = #"Violino II"
           \clef "treble"
-          \ldViolinoIIMusic
+          \"/violino2/music"
         }
         >>
       >>

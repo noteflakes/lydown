@@ -1,6 +1,6 @@
 \version "2.18.2"
 
-ldMusic = \relative c {
+"//music" = \relative c {
   <<
     \new Voice = "voice1" {
       R1*1
@@ -23,14 +23,14 @@ ldMusic = \relative c {
     }
   >>
 }
-ldLyricsVoiceOneI = \lyricmode {
+"//lyrics/voice1/1" = \lyricmode {
   Bin ich's?
   Nein ja nein ja
 }
-ldLyricsVoiceTwoI = \lyricmode {
+"//lyrics/voice2/1" = \lyricmode {
   Ja ja!
 }
-ldLyricsVoiceTwoII = \lyricmode {
+"//lyrics/voice2/2" = \lyricmode {
   Nei nei
 }
 
@@ -43,18 +43,18 @@ ldLyricsVoiceTwoII = \lyricmode {
       <<
       \new Staff = Staff \with { }
       \context Staff = Staff {
-        \ldMusic
+        \"//music"
       }
       \new Lyrics \with { alignAboveContext = "Staff" } {
-        \lyricsto "voice1" { \ldLyricsVoiceOneI }
+        \lyricsto "voice1" { \"//lyrics/voice1/1" }
       }
 
       \new Lyrics {
-        \lyricsto "voice2" { \ldLyricsVoiceTwoI }
+        \lyricsto "voice2" { \"//lyrics/voice2/1" }
       }
 
       \new Lyrics {
-        \lyricsto "voice2" { \ldLyricsVoiceTwoII }
+        \lyricsto "voice2" { \"//lyrics/voice2/2" }
       }
       >>
     }

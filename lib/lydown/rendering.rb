@@ -51,13 +51,16 @@ module Lydown::Rendering
     end
     
     def variable_name(opts)
-      "ld%s%s%s%s%s" % [
-        opts[:movement] ? variable_name_infix(opts[:movement]) : '',
-        opts[:part] ? variable_name_infix(opts[:part]) : '',
-        opts[:stream].to_s.capitalize,
-        opts[:voice] ? voice_variable_name_infix(opts[:voice]) : '',
-        opts[:idx] ? opts[:idx].to_i.to_roman.upcase : ''
+      varname = "%s/%s/%s" % [
+        opts[:movement],
+        opts[:part],
+        opts[:stream]
       ]
+      
+      varname << "/#{opts[:voice]}" if opts[:voice]
+      varname << "/#{opts[:idx]}" if opts[:idx]
+      
+      "\"#{varname}\""
     end
   end
 end

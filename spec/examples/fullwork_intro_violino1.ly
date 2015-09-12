@@ -1,6 +1,6 @@
 \version "2.18.2"
 
-ldIintroViolinoIMusic = \relative c {
+"01-intro/violino1/music" = \relative c {
   << \new Voice = "violino1_voice1" {
     \time 3/4
     \key d \major
@@ -22,7 +22,7 @@ ldIintroViolinoIMusic = \relative c {
       \new Staff = ViolinoIStaff \with { }
       \context Staff = ViolinoIStaff {
         \clef "treble"
-        \ldIintroViolinoIMusic
+        \"01-intro/violino1/music"
         \bar "|."
       }
       >>

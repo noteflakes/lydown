@@ -1,19 +1,19 @@
 \version "2.18.2"
 
-ldSopranoIMusic = \relative c {
+"/soprano1/music" = \relative c {
   << \new Voice = "soprano1_voice1" {
     c8 c g' g a' a g4
   } >>
 }
-ldSopranoILyricsVoiceOneI = \lyricmode {
+"/soprano1/lyrics/voice1/1" = \lyricmode {
   Twin -- kle twin -- kle lit -- tle star,
 }
-ldSopranoIIMusic = \relative c {
+"/soprano2/music" = \relative c {
   << \new Voice = "soprano2_voice1" {
     f8 f e e d d c4 d8[ e f e] d2
   } >>
 }
-ldSopranoIILyricsVoiceOneI = \lyricmode {
+"/soprano2/lyrics/voice1/1" = \lyricmode {
   How I won -- der what you are. __ _ _
 }
 
@@ -31,10 +31,10 @@ ldSopranoIILyricsVoiceOneI = \lyricmode {
           \set Staff.instrumentName = #"Soprano I"
           \clef "treble"
           \set Staff.autoBeaming = ##f
-          \ldSopranoIMusic
+          \"/soprano1/music"
         }
         \new Lyrics {
-          \lyricsto "soprano1_voice1" { \ldSopranoILyricsVoiceOneI }
+          \lyricsto "soprano1_voice1" { \"/soprano1/lyrics/voice1/1" }
         }
         >>
 
@@ -44,10 +44,10 @@ ldSopranoIILyricsVoiceOneI = \lyricmode {
           \set Staff.instrumentName = #"Soprano II"
           \clef "treble"
           \set Staff.autoBeaming = ##f
-          \ldSopranoIIMusic
+          \"/soprano2/music"
         }
         \new Lyrics {
-          \lyricsto "soprano2_voice1" { \ldSopranoIILyricsVoiceOneI }
+          \lyricsto "soprano2_voice1" { \"/soprano2/lyrics/voice1/1" }
         }
         >>
       >>

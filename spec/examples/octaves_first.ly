@@ -1,27 +1,27 @@
 \version "2.18.2" 
 
-ldSopranoMusic = \relative c { 
+"/soprano/music" = \relative c { 
   << 
     \new Voice = "soprano_voice1" { 
       e''4 f g, 
     }
   >>
 }
-ldAltoMusic = \relative c { 
+"/alto/music" = \relative c { 
   << 
     \new Voice = "alto_voice1" { 
        g''4 a b 
     } 
   >> 
 }
-ldTenoreMusic = \relative c { 
+"/tenore/music" = \relative c { 
   << 
     \new Voice = "tenore_voice1" { 
        d'4 e f' 
     } 
   >> 
 }
-ldBassoMusic = \relative c { 
+"/basso/music" = \relative c { 
   <<
     \new Voice = "basso_voice1" { 
       a4 b c,, 
@@ -40,7 +40,7 @@ ldBassoMusic = \relative c {
           \context Staff = SopranoStaff { 
             \clef "treble"
             \set Staff.autoBeaming = ##f
-            \ldSopranoMusic 
+            \"/soprano/music" 
           } 
         >> 
         << 
@@ -48,7 +48,7 @@ ldBassoMusic = \relative c {
           \context Staff = AltoStaff { 
             \clef "treble"
             \set Staff.autoBeaming = ##f
-            \ldAltoMusic 
+            \"/alto/music" 
           } 
         >> 
         << 
@@ -56,7 +56,7 @@ ldBassoMusic = \relative c {
           \context Staff = TenoreStaff { 
             \clef "treble_8"
             \set Staff.autoBeaming = ##f
-            \ldTenoreMusic 
+            \"/tenore/music" 
           } 
         >> 
         << 
@@ -64,7 +64,7 @@ ldBassoMusic = \relative c {
           \context Staff = BassoStaff { 
             \clef "bass"
             \set Staff.autoBeaming = ##f
-            \ldBassoMusic
+            \"/basso/music"
           }
         >>
       >>

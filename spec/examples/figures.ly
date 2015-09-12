@@ -1,6 +1,6 @@
 \version "2.18.2"
 
-ldContinuoMusic = \relative c {
+"/continuo/music" = \relative c {
   << \new Voice = "continuo_voice1" {
     a'4 r r2
     bes4 r fis r
@@ -12,7 +12,7 @@ ldContinuoMusic = \relative c {
     c d e c
   } >>
 }
-ldContinuoFigures = \figuremode {
+"/continuo/figures" = \figuremode {
   <6>4 s s2
   s4 s <6> s
   <4 2> s <7 _+> s
@@ -35,10 +35,10 @@ ldContinuoFigures = \figuremode {
 
       \context Staff = ContinuoStaff {
         \clef "bass"
-        \ldContinuoMusic
+        \"/continuo/music"
       }
 
-      \new FiguredBass { \ldContinuoFigures }
+      \new FiguredBass { \"/continuo/figures" }
 
       >>
     }

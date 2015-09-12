@@ -1,13 +1,13 @@
 \version "2.18.2"
 
-ldIintroMusic = \relative c {
+"01-intro//music" = \relative c {
   << \new Voice = "voice1" {
     \time 3/8
     \key c \minor
     c'8 ees g g4.
   } >>
 }
-ldIIoutroMusic = \relative c {
+"02-outro//music" = \relative c {
   << \new Voice = "voice1" {
     \time 4/4
     \key b \major
@@ -29,7 +29,7 @@ ldIIoutroMusic = \relative c {
         \new Staff = Staff \with { }
         \context Staff = Staff {
           \set Score.skipBars = ##t 
-          \ldIintroMusic
+          \"01-intro//music"
         }
         >>
     }
@@ -42,7 +42,7 @@ ldIIoutroMusic = \relative c {
         \new Staff = Staff \with { }
         \context Staff = Staff {
           \set Score.skipBars = ##t 
-          \ldIIoutroMusic
+          \"02-outro//music"
         }
         >>
     }
