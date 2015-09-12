@@ -104,29 +104,71 @@ module Lydown
           m[:parts].delete('')
         end
 
-        filter_movement_parts(movement_name, m, filter) if filter
+        filter_movement_parts(movement_name, m, filter)
       end
 
       WorkContext.new(nil, filtered)
     end
     
+    DEFAULT_SOURCE_STREAMS = %w{music}
+    
+    # Parts are filtered as follows:
+    # 
+    # - Parts for which the render_modes do not include the current mode
+    #   are rejected.
+    # - If a filter is provided, only the specified parts are selected, and any
+    #   colla parte parts are added if found.
+    # - Part includes are checked and added as well
     def filter_movement_parts(movement_name, m, filter)
-      m[:parts].select! {|part_name, p| filter.include?(part_name)}
+      mode = self['options/mode']
+      if DEFAULT_RENDER_MODES.include?(mode)
+        m[:parts].select!  do |part_name|
+          part_render_modes(movement_name, part_name).include?(mode)
+        end
+      end
       
+      select_filter_parts(movement_name, m, filter) if filter
+      add_part_includes(movement_name, m)
+    end
+
+    DEFAULT_RENDER_MODES = [:part, :score]
+    
+    def part_render_modes(movement_name, part_name)
+      modes = get_setting(:render_modes, part: part_name, movement: movement_name)
+      if modes
+        modes.split(',').map {|m| m.strip.to_sym}
+      else
+        DEFAULT_RENDER_MODES
+      end
+    end
+    
+    def select_filter_parts(movement_name, m, filter)
+      m[:parts].select! {|part_name, p| filter.include?(part_name)}
+    
       # go over filter and check for colla parte
       filter.each do |part_name|
         unless m[:parts].keys.include?(part_name)
           if source = part_source(movement_name, part_name)
             part_path = "parts/#{part_name}"
             source_path = "movements/#{movement_name}/parts/#{source}"
-            m[part_path] = {
-              'settings' => self["#{source_path}/settings"],
-              'music' => self["#{source_path}/music"]
-            }.deep!
+          
+            source_streams = ['settings']
+            if stream_list = part_source_streams(movement_name, part_name)
+              source_streams += stream_list.split(',').map(&:strip)
+            else
+              source_streams += DEFAULT_SOURCE_STREAMS
+            end
+          
+            m[part_path] = source_streams.inject({}) do |hash, stream|
+              hash[stream] = self["#{source_path}/#{stream}"]
+              hash
+            end.deep!
           end
         end
       end
-      
+    end
+    
+    def add_part_includes(movement_name, m)
       # check for part includes
       if part = self['options/parts']
         includes = get_setting(:include_parts, 
@@ -137,8 +179,13 @@ module Lydown
         includes = includes.split(',').map(&:strip)
         
         includes.each do |included_part|
-          source_path = "movements/#{movement_name}/parts/#{included_part}"
-          m["parts/#{included_part}"] ||= self[source_path]
+          # If the included part does not exist, try to find its source
+          part_hash = self["movements/#{movement_name}/parts/#{included_part}"]
+          unless part_hash
+            source = part_source(movement_name, included_part)
+            part_hash = self["movements/#{movement_name}/parts/#{source}"]
+          end
+          m["parts/#{included_part}"] ||= part_hash
         end
       end
     end
@@ -304,6 +351,11 @@ module Lydown
       nil
     end
     
+    def part_source_streams(movement_name, part_name)
+      parts_settings = get_merged_setting_tree(:parts, movement: movement_name)
+      parts_settings["#{part_name}/source_streams"]
+    end
+
     def set_setting(path, value)
       path = "#{settings_path(@context[:movement], @context[:part])}/#{path}"
       @context[path] = value

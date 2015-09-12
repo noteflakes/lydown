@@ -16,7 +16,7 @@
   score_mode = render_mode == :score
   
   clef = Lydown::Rendering::Staff.clef(self, setting_opts)
-  prevent_remove_empty = Lydown::Rendering::Staff.prevent_remove_empty(self, setting_opts) == false
+  prevent_remove_empty = Lydown::Rendering::Staff.prevent_remove_empty(self, setting_opts)
   
   midi_mode = (self['render_opts/format'] == 'midi') ||
               (self['render_opts/format'] == 'mp3')
@@ -51,6 +51,10 @@
 \new Staff = <%= staff_id %> \with {
   <% if prevent_remove_empty %>
     \override VerticalAxisGroup.remove-empty = ##f
+  <% end %>
+  <% if size = self.get_setting(:staff_size, setting_opts) %>
+    fontSize = #<%= size %>
+    \override StaffSymbol.staff-space = #(magstep <%= size %>)
   <% end %>
 }
 
