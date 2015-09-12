@@ -157,12 +157,14 @@ module Lydown
       
       processed_streams = Parallel.map(paths, PARALLEL_PARSE_OPTIONS.clone) do |path|
         content = IO.read(path)
-        LydownParser.parse(content, {
-          filename: File.expand_path(path),
-          source: content,
-          proof_mode: proof_mode,
-          no_progress: true
-        })
+        Cache.hit(content) do
+          LydownParser.parse(content, {
+            filename: File.expand_path(path),
+            source: content,
+            proof_mode: proof_mode,
+            no_progress: true
+          })
+        end
       end
       processed_streams.each_with_index {|s, idx| streams[paths[idx]] = s}
     end
@@ -181,9 +183,11 @@ module Lydown
       processed_contexts = Parallel.map(stream_entries, PARALLEL_PROCESS_OPTIONS.clone) do |entry|
         mvmt_stream, stream = *entry
         ctx = @context.clone_for_translation
-        ctx.translate(mvmt_stream)
-        ctx.translate(stream)
-        ctx
+        Cache.hit(ctx, mvmt_stream, stream) do
+          ctx.translate(mvmt_stream)
+          ctx.translate(stream)
+          ctx
+        end
       end
       
       processed_contexts.each {|ctx| @context.merge_movements(ctx)}

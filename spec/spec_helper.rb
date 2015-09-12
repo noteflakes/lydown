@@ -35,6 +35,9 @@ end
 Lydown::Work::PARALLEL_PARSE_OPTIONS.delete(:progress)
 Lydown::Work::PARALLEL_PROCESS_OPTIONS.delete(:progress)
 
+# Inhibit cache
+Cache.disable!
+
 def verify_example(name, result_name = nil, opts = {})
   lydown = LydownParser.parse(load_example("#{name}.ld"))
   work = Lydown::Work.new(opts)

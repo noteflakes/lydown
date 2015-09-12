@@ -364,5 +364,9 @@ module Lydown
     def render_mode
       self['options/mode'] || self['render_opts/mode']
     end
+    
+    def to_msgpack
+      @context.to_msgpack
+    end
   end
 end

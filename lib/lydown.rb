@@ -1,4 +1,5 @@
 require 'lydown/core_ext'
+require 'lydown/cache'
 
 module Lydown
   require 'yaml'
