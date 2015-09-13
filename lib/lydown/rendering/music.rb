@@ -219,7 +219,34 @@ module Lydown::Rendering
   class Silence < Base
     include Notes
 
+    def full_bar_value(time)
+      r = Rational(time)
+      case r.numerator
+      when 1
+        r.denominator.to_s
+      when 3
+        "#{r.denominator / 2}."
+      else
+        nil
+      end
+    end
+
     def translate
+      if @event[:multiplier]
+        value = full_bar_value(@context.get_current_setting(:time))
+        @context['process/duration_macro'] = nil unless @context['process/macro_group']
+        if value
+          @event[:rest_value] = "#{value}*#{@event[:multiplier]}"
+          @event[:head] = "s#{@event[:rest_value]}"
+        else
+          @event[:head] = "s#{@event[:multiplier]}*#{
+            @context.get_current_setting(:time)}"
+        end
+        # reset the last value so the next note will be rendered with its value
+        @context['process/last_value'] = nil
+        @context['process/duration_values'] = []
+      end
+
       add_note(@event)
     end
   end

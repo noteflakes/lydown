@@ -41,20 +41,24 @@ RSpec.describe Lydown do
     verify_example('accidental-modes')
   end
 
-  it "correctly translate first note octave markers" do
+  it "correctly translates first note octave markers" do
     verify_example('octaves_first')
   end
 
-  it "correctly translate octave markers" do
+  it "correctly translates octave markers" do
     verify_example('octaves')
   end
 
-  it "correctly translate repeating pitch" do
+  it "correctly translates repeating pitch" do
     verify_example('repeating_pitch')
   end
 
-  it "correctly translate full bar rests" do
+  it "correctly translate sfull bar rests" do
     verify_example('full-bar-rests')
+  end
+
+  it "correctly translates full bar silences" do
+    verify_example('full-bar-silences')
   end
 
   it "correctly translates clef settings" do

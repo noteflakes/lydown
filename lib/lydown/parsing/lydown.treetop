@@ -134,7 +134,7 @@ grammar Lydown
     (expression_string / expression_longhand) <Note::Expression>
   end
   rule silence
-    [s] multiplier* <Silence>
+    [sS] multiplier* <Silence>
   end
   rule note_head
     [a-g@] octave* accidental* <Note::Head>

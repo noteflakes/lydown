@@ -275,6 +275,9 @@ module Lydown::Parsing
       silence = event_hash(stream, opts, {
         type: :silence, raw: text_value, head: text_value[0]
       })
+      if text_value =~ /^S(\*([0-9]+))?/
+        silence[:multiplier] = $2 || '1'
+      end
       _to_stream(self, silence, opts)
       stream << silence
     end
