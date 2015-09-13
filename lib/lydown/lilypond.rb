@@ -13,18 +13,24 @@ module Lydown
       end
       
       def compile(source, opts = {})
-        opts[:output_filename] ||= 'lydown'
-        
-        target = opts[:output_filename].dup
+        opts[:output_target] ||= 'lydown'
+
+        target = opts[:output_target].dup
         ext = ".#{opts[:format] || :pdf}"
         if target !~ /#{ext}$/
           target << ext
         end
         
+        # Compile into a tempfile. We do this because lilypond's behavior when 
+        # supplied with target filenames is broken. If it is given a target
+        # path which corresponds to an existing directory name, it does not use
+        # the specified path plus extension, but instead creates a file inside
+        # the directory.
         tmp_target = Tempfile.new('lydown').path
         opts[:output_filename] = tmp_target
         invoke(source, opts)
         
+        # Copy tempfile to target
         if File.file?(tmp_target + ext)
           FileUtils.cp(tmp_target + ext, target)
         else
@@ -51,34 +57,17 @@ module Lydown
         end
       end
       
+      # Run lilypond, pipe source into its STDIN, and capture its STDERR
       def invoke(source, opts = {})
-        format = opts[:format]
-        format = nil if (format == :midi) || (format == :mp3)
-        
-        # Run lilypond, pipe source into its STDIN, and capture its STDERR
-        cmd = 'lilypond '
-        cmd << "-o #{opts[:output_filename]} "
-        cmd << "-dno-point-and-click "
-        cmd << "--#{opts[:format]} " if format
-        cmd << ' - '
+        cmd = format_cmd(opts)
         
         err_info = ''
-        success = false
         exit_value = nil
         Open3.popen2e(cmd) do |input, output, wait_thr|
-          begin
-            Lydown::CLI.register_abortable_process(wait_thr.pid)
-            input.puts source
-            input.close_write
-            err_info = read_lilypond_progress(output, opts)
-            output.close
-          ensure
-            Lydown::CLI.unregister_abortable_process(wait_thr.pid)
-            exit_value = wait_thr.value
-            success = wait_thr.value == 0
-          end
+          err_info = exec(wait_thr, input, output, source, opts)
+          exit_value = wait_thr.value
         end
-        unless success
+        if exit_value != 0
           if exit_value.termsig
             raise CompilationAbortError
           else
@@ -86,6 +75,30 @@ module Lydown
             raise LydownError, "Lilypond compilation failed:\n#{err_info}"
           end
         end
+      end
+      
+      def format_cmd(opts)
+        format = opts[:format]
+        format = nil if (format == :midi) || (format == :mp3)
+
+        cmd = 'lilypond '
+        cmd << "-o #{opts[:output_filename]} "
+        cmd << "-dno-point-and-click "
+        cmd << "--#{opts[:format]} " if format
+        cmd << ' - '
+
+        cmd
+      end
+      
+      def exec(wait_thr, input, output, source, opts)
+        Lydown::CLI.register_abortable_process(wait_thr.pid)
+        input.puts source
+        input.close_write
+        err_info = read_lilypond_progress(output, opts)
+        output.close
+        err_info
+      ensure
+        Lydown::CLI.unregister_abortable_process(wait_thr.pid)
       end
       
       LILYPOND_STATUS_LINES = %w{
@@ -104,15 +117,19 @@ module Lydown
       
       def read_lilypond_progress(f, opts)
         info = ''
-        Lydown::CLI::show_progress('Compile', STATUS_TOTAL) do |bar|
-          while !f.eof?
-            line = f.gets
-            info += line
-            if line =~ /^([^\s]+)/
-              idx = LILYPOND_STATUS_LINES.index($1)
-              bar.progress = idx + 1 if idx
+        unless opts[:no_progress_bar]
+          Lydown::CLI::show_progress('Compile', STATUS_TOTAL) do |bar|
+            while !f.eof?
+              line = f.gets
+              info += line
+              if line =~ /^([^\s]+)/
+                idx = LILYPOND_STATUS_LINES.index($1)
+                bar.progress = idx + 1 if idx
+              end
             end
           end
+        else
+          info = f.read
         end
         info
       end

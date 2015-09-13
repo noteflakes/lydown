@@ -31,6 +31,8 @@ module Lydown::CLI
       desc: 'Set output path'
     method_option :open_target, type: :boolean, aliases: '-O',
       desc: 'Open output file after compilation'
+    method_option :separate, type: :boolean, aliases: '-S',
+      desc: 'Create separate file for each movement'
     method_option :verbose, type: :boolean
     def compile(*args)
       require 'lydown'
@@ -45,18 +47,15 @@ module Lydown::CLI
 
       opts[:parts] = opts[:parts].split(',') if opts[:parts]
       opts[:movements] = opts[:movements].split(',') if opts[:movements]
-      
+
       # compile score
       unless opts[:parts_only] || opts[:parts]
         Lydown::CLI::Compiler.process(opts.merge(mode: :score, parts: nil))
       end
 
       # compile parts
-      unless opts[:score_only] || !opts[:parts]
-        parts = opts[:parts]
-        parts.each do |p|
-          Lydown::CLI::Compiler.process(opts.merge(mode: :part, parts: p))
-        end
+      unless opts[:score_only]
+        Lydown::CLI::Compiler.process(opts.merge(mode: :part))
       end
     end
   
