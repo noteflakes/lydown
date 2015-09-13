@@ -369,6 +369,8 @@ module Lydown
       @context.to_msgpack
     end
     
+    # Returns a list of parts to extract for the specified opts. Only parts
+    # that should be extracted (based on the render_modes setting) are included.
     def part_list_for_extraction(opts)
       parts = []
       return parts unless @context[:movements]

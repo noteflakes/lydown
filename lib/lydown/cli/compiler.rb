@@ -1,4 +1,5 @@
 require 'lydown/cli/output'
+require 'combine_pdf'
 
 module Lydown::CLI::Compiler
   class << self
@@ -9,61 +10,110 @@ module Lydown::CLI::Compiler
       }
     }
     
+    PARALLEL_COLLATE_OPTIONS = {
+      progress: {
+        title: 'Collate',
+        format: Lydown::CLI::PROGRESS_FORMAT
+      }
+    }
+    
     def process(opts)
       t1 = Time.now
 
-      case opts[:mode]
-      when :score
-        $stderr.puts "Process score..."
-      when :part
-        $stderr.puts "Process #{output_filename(opts)} parts..."
-      end
-      
       opts = opts.deep_clone
       work = create_work_from_opts(opts)
       
       jobs = create_jobs_from_opts(work, opts)
-      process_jobs(work, jobs)
+      process_jobs(work, jobs, opts)
       
       t2 = Time.now
       $stderr.puts "Elapsed: #{'%.1f' % [t2-t1]}s"
     end
     
     def create_jobs_from_opts(work, opts)
-      jobs = []
+      jobs = {compile: [], collate: {}}
       case opts[:mode]
       when :score
         if opts[:separate]
+          # If separate flag is specified, compile each movement separately
           work.context[:movements].keys.each do |m|
-            jobs << opts.merge(movements: [m])
+            add_compile_job(jobs, work, opts.merge(movements: [m]))
           end
         else
-          jobs << opts
+          add_compile_job(jobs, work, opts)
         end
       when :part
-        parts = opts[:parts] ? 
-          opts[:parts].split(',') : work.context.part_list_for_extraction(opts)
+        # If parts are not specified, compile all extractable parts
+        parts = opts[:parts] || work.context.part_list_for_extraction(opts)
         
-        parts.each {|p| jobs << opts.merge(parts: p)}
+        parts.each {|p| add_compile_job(jobs, work, opts.merge(parts: p))}
       end
       jobs
     end
     
-    def process_jobs(work, jobs)
-      if jobs.size == 1
-        run_compile_job(work, jobs[0])
+    def add_compile_job(jobs, work, opts)
+      if opts[:separate] || (opts[:format] != :pdf)
+        jobs[:compile] << opts
       else
-        Parallel.map(jobs, PARALLEL_COMPILE_OPTIONS.clone) do |opts|
-          opts = opts.deep_clone
-          opts[:no_progress_bar] = true
-          run_compile_job(work, opts)
+        bookparts = Lydown::Rendering::Movement.bookparts(work.context, opts)
+        if bookparts.size == 1
+          jobs[:compile] << opts
+        else
+          # If compiling pdfs, compilation can be sped up by breaking
+          # the work into bookparts (on page break boundaries), compiling
+          # them in parallel, and then collating the files into a single PDF.
+
+          bookpart_files = []
+          bookparts.each do |movements|
+            tmp_target = Tempfile.new('lydown').path
+            bookpart_files << tmp_target
+            jobs[:compile] << opts.merge(
+              output_target: tmp_target, temp: true, open_target: false,
+              movements: movements
+            )            
+          end
+          jobs[:collate][output_filename(opts)] = bookpart_files
         end
       end
     end
     
+    def process_jobs(work, jobs, opts)
+      if jobs[:compile].size == 1
+        run_compile_job(work, jobs[:compile][0])
+      else
+        Parallel.each(jobs[:compile], PARALLEL_COMPILE_OPTIONS.clone) do |job|
+          job = job.deep_clone
+          job[:no_progress_bar] = true
+          run_compile_job(work, job)
+        end
+      end
+      
+      collate_pdfs(jobs[:collate], opts) unless jobs[:collate].empty?
+    end
+    
+    def collate_pdfs(collate_map, opts)
+      if collate_map.size == 1
+        collate_bookparts_into_pdf(collate_map.keys[0], collate_map.values[0], opts)
+      else
+        Parallel.each(collate_map, PARALLEL_COLLATE_OPTIONS.clone) do |fn, tempfiles|
+          collate_bookparts_into_pdf(fn, tempfiles, opts)
+        end
+      end
+    end
+    
+    def collate_bookparts_into_pdf(output_filename, source_filenames, opts)
+      pdf = CombinePDF.new
+      source_filenames.each do |fn|
+        pdf << CombinePDF.load(fn + ".pdf")
+      end
+      pdf.save output_filename + ".pdf"
+      
+      system("open #{output_filename}.pdf") if opts[:open_target]
+    end
+    
     def run_compile_job(work, opts)
       ly_code = work.to_lilypond(opts)
-      opts[:output_target] = output_filename(opts)
+      opts[:output_target] = output_filename(opts) unless opts[:temp]
 
       if opts[:format] == :ly
         process_ly_target(ly_code, opts)

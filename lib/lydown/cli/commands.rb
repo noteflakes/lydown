@@ -50,11 +50,13 @@ module Lydown::CLI
 
       # compile score
       unless opts[:parts_only] || opts[:parts]
+        $stderr.puts "Processing score..."
         Lydown::CLI::Compiler.process(opts.merge(mode: :score, parts: nil))
       end
 
       # compile parts
       unless opts[:score_only]
+        $stderr.puts "Processing parts..."
         Lydown::CLI::Compiler.process(opts.merge(mode: :part))
       end
     end

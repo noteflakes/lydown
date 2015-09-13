@@ -15,17 +15,33 @@ module Lydown
       def compile(source, opts = {})
         opts[:output_target] ||= 'lydown'
 
+        if opts[:temp]
+          opts[:output_filename] = opts[:output_target]
+          invoke(source, opts)
+        else
+          invoke_with_tempfile(source, opts)
+        end
+        
+      rescue CompilationAbortError => e
+        raise e
+      rescue => e
+        $stderr.puts e.message
+        $stderr.puts e.backtrace.join("\n") unless e.is_a?(LydownError)
+        raise e
+      end
+      
+      # Compile into a tempfile. We do this because lilypond's behavior when 
+      # supplied with target filenames is broken. If it is given a target
+      # path which corresponds to an existing directory name, it does not use
+      # the specified path plus extension, but instead creates a file inside
+      # the directory.
+      def invoke_with_tempfile(source, opts)
         target = opts[:output_target].dup
         ext = ".#{opts[:format] || :pdf}"
         if target !~ /#{ext}$/
           target << ext
         end
         
-        # Compile into a tempfile. We do this because lilypond's behavior when 
-        # supplied with target filenames is broken. If it is given a target
-        # path which corresponds to an existing directory name, it does not use
-        # the specified path plus extension, but instead creates a file inside
-        # the directory.
         tmp_target = Tempfile.new('lydown').path
         opts[:output_filename] = tmp_target
         invoke(source, opts)
@@ -36,12 +52,6 @@ module Lydown
         else
           copy_pages(tmp_target, target, ext)
         end
-      rescue CompilationAbortError => e
-        raise e
-      rescue => e
-        $stderr.puts e.message
-        $stderr.puts e.backtrace.join("\n") unless e.is_a?(LydownError)
-        raise e
       end
       
       def copy_pages(source, target, ext)

@@ -52,5 +52,22 @@ module Lydown::Rendering
         end
       end
     end
+    
+    # Groups movements by bookparts. Whenever a movement requires a page break
+    # before, a new group is created
+    def self.bookparts(context, opts)
+      groups = []; current_group = []
+      context[:movements].keys.each do |movement|
+        breaks = page_breaks(context, opts.merge(movement: movement))
+        if breaks[:before] || breaks[:blank_page_before]
+          groups << current_group unless current_group.empty?
+          current_group = []
+        end
+        current_group << movement
+      end
+      groups << current_group unless current_group.empty?
+
+      groups
+    end
   end
 end
