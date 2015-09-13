@@ -1,0 +1,707 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Lydown by ciconia</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Lydown</h1>
+        <p>A language for music notation</p>
+
+        <p class="view"><a href="https://github.com/ciconia/lydown">View the Project on GitHub <small>ciconia/lydown</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/ciconia/lydown/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/ciconia/lydown/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/ciconia/lydown">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p>Lydown is a language and compiler for creating music scores, parts and snippets. The lydown code is compiled to <a href="http://lilypond.org/">lilypond</a> code and then compiled to PDF, PNG or MIDI files.</p>
+
+<p>Lydown builds on the ideas put forth by lilypond and makes the following improvements:</p>
+
+<ul>
+<li>a greatly simplified syntax for entering notes, for more rapid note entry and improved legibility.</li>
+<li>ability to enter lyrics and bass figures interspersed with the music.</li>
+<li>rhythmic macros for rapid entry of repeated rhythmic patterns.</li>
+<li>zero lilypond boilerplate code.</li>
+<li>a sane file/folder structure for creating multi-part, multi-movement works with automatic part extraction.</li>
+</ul>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Before installing lydown, you'll need to have installed <a href="http://lilypond.org/download.html">lilypond</a>.</p>
+
+<p>You can verify that lilypond is correctly installed by running the following command:</p>
+
+<pre><code>lilypond --version
+</code></pre>
+
+<p>If everything's ok, you can proceed by installing lydown:</p>
+
+<pre><code>gem install lydown
+</code></pre>
+
+<p>and verifying that it too works:</p>
+
+<pre><code>lydown --version
+</code></pre>
+
+<h2>
+<a id="hello-world-in-lydown" class="anchor" href="#hello-world-in-lydown" aria-hidden="true"><span class="octicon octicon-link"></span></a>Hello world in lydown</h2>
+
+<pre><code>// helloworld.lydown
+- key: d major
+- time: 2/4
+4d\"Hello world!" 6c#bag 3f#gag6f#d 4e
+</code></pre>
+
+<p>And here's the equivalent lilypond code:</p>
+
+<pre><code>\version "2.18.2"
+relative c' {
+  \key d major
+  \time 2/4
+   d'4\"Hello world!" cs16 b a g fs32 g a g fs16 d e4
+}
+</code></pre>
+
+<h2>
+<a id="compiling-the-lydown-code" class="anchor" href="#compiling-the-lydown-code" aria-hidden="true"><span class="octicon octicon-link"></span></a>Compiling the lydown code</h2>
+
+<p>The lydown command line tool can compile the code into lilypond code, PDF, PNG, or MIDI. The program creates an output file with the same name as the input file and the corresponding extension. Specifiying the -O switch causes the output to be opened immediately.</p>
+
+<p>To create a lilypond file:</p>
+
+<pre><code>lydown -O --ly helloworld.lydown
+</code></pre>
+
+<p>To create a PDF file:</p>
+
+<pre><code>lydown -O --pdf helloworld.lydown
+</code></pre>
+
+<p>To create a PNG file:</p>
+
+<pre><code>lydown -O --png helloworld.lydown
+</code></pre>
+
+<p>To create a MIDI file:</p>
+
+<pre><code>lydown -O --midi helloworld.lydown
+</code></pre>
+
+<h2>
+<a id="proofing-mode" class="anchor" href="#proofing-mode" aria-hidden="true"><span class="octicon octicon-link"></span></a>Proofing mode</h2>
+
+<p>Lydown can be run in a special proofing mode designed to minimize the turnaround time between editing and viewing the result when entering new music or when editing existing music. To run lydown in proofing mode, use the proof subcommand:</p>
+
+<pre><code>lydown proof
+</code></pre>
+
+<p>Lydown will then start to monitor all subdirectories and files in the current directory, and compile them whenever they're changed. Lydown will detect the lines that have changed and insert skip markers in order to speed up compilation and typeset only the music that has actually changed. In addition, notes in the bars that changed will be colored red.</p>
+
+<p>In proof mode, lydown will generate parts and not a score. To include another part for reference along with the part that changed, you can use the include_parts parameter:</p>
+
+<pre><code>lydown proof --include_parts continuo # or:
+lydown proof -i continuo
+</code></pre>
+
+<p>This is useful when editing baroque music for example, or when any other part can give context and aid in verifying the music.</p>
+
+<h2>
+<a id="the-lydown-syntax" class="anchor" href="#the-lydown-syntax" aria-hidden="true"><span class="octicon octicon-link"></span></a>The lydown syntax</h2>
+
+<p>The lydown syntax is designed for faster note entry, better legibility and minimal boilerplate. The lydown syntax takes the basic ideas put forth by lilypond and simplifies them, with the following main differences:</p>
+
+<ul>
+<li>musical context (staves, parts, etc) is implicit rather than explicit.</li>
+<li>whitespace between notes is optional.</li>
+<li>durations come before notes.</li>
+<li>duration macros allow rapid entry of repeated rhythmic patterns (such as dotted rhythm).</li>
+</ul>
+
+<p>It must be stressed that lydown is made to process music that is relatively simple, and it was designed to support the processing of baroque music in particular. Therefore, a lot of stuff that is possible with plain lilypond would not be possible with lydown.</p>
+
+<p>For the sake of this tutorial, some familiarity with the concepts and syntax of lilypond is presumed. The lydown code will be shown alongside its lilypond equivalent.</p>
+
+<h3>
+<a id="notes-and-durations" class="anchor" href="#notes-and-durations" aria-hidden="true"><span class="octicon octicon-link"></span></a>Notes and durations</h3>
+
+<p>In lydown, durations are entered before the note to which they refer, and they stay valid for subsequent notes, until a new value is entered:</p>
+
+<pre><code>4c8de2f =&gt; c4 d8 e f2
+</code></pre>
+
+<p>In addition to the usual values (1, 2, 4, 8, 16, 32 etc), lydown adds two shortcuts for commonly used values: 6 for 16th notes and 3 for 32th notes:</p>
+
+<pre><code>8c6de3fefefede2f =&gt; c8 d16 e f32 e f e f e d e f2
+</code></pre>
+
+<p>Augmentation dots are entered like in lilypond:</p>
+
+<pre><code>8.c6d 8.e6f 2g =&gt; c8. d16 e8. f16 g2
+8..g 3g 4c =&gt; g8.. g32 c4
+</code></pre>
+
+<p>Notes can be repeated using the <code>@</code> placeholder:</p>
+
+<pre><code>4c@@@ =&gt; c4 c c c
+</code></pre>
+
+<p>(The repeating note placeholder is useful when entering repeated notes with accidentals).</p>
+
+<p>Chords are written using angled brackets, like in lilypond:</p>
+
+<pre><code>(2&lt;fd&gt;4&lt;ge&gt;) =&gt; &lt;f d&gt;2( &lt;g e&gt;4)
+</code></pre>
+
+<h3>
+<a id="accidentals" class="anchor" href="#accidentals" aria-hidden="true"><span class="octicon octicon-link"></span></a>Accidentals</h3>
+
+<p>Accidentals can be entered using + and -</p>
+
+<pre><code>8cgb-c2a =&gt; c8 g bes c a2
+</code></pre>
+
+<p>But can also be entered using the characters # for sharp, ß for flat and h for natural:</p>
+
+<pre><code>c#dßeh =&gt; cis des e
+</code></pre>
+
+<p>In lydown notes follow the key signature by default:</p>
+
+<pre><code>- key: g major
+ff#fhfßd#bß =&gt; fis fisis f f dis bes
+</code></pre>
+
+<p>The accidental mode can be changed by specifiying the manual accidental mode:</p>
+
+<pre><code>- key: g major
+- accidentals: manual
+8g6f+edcba2g
+</code></pre>
+
+<p>In the default, automatic mode, when deviating from the key signature the accidental must be repeated for each note, regardless of barlines.</p>
+
+<p>In the <a href="http://www.lilypond.org/doc/v2.18/Documentation/notation/writing-pitches#accidentals">same manner as lilypond</a>, accidentals can be forced by following the note name and accidental with a ! (for a reminder), or ? (for a cautionary accidental in parentheses):</p>
+
+<pre><code>  cc+c+!cc? =&gt; c cs cs! c c?
+</code></pre>
+
+<p>A ficta accidental (an non-original accidental that appears above the staff) can be entered using the ^ symbol after the accidental:</p>
+
+<pre><code>  cdef+^g
+</code></pre>
+
+<h3>
+<a id="octaves" class="anchor" href="#octaves" aria-hidden="true"><span class="octicon octicon-link"></span></a>Octaves</h3>
+
+<p>In Lydown, the first note in the document carries an absolute octave marker, using the <code>'</code> and <code>,</code> signs:</p>
+
+<pre><code>  c,,   // contrabass octave
+  c,    // great octave
+  c     // small octave
+  c'    // first octave (middle c)
+  c''   // second octave
+  c'''  // third octave
+  ...   // etc.
+</code></pre>
+
+<p>For the following notes, the octave markers <code>'</code> and <code>,</code> are used for jumping between octaves, using the same rules as 
+ lilypond's <a href="http://www.lilypond.org/doc/v2.18/Documentation/notation/writing-pitches#relative-octave-entry">relative mode</a>:</p>
+
+<h3>
+<a id="barlines" class="anchor" href="#barlines" aria-hidden="true"><span class="octicon octicon-link"></span></a>Barlines</h3>
+
+<p>Just like in lilypond, barlines are taken care of automatically according to the time signature. Final bar lines and repeat bar lines can be entered explicitly by using shorthand syntax:</p>
+
+<pre><code>|: cege :|: cfaf :|
+</code></pre>
+
+<p>When entering unmetered music, an invisible barline can be added in order to provide line breaks:</p>
+
+<pre><code>-time: unmetered
+cdef ?| gag
+</code></pre>
+
+<h3>
+<a id="rests" class="anchor" href="#rests" aria-hidden="true"><span class="octicon octicon-link"></span></a>Rests</h3>
+
+<p>Normal rests are written <a href="http://www.lilypond.org/doc/v2.18/Documentation/notation/writing-rests#rests">like in lilypond</a>:</p>
+
+<pre><code>4ce2r =&gt; c4 e r2
+</code></pre>
+
+<p>Full bar rests are <a href="http://www.lilypond.org/doc/v2.18/Documentation/notation/writing-rests#full-measure-rests">similar to lilypond</a>, except there's no need to enter the rest value (it is implicit in the time signature):</p>
+
+<pre><code>- time: 3/4
+// 4 bar rest in the middle
+2c4e R*4 2.g
+</code></pre>
+
+<h3>
+<a id="beams-slurs-and-ties" class="anchor" href="#beams-slurs-and-ties" aria-hidden="true"><span class="octicon octicon-link"></span></a>Beams, slurs and ties</h3>
+
+<p>Lydown uses automatic beaming as the default, except in the case of vocal parts (see <a href="#settings">document settings</a>). Auto beaming can be</p>
+
+<p>Beaming and sluring is similar to lilypond, except the beam/slur start comes before the note:</p>
+
+<pre><code>8(cdef)g[6fe]4f =&gt; c8( d e f) g f16[ e] f4
+</code></pre>
+
+<p>a regular tie is written just like in lilypond:</p>
+
+<pre><code>4g~6gfed2c =&gt; g4 ~ g16 f e d c2
+</code></pre>
+
+<p>Lydown also supports a shortened tie form, where the tied note is not repeated:</p>
+
+<pre><code>4g6&amp;fed2c =&gt; g4 ~ g16 f e d c2
+</code></pre>
+
+<h3>
+<a id="articulation-and-expression-marks" class="anchor" href="#articulation-and-expression-marks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Articulation and expression marks</h3>
+
+<p>Lilypond <a href="http://www.lilypond.org/doc/v2.18/Documentation/notation/expressive-marks-attached-to-notes#articulations-and-ornamentations">shorthand articulation marks</a> can be entered after a backslash</p>
+
+<pre><code>c\^ e\+ g\_ =&gt; c-^ e-+ g-_
+</code></pre>
+
+<p>Common articulation marks can be entered immediately after the note:</p>
+
+<pre><code>// tenuto, staccato, staccatissimo
+c_e.g` =&gt; c-- e-. g-!
+</code></pre>
+
+<p>Other arbitrary lilypond articulations can be entered after a backslash:</p>
+
+<pre><code>c\staccato e\mordent g\turn =&gt; c\staccato e\mordent g\turn
+</code></pre>
+
+<p><a href="http://www.lilypond.org/doc/v2.18/Documentation/notation/expressive-marks-attached-to-notes#dynamics">Dynamic marks</a> are entered before the note to which they apply:</p>
+
+<pre><code>c\f eg
+
+\f cege \p cfaf =&gt; c\f e g e c\p f a f
+</code></pre>
+
+<p>Arbitrary expression markup can be entered as a string following a backslash. Lydown supports basic markdown syntax for formatting the expression:</p>
+
+<pre><code>c\"hello" // displayed above the note
+c\_"hello" // displayed below the note
+c\&lt;"hello" // right-aligned
+c\|"hello" // centered
+c\_|"hello" // centered, below the note
+c\"_hello_" // italic
+c\"__hello__" // bold
+</code></pre>
+
+<h3>
+<a id="repeated-articulation-and-rhythmic-patterns-macros" class="anchor" href="#repeated-articulation-and-rhythmic-patterns-macros" aria-hidden="true"><span class="octicon octicon-link"></span></a>Repeated articulation and rhythmic patterns: macros</h3>
+
+<p>An important feature of lydown is the macro, which facilitates rapid entry of repeated rhythmic and articulative patterns.</p>
+
+<p>A common scenario is repeated articulation, for example a sequence of staccato notes:</p>
+
+<pre><code>{.}cdefgabc =&gt; c-. d-. e-. f-. g-. a-. b-. c-.
+</code></pre>
+
+<p>A macro can also contain a fully qualified lilypond articulation specifier:</p>
+
+<pre><code>{\tenuto}cege =&gt; c\tenuto e\tenuto g\tenuto e\tenuto
+</code></pre>
+
+<p>Rhythmic macros can be used for repeated rhythmic patterns. A common scenario is a dotted rhythm:</p>
+
+<pre><code>// The _ symbol denotes a note placeholder
+{8._6_}cdefgfed =&gt; c8. d16 e8. f16 g8. f16 e8. d16
+</code></pre>
+
+<p>A repeating diminution may also be expressed succintly:</p>
+
+<pre><code>// The @ symbol denotes a repeated pitch
+{16_@@@}cfgf =&gt; c16 c c c f f f f g g g g f f f f
+</code></pre>
+
+<p>A macro can include both durations and articulation marks:</p>
+
+<pre><code>{4_~6@(_._._.)}cdefgfed =&gt; c4 ~ c16 d-.( e-. f-.) g4 ~ g16 f-.( e-. d-.)
+</code></pre>
+
+<p>A macro containing durations will remain valid until another duration or duration macro is encountered. A macro containing articulation only will be valid until another duration, macro or empty macro is encountered:</p>
+
+<pre><code>6{.}gg{}aa =&gt; g16-. g-. a a
+</code></pre>
+
+<h3>
+<a id="named-macros" class="anchor" href="#named-macros" aria-hidden="true"><span class="octicon octicon-link"></span></a>Named macros</h3>
+
+<p>Macros can be defined with a name and reused:</p>
+
+<pre><code>- macros:
+  - dotted: 8._6_
+{dotted}gaba2g{dotted}abcb2a =&gt; g8. a16 b8. a16 g2 a8. b16 c8. b16 a2
+</code></pre>
+
+<h3>
+<a id="clefs-key-and-time-signatures" class="anchor" href="#clefs-key-and-time-signatures" aria-hidden="true"><span class="octicon octicon-link"></span></a>Clefs, key and time signatures</h3>
+
+<p>Clefs are determined automatically by lydown based on the specified part. In case no part is specified, the default clef is a treble clef. The clef values are the same as in <a href="http://www.lilypond.org/doc/v2.18/Documentation/notation/displaying-pitches#clef">lilypond</a>. The clef can be changed at any time with a clef setting:</p>
+
+<pre><code>- clef: bass
+8cdefgabc
+- clef: tenor
+defedcbd
+- clef: bass
+1c
+</code></pre>
+
+<p>Key and time signatures are entered inline as document settings (<a href="#settings">see below</a>). The <a href="http://www.lilypond.org/doc/v2.18/Documentation/notation/displaying-pitches#key-signature">key</a> and <a href="http://www.lilypond.org/doc/v2.18/Documentation/notation/displaying-rhythms#time-signature">time</a> values follow the lilypond syntax:</p>
+
+<pre><code>- key: d major
+- time: 3/4
+</code></pre>
+
+<p>In the case of key signatures, accidentals will follow the lydown syntax:</p>
+
+<pre><code>- key: b- major
+- key: f+ minor
+</code></pre>
+
+<p>Key signatures can also be specified using shorthand notation (upper case for major, lower case for minor):</p>
+
+<pre><code>- key: B- // b flat major
+- key: f+ // f sharp minor
+</code></pre>
+
+<p>The default key signature is C major, and the default time signature is 4/4.</p>
+
+<p>Key or time signatures can be changed on the fly:</p>
+
+<pre><code>- time: 4/4
+4c e g b
+- time: 3/4
+c e g 2.c
+</code></pre>
+
+<h3>
+<a id="pickup-bars" class="anchor" href="#pickup-bars" aria-hidden="true"><span class="octicon octicon-link"></span></a>Pickup bars</h3>
+
+<p><a href="http://www.lilypond.org/doc/v2.18/Documentation/notation/displaying-rhythms#upbeats">Pickup bars</a> (anacrusis, upbeat) are defined with the pickup setting:</p>
+
+<pre><code>- time: 3/4
+- pickup: 4
+    4g
+c8cdcb4aaa
+d8dedc4bb
+</code></pre>
+
+<h3>
+<a id="lilypond-commands-and-inline-settings" class="anchor" href="#lilypond-commands-and-inline-settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Lilypond Commands and inline settings</h3>
+
+<p>Lilypond commands and settings can be entered inline as part of the note stream:</p>
+
+<p>cd \key:E- e \stemDown f</p>
+
+<p>A useful shorthand is for one-time (<code>\once</code>) overrides, with an exclamation mark between the backslash and the command:</p>
+
+<p>!override:"NoteHead.color = #red"</p>
+
+<p>Multiple arguments can be given, separated by colons. Arguments need to be quoted only if they contain whitespace, or colons:</p>
+
+<p>!override:AccidentalSuggestion:"#'avoid-slur = #'outside"</p>
+
+<p>Some lilypond command arguments are expected to be quoted. Quotes can be escaped by prefixing them with a backslash:</p>
+
+<p>\footnote:"#'(-1 . 1)":"\"slurred?\""</p>
+
+<h3>
+<a id="inline-lyrics" class="anchor" href="#inline-lyrics" aria-hidden="true"><span class="octicon octicon-link"></span></a>Inline lyrics</h3>
+
+<p>Lyrics for vocal parts can be entered on separate lines prefixed by a &gt; symbol:</p>
+
+<pre><code>4c[8de]4fd(4c[8de]2f)
+&gt; Ly-down is the bomb__
+</code></pre>
+
+<p>Or between notes using quotes:</p>
+
+<pre><code>4c[8de]4fd(4c[8de]2f) &gt;"Ly-down is the bomb__"
+</code></pre>
+
+<p>Text alignment follows the duration, beaming and slurring of the music, <a href="http://www.lilypond.org/doc/v2.18/Documentation/notation/common-notation-for-vocal-music#automatic-syllable-durations">just like in lilypond</a>. Sillables are expected to be separated by a dash. Melismas, i.e. a single sillable streched over multiple notes, is signified by one or more underscores.</p>
+
+<p>Multiple stanzas for the same music can be specified by including the stanza number in parens:</p>
+
+<pre><code>4cege1c
+&gt; Ly-down is the bomb.
+&gt;(2) Li-ly-pond is too.
+</code></pre>
+
+<h3>
+<a id="stream-switching" class="anchor" href="#stream-switching" aria-hidden="true"><span class="octicon octicon-link"></span></a>Stream switching</h3>
+
+<p>Lyrics can be entered in a block, before or after musical notation, by switching streams:</p>
+
+<pre><code>8ccg'gaa4g
+8ffeedd4c
+=lyrics
+Twin-kle twin-kle lit-tle star,
+How I won-der what you are.
+=music
+8g'gffeed4
+...
+</code></pre>
+
+<p>Multiple lyrics stanzas can be written by including the stanza number in parens:</p>
+
+<pre><code>=lyrics(1) // optional, same as =lyrics
+...
+=lyrics(2)
+...
+</code></pre>
+
+<h3>
+<a id="figured-bass" class="anchor" href="#figured-bass" aria-hidden="true"><span class="octicon octicon-link"></span></a>Figured bass</h3>
+
+<p>Figured bass is entered inline, following notes or even between notes, when
+multiple figures align with a single note.</p>
+
+<pre><code>c&lt;6&gt;de&lt;5&gt;c // figures are automatically rhythmically aligned 
+e&lt;7`&gt; // barred figure
+f&lt;6+&gt; // sharp 6th
+g&lt;6-&gt; // flat 6th
+g&lt;6!&gt; // natural sixth
+a&lt;h&gt; // natural third
+a&lt;#&gt; // sharp third
+a&lt;b&gt; // flat third
+b&lt;7#&gt;b&lt;6_&gt; // extender (tenue) line on sharp third
+1c2&lt;6&gt;&lt;7-&gt; // use durations to change figures over a long note
+1c2&lt;&gt;&lt;7-&gt; // &lt;&gt; is an empty figure
+c&lt;-&gt;dec&lt;.&gt; // extender (tenue) line without figures over the four notes
+</code></pre>
+
+<h2>
+<a id="multiple-parts" class="anchor" href="#multiple-parts" aria-hidden="true"><span class="octicon octicon-link"></span></a>Multiple parts</h2>
+
+<p>Multiple parts can be entered in the same file by prefixing each part's content with a -part setting:</p>
+
+<pre><code>- part: violino1
+8c'cg'gaa4g
+- part: continuo
+4cefe
+</code></pre>
+
+<h2>
+<a id="multiple-movements" class="anchor" href="#multiple-movements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Multiple movements</h2>
+
+<p>For multi-movement works, prefix each movement with a -movement setting:</p>
+
+<pre><code>- movement: Adagio
+...
+- movement: Allegro
+...
+</code></pre>
+
+<h2>
+<a id="multiple-voices" class="anchor" href="#multiple-voices" aria-hidden="true"><span class="octicon octicon-link"></span></a>Multiple voices</h2>
+
+<p><a href="http://www.lilypond.org/doc/v2.18/Documentation/notation/multiple-voices#single_002dstaff-polyphony">Multiple voices</a> on the same staff can be easily entered using the following notation:</p>
+
+<pre><code>1: 8egfdeg4f 2: 4cded u: ...
+</code></pre>
+
+<p>the <code>u:&lt;\code&gt; command is used to return to single voice (<em>unisono</em>) mode.</code></p>
+
+<p>Lyrics can be added for individual voices by using inline lyrics:</p>
+
+<pre><code>1: ceg &gt;"yeah yeah yeah" 2: gbd &gt;"no no no" u: ...
+</code></pre>
+
+<h2>
+<a id="piano-scores" class="anchor" href="#piano-scores" aria-hidden="true"><span class="octicon octicon-link"></span></a>Piano scores</h2>
+
+<p><a href="http://www.lilypond.org/doc/v2.18/Documentation/notation/common-notation-for-keyboards">Piano/keyboard scores</a> can be created by using the <code>r/l</code> (right/left) prefixes:</p>
+
+<pre><code>r: 8cdeccdec
+l: 4cgcg
+</code></pre>
+
+<p>In order to jump between staves, you can use the special commands <code>\r, \l</code></p>
+
+<pre><code>r: 8&lt;e'c'&gt; \l g,f+g \r &lt;g'' c'&gt; \l e,,d+e \r
+l: 1s
+</code></pre>
+
+<h2>
+<a id="multi-part-scores-and-part-extraction" class="anchor" href="#multi-part-scores-and-part-extraction" aria-hidden="true"><span class="octicon octicon-link"></span></a>multi-part scores and part extraction</h2>
+
+<p>As the example above shows, lydown supports multiple parts in the same file, but parts can also be written in separate files. This is useful for long pieces or those with a large number of parts.</p>
+
+<p>For this we create a main file which defines the score structure:</p>
+
+<p>// score.lydown</p>
+
+<ul>
+<li>score:
+
+<ul>
+<li>[violino1, violino2]</li>
+<li>viola</li>
+<li>violoncello</li>
+</ul>
+</li>
+<li>time: 4/4</li>
+<li>key: c major</li>
+</ul>
+
+<p>Then we enter the music in a separate file for each part:</p>
+
+<p>// violino1.lydown
+8c''cg'gaa4g 8ffeedd4c</p>
+
+<p>And so forth.</p>
+
+<p>To compile the score, we use the following command:</p>
+
+<p>lydown -o -s score.lydown</p>
+
+<p>To extract a specific part, we use the -p  switch:</p>
+
+<p>lydown -o -p violino1 score.lydown</p>
+
+<h2>
+<a id="colla-parte-and-part-sources" class="anchor" href="#colla-parte-and-part-sources" aria-hidden="true"><span class="octicon octicon-link"></span></a>Colla parte and part sources</h2>
+
+<p>lydown provides two ways to reuse a part's music in another part. The first is by defining a part source:</p>
+
+<pre><code>- parts:
+  - violino1:
+    - source: soprano
+</code></pre>
+
+<p>When dealing situations such as a choral being doubled by many instruments, a more convenient approach would be the <code>colla_parte</code> setting:</p>
+
+<pre><code>- colla_parte:
+  - soprano: violino1, flute1, flute2, oboe1
+  - alto: violino2, oboe2
+  - tenor: viola, gamba1
+  - basso: gamba2
+</code></pre>
+
+<p>It is important to remember that the <code>colla_parte</code> setting is the opposite of the part source. Instead of defining a source for a part, it defines the parts that follow the source part.</p>
+
+<h2>
+<a id="including-another-part-when-extracting-parts" class="anchor" href="#including-another-part-when-extracting-parts" aria-hidden="true"><span class="octicon octicon-link"></span></a>Including another part when extracting parts</h2>
+
+<p>When extracing parts, some cases, such as recitatives, require displaying another part together with the part to be extracted. Parts can be included in extracted parts using the <code>include_parts</code> setting:</p>
+
+<pre><code>- parts:
+  - continuo:
+    - include_parts: tenore
+</code></pre>
+
+<p>multiple parts can be specified by comma separating them.</p>
+
+<h2>
+<a id="mode-specific-code" class="anchor" href="#mode-specific-code" aria-hidden="true"><span class="octicon octicon-link"></span></a>Mode specific code</h2>
+
+<p>The <code>\mode</code> and <code>\nomode</code> commands can be used to render code for specific modes. This can be useful when the extracted part should display a different music than the score. The mode command causes anything after it to be rendered only when the rendering mode matches the specified mode.</p>
+
+<pre><code>\mode:score 4cege \mode:part 4cded \mode:none 1c
+</code></pre>
+
+<p>The example above will be render as <code>4cege1c</code> when in score mode, and as <code>4cded1c</code> in the extracted part.</p>
+
+<p>To cancel a mode, use either <code>\mode:none</code> or <code>\nomode</code></p>
+
+<h2>
+<a id="staff-and-system-appearance" class="anchor" href="#staff-and-system-appearance" aria-hidden="true"><span class="octicon octicon-link"></span></a>Staff and system appearance</h2>
+
+<p>Numerous settings can be used to control the way staves and systems are displayed. Normally, lydown will follow standard conventions when putting together a score: the different parts will be ordered correctly (e.g. flutes, then oboes, then strings, then vocal parts, then continuo), and braced/bracketed according to convention.</p>
+
+<p>When a single movement switches between different ensembles, for example a recitativo secco followed by a recitativo accompagnato, empty staves may be hidden using setting <code>empty_staves</code> setting:</p>
+
+<pre><code>- empty_staves: hide
+</code></pre>
+
+<p>Normally, instrument names are shown according to convention, to the left of each staff in the first system. To hide the instrument names on the first system, use the <code>instrument_names</code> setting:</p>
+
+<pre><code>- instrument_names: hide
+</code></pre>
+
+<p>The <code>instrument_names</code> setting can also be set to , in which case the instrument name will be displayed above the beginning of each staff in the first system.</p>
+
+<p>To show the instrument name inline at any point in the music, use the <code>\instr</code> command:</p>
+
+<pre><code>- part: flute
+R*4
+// when no parameter is given, the part name is used, 
+// and engraved capitalized with numbers formatted to roman numerals
+\instr 4c8eg2c
+...
+// when the instrument name is specifed, it is used in place of the 
+// part name:
+\instr:"Flute II" 4c8eg2c
+</code></pre>
+
+<p>The <code>\instr</code> command can also accept an alignment modifier:</p>
+
+<pre><code>\&lt;instr // right-aligned
+\&gt;instr // left-aligned (default)
+\|instr // centered
+</code></pre>
+
+<p>Another setting which controls the display of instrument names is <code>instrument_name_style</code> which can be set to <code>normal</code> or <code>smallcaps</code>, in which case the instrument name will be engraved using small caps.</p>
+
+<h2>
+<a id="rendering-midi--mp3-files" class="anchor" href="#rendering-midi--mp3-files" aria-hidden="true"><span class="octicon octicon-link"></span></a>Rendering MIDI &amp;&amp; mp3 files</h2>
+
+<p>In order to render the source code into MIDI, the midi format should be specified:</p>
+
+<pre><code>lydown --midi score.ld
+</code></pre>
+
+<p>The playback tempo can be specified either using the <code>midi_tempo</code> setting:</p>
+
+<pre><code>- midi_tempo: 4=96
+</code></pre>
+
+<p>Or inline using the <code>tempo</code> command, putting the tempo in parens:</p>
+
+<pre><code>\tempo:(4=120)
+cdef
+/tempo:(4=54)
+gabc
+</code></pre>
+
+<p>Rendering of mp3 files requires both <a href="http://timidity.sourceforge.net/">timidity</a> and <a href="http://lame.sourceforge.net/">LAME</a> to be installed. The mp3 format needs to be </p>
+
+<h2>
+<a id="adding-a-front-cover" class="anchor" href="#adding-a-front-cover" aria-hidden="true"><span class="octicon octicon-link"></span></a>Adding a front cover</h2>
+
+<p>When creating professional scores and parts, it is customary to add a cover page, with the title of the piece, the composer's name and other general information.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/ciconia">ciconia</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
