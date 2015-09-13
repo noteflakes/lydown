@@ -11,6 +11,10 @@
   How I won -- der what you are. __ _ _
 }
 
+"//lyrics/voice1/2" = \lyricmode {
+  Yeah yeah yeah
+}
+
 \book {
   \header {
   }
@@ -24,6 +28,9 @@
       }
       \new Lyrics {
         \lyricsto "voice1"  { \"//lyrics/voice1/1" }
+      }
+      \new Lyrics {
+        \lyricsto "voice1"  { \"//lyrics/voice1/2" }
       }
       >>
     }

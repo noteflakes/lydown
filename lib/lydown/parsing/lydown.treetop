@@ -8,10 +8,10 @@ grammar Lydown
     music_stream / lyrics_stream
   end
   rule music_stream
-    '=music' white_space? [\n] music ([\n] !stream_breaker music)*
+    '=' white_space? 'music' white_space? [\n] music ([\n] !stream_breaker music)*
   end
   rule lyrics_stream
-    '=lyrics' stream_idx? white_space? [\n] lyrics_content 
+    '=' white_space? 'lyrics' stream_idx? white_space? [\n] lyrics_content 
       ([\n] !stream_breaker lyrics_content)* <Lyrics>
   end
   rule stream_breaker

@@ -5,3 +5,5 @@ Twin-kle twin-kle lit-tle star,
 8ffeedd4c 8[defe]2d
 =lyrics
 How I won-der what you are.___
+= lyrics(2)
+Yeah yeah yeah
