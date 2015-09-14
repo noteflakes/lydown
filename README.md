@@ -1,5 +1,32 @@
 Lydown is a language and compiler for creating music scores, parts and snippets. The lydown code is compiled to [lilypond](http://lilypond.org/) code and then compiled to PDF, PNG or MIDI files.
 
+- [About](#)
+- [Installation](#)
+- [Hello world in lydown](#)
+- [Compiling the lydown code](#)
+- [Proofing mode](#)
+- [The lydown syntax](#)
+	- [Notes and durations](#)
+	- [Accidentals](#)
+	- [Octaves](#)
+	- [Barlines](#)
+	- [Rests](#)
+	- [Beams, slurs and ties](#)
+	- [Articulation and expression marks](#)
+	- [Repeated articulation and rhythmic patterns: macros](#)
+	- [Named macros](#)
+	- [Clefs, key and time signatures](#)
+	- [Pickup bars](#)
+	- [Lilypond Commands and inline settings](#)
+	- [Inline lyrics](#)
+	- [Stream switching](#)
+	- [Figured bass](#)
+- [Multiple parts](#)
+- [Multiple movements](#)
+- [Multiple voices](#)
+
+## About
+
 Lydown builds on the ideas put forth by lilypond and makes the following improvements:
 
 - a greatly simplified syntax for entering notes, for more rapid note entry and improved legibility.
