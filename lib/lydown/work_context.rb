@@ -171,6 +171,7 @@ module Lydown
     def add_part_includes(movement_name, m)
       # check for part includes
       if part = self['options/parts']
+        part = part[0] if part.is_a?(Array)
         includes = get_setting(:include_parts, 
           movement: movement_name, part: part)
           
