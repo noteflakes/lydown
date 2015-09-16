@@ -1,16 +1,5 @@
 \header {
-  tagline = ##f% \markup {
-%     Engraved using \bold {
-%       \with-url #"http://github.com/ciconia/lydown" {
-%         Lydown
-%       }
-%     }
-%     and \bold {
-%       \with-url #"http://lilypond.org/" {
-%         Lilypond
-%       }
-%     }
-%   }
+  tagline = ##f
 }
 
 segno = {
@@ -140,6 +129,10 @@ ficta = {
     \override LyricText #'font-name = #"Hoefler Text"
 %     \override LyricText #'font-size = #3
   }
+  
+  \context {
+    \override MarkupText #'font-name = #"Hoefler Text"
+  }
 }
 
 \paper {
@@ -163,9 +156,9 @@ ficta = {
   
   
 %   ragged-last-bottom = ##t
-  ragged-bottom = ##f
+  ragged-bottom = ##t
   
-  print-first-page-number = ##t
+  print-first-page-number = ##f
 
 	oddHeaderMarkup = \markup
 	\fill-line {
@@ -288,17 +281,17 @@ prallupbefore = {
   \context { 
     \FiguredBass 
     figuredBassFormatter = #better-format-bass-figure
-    \override BassFigure #'font-size = #-1
+%     \override BassFigure #'font-size = #-1
 %     \override BassFigure #'font-name = #"Georgia"
   }
   
-  \context {
-    \StaffGroup
-    \override StaffGrouper.staff-staff-spacing = 
-      #'((basic-distance . 10)
-         (minimum-distance . 7)
-         (padding . 0)
-         (stretchability . 7))
-    
-  }
+%   \context {
+%     \StaffGroup
+%     \override StaffGrouper.staff-staff-spacing =
+%       #'((basic-distance . 10)
+%          (minimum-distance . 7)
+%          (padding . 0)
+%          (stretchability . 7))
+%
+%   }
 }
