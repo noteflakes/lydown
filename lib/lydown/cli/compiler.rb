@@ -55,7 +55,13 @@ module Lydown::CLI::Compiler
       if opts[:separate] || (opts[:format] != :pdf)
         jobs[:compile] << opts
       else
-        bookparts = Lydown::Rendering::Movement.bookparts(work.context, opts)
+        # For now we disable dividing into bookparts, as we have a problem
+        # With page numbers (each bookpart will start at 1).
+        return jobs[:compile] << opts
+        
+        bookparts = Lydown::Rendering::Movement.bookparts(
+          work.context, opts.merge(part: opts[:parts])
+        )
         if bookparts.size == 1
           jobs[:compile] << opts
         else
