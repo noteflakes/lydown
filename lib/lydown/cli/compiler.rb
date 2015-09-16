@@ -153,7 +153,8 @@ module Lydown::CLI::Compiler
       if opts[:parts] && (opts[:parts].is_a?(String) || (opts[:parts].size == 1))
         part_name = opts[:parts].is_a?(String) ? opts[:parts] : opts[:parts].first
         fn << "-#{part_name}"
-      elsif opts[:mode] == :score
+      elsif (opts[:mode] == :score) && !([:midi, :mp3].include? opts[:format])
+        # Don't add score postfix for midi or mp3 compilation
         fn << '-score'
       end
       fn
@@ -214,7 +215,7 @@ module Lydown::CLI::Compiler
         end
       end
       
-      if opts[:format] == 'midi'
+      if opts[:format] == :midi
         open_midi_target(filename)
       else
         system("open #{filename}")

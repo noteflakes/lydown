@@ -47,6 +47,11 @@ module Lydown::CLI
 
       opts[:parts] = opts[:parts].split(',') if opts[:parts]
       opts[:movements] = opts[:movements].split(',') if opts[:movements]
+      
+      if (opts[:format] == :midi) || (opts[:format] == :mp3)
+        opts[:score_only] = true
+        opts[:parts_only] = false
+      end
 
       # compile score
       unless opts[:parts_only] || opts[:parts]
