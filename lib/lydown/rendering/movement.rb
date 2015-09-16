@@ -32,7 +32,8 @@ module Lydown::Rendering
       when :score
         context.get_setting('score/page_break', opts)
       when :part
-        part = context[:part] || context['options/parts']
+        part = opts[:part] || context[:part] || 
+          (context['options/parts'] ? context['options/parts'][0] : '')
         context.get_setting(:page_break, opts.merge(part: part)) ||
           context.get_setting('parts/page_break', opts)
       else
@@ -66,7 +67,7 @@ module Lydown::Rendering
         current_group << movement
       end
       groups << current_group unless current_group.empty?
-
+      
       groups
     end
   end
