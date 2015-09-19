@@ -22,13 +22,32 @@ module Lydown::Rendering
       if @context['process/duration_macro']
         add_macro_event(@event[:raw] || cmd_to_lydown(@event))
       else
-        once = @event[:once] ? '\once ' : ''
         arguments = (@event[:arguments] || []).map do |a|
           format_argument(@event[:key], a)
         end.join(' ')
-        cmd = "#{once}\\#{@event[:key]} #{arguments} "
+        if @event[:key] =~ /^\\/
+          cmd = format_override_shorthand_command
+        else
+          cmd = "\\#{@event[:key]} #{arguments} "
+        end
+        @context.emit(:music, '\once ') if @event[:once]
         @context.emit(:music, cmd)
       end
+    end
+    
+    def format_override_shorthand_command
+      key = @event[:key] =~ /^\\(.+)$/ && $1
+      arguments = @event[:arguments].map do |arg|
+        case arg
+        when /^[0-9\.]+$/
+          "##{arg}"
+        when /^[tf]$/
+          "###{arg}"
+        else
+          arg
+        end
+      end
+      "\\override #{key} = #{arguments.join(' ')} "
     end
     
     def format_argument(command_key, argument)

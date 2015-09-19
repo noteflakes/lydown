@@ -111,6 +111,10 @@ RSpec.describe Lydown do
     verify_example('commands')
   end
 
+  it "correctly translates inline commands with override shorthand" do
+    verify_example('commands_override_shorthand')
+  end
+
   it "correctly handles multiple voices" do
     verify_example('voices')
   end
