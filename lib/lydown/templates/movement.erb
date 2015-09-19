@@ -25,6 +25,10 @@
   page_breaks = Lydown::Rendering::Movement.page_breaks(self, movement: name)
   
   includes = Lydown::Rendering::Movement.include_files(self, movement: name)
+  
+  hide_bar_numbers = Lydown::Rendering::Movement.hide_bar_numbers?(
+    self, movement: name
+  )
 %>
 
 <% if page_breaks[:blank_page_before] %>
@@ -94,6 +98,15 @@
       <% end %>
     }
     <% end %> 
+    
+    <% if hide_bar_numbers %>
+    \layout {
+      \context {
+        \Score
+        \omit BarNumber
+      }
+    }
+    <% end %>
   }
 <% else # tacet %>
   \markup { 

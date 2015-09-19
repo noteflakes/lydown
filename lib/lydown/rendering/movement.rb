@@ -70,5 +70,11 @@ module Lydown::Rendering
       
       groups
     end
+    
+    def self.hide_bar_numbers?(context, opts)
+      context.get_setting(:bar_numbers, opts) == 'hide'
+    end
+    
+    
   end
 end

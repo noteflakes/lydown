@@ -194,4 +194,9 @@ RSpec.describe Lydown::Work do
     # verify_example('part_include', nil, mode: :score)
     verify_example('part_include', nil, parts: 'violoncello', mode: :part)
   end
+
+  it "handles bar_numbers settings" do
+    verify_example('hide_bar_numbers')
+  end
+
 end

@@ -7,7 +7,7 @@ module Lydown::Rendering
       'accidentals', 'beams', 'end_barline', 'macros', 'empty_staves',
       'midi_tempo', 'instrument_names', 'instrument_name_style',
       'parts', 'score', 'movement_source', 'colla_parte', 'include',
-      'mode', 'nomode'
+      'mode', 'nomode', 'bar_numbers'
     ]
 
     RENDERABLE_SETTING_KEYS = [
@@ -21,7 +21,8 @@ module Lydown::Rendering
       'instrument_names' => ['hide', 'show', 'inline', 'inline-right-align', 'inline-center-align'],
       'instrument_name_style' => ['normal', 'smallcaps'],
       'page_break' => ['none', 'before', 'after', 'before and after', 'blank page before'],
-      'mode' => ['score', 'part', 'none']
+      'mode' => ['score', 'part', 'none'],
+      'bar_numbers' => ['hide', 'shows']
     }
 
     def translate
