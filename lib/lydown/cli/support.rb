@@ -31,4 +31,26 @@ module Lydown::CLI::Support
       end
     end
   end
+  
+  # determine if the specified path is actually a path to a single movement of
+  # a multi-movement work. If so, return the path of the work directory, and 
+  # add a movement parameter. This should also take care of running proof
+  # mode inside of a movement directory.
+  def self.detect_work_directory(opts)
+    return if opts[:movements]
+
+    parent_dir = File.expand_path(File.join(opts[:path], '..'))
+    
+    if !File.exists?(File.join(opts[:path], 'work.ld')) &&
+      File.exists?(File.expand_path(File.join(parent_dir, 'work.ld')))
+
+      movement = File.basename(File.expand_path(opts[:path]))
+      opts[:movements] = [movement] unless opts[:mode] == :proof
+      opts[:path] = parent_dir
+    end
+  end
 end
+
+
+
+

@@ -39,8 +39,7 @@ module Lydown::CLI
       
       opts = Lydown::CLI::Support.copy_options(options)
       opts[:path] = args.first || '.'
-      Lydown::CLI::Support.detect_filename(opts)
-
+      
       # Set format based on direct flag
       opts[:format] = opts[:format].to_sym if opts[:format]
       [:png, :ly, :midi, :mp3].each {|f| opts[:format] = f if opts[f]}
@@ -48,6 +47,12 @@ module Lydown::CLI
       opts[:parts] = opts[:parts].split(',') if opts[:parts]
       opts[:movements] = opts[:movements].split(',') if opts[:movements]
       
+      # Detect work directory
+      Lydown::CLI::Support.detect_work_directory(opts)
+      Lydown::CLI::Support.detect_filename(opts)
+      
+      p opts
+
       if (opts[:format] == :midi) || (opts[:format] == :mp3)
         opts[:score_only] = true
         opts[:parts_only] = false
@@ -76,11 +81,14 @@ module Lydown::CLI
 
       opts = Lydown::CLI::Support.copy_options(options)
       opts[:path] = args.first || '.'
+
       opts[:proof_mode] = true
       opts[:include_parts] = opts[:include_parts] && opts[:include_parts].split(',')
       opts[:open_target] = true
     
+      Lydown::CLI::Support.detect_work_directory(opts)
       Lydown::CLI::Support.detect_filename(opts)
+
       Lydown::CLI::Proofing.start_proofing(opts)
     end
     
