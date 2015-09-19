@@ -4,6 +4,10 @@
 \include "<%= File.join(LY_LIB_DIR, 'lib.ly') %>"
 <% end %>
 
+<% if self.render_mode == :proof %>
+<%= Lydown::Rendering::PROOFING_LY_SETTINGS %>
+<% end %>
+
 <% if self['layout'] %>
 \layout {
 }

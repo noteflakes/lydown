@@ -45,7 +45,7 @@ module Lydown::CLI::Diff
       first += 1 if first
       last += 1 if last
       
-      first..last
+      [first, last]
     rescue => e
       $stderr.puts e.message
       $stderr.puts e.backtrace.join("\n")

@@ -47,6 +47,8 @@ module Lydown::CLI::Compiler
         parts = opts[:parts] || work.context.part_list_for_extraction(opts)
         
         parts.each {|p| add_compile_job(jobs, work, opts.merge(parts: p))}
+      when :proof
+        add_compile_job(jobs, work, opts)
       end
       jobs
     end

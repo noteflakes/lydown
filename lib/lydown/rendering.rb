@@ -1,6 +1,7 @@
 require 'lydown/templates'
 require 'lydown/work'
 require 'lydown/rendering/base'
+require 'lydown/rendering/literal'
 require 'lydown/rendering/comments'
 require 'lydown/rendering/lyrics'
 require 'lydown/rendering/notes'

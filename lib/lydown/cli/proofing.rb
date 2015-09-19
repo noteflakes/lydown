@@ -85,9 +85,9 @@ module Lydown::CLI::Proofing
     end
     
     def process(opts)
-      if opts[:line_range] != (nil..nil)
+      if opts[:line_range] != [nil, nil]
         t = Time.now.strftime("%H:%M:%S")
-        $stderr.puts "[#{t}] Changed: #{opts[:base_path]} (lines #{opts[:line_range].inspect})"
+        $stderr.puts "[#{t}] Changed: #{opts[:base_path]} (lines #{opts[:line_range][0]}..#{opts[:line_range][1]})"
         Lydown::CLI::Compiler.process(opts)
       end
     end

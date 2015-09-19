@@ -92,6 +92,7 @@ module Lydown
         format = nil if (format == :midi) || (format == :mp3)
 
         cmd = 'lilypond '
+        cmd << "-dbackend=eps " if opts[:mode] == :proof
         cmd << "-o #{opts[:output_filename]} "
         cmd << "-dno-point-and-click "
         cmd << "--#{opts[:format]} " if format

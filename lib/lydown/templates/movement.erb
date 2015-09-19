@@ -48,7 +48,7 @@
 
 <% unless tacet %>
   \score {
-    <% if movement_title %>
+    <% if movement_title && render_mode != :proof %>
       \header { 
         piece = \markup { 
           \bold \large { <%= movement_title %> } 
