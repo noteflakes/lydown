@@ -1,3 +1,22 @@
+## Version 0.10.0 2015-09-20
+
+- Add support for shorthand override commands.
+- Add support for hiding bar numbers.
+- Various improvements to proof mode.
+- Add support for full bar silences.
+- Cache results of parse and render stages for faster processing.
+- Add support for mode specific code.
+- Add support for including auxiliary parts in extracted parts.
+- Add support for \partBreak command.
+- Add support for includes (with templating for files with .ely extension).
+- Add support for colla parte and part source settings.
+- Add support for custom part titles.
+- Add support for score/part specific page breaks, using \bookpart sections.
+- Add support for inline midi tempo (hidden tempo).
+- Add support for blank extenders in bass figures, allow putting extender only at end of tenue, instead of on each note.
+- Fix rendering of note expressions.
+- Render lilypond code using variables.
+- Add support for breve and longa values ('0' and 'l' respectively).
 - Add support for smallcaps instrument name style, using the <code>instrument_name_style</code> setting.
 - Prevent removal of continuo staff when empty_staves is set to <code>hide</code>.
 - Add support for aligned note markup: <code>\<"right-aligned"</code>, <code>\>"left-aligned"</code>, <code>\|"centered"</code>.
@@ -109,12 +128,12 @@
 - Support for invisible bar lines (line breaks for unmetered music)
 - Named macros
 
-## Version 0.2
+## Version 0.2 2015-05-16
 
 - Stream switching
 - Inline figures
 
-## Version 0.1
+## Version 0.1 2015-05-10
 
 - Durations, duration macros
 - Comments
