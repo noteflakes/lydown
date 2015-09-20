@@ -4,6 +4,11 @@
 \include "<%= File.join(LY_LIB_DIR, 'lib.ly') %>"
 <% end %>
 
+<% includes = Lydown::Rendering.include_files(self, {}) %>
+<% includes.each do |i| %>
+  <%= i %>
+<% end %>
+
 <% if self.render_mode == :proof %>
 <%= Lydown::Rendering::PROOFING_LY_SETTINGS %>
 <% end %>

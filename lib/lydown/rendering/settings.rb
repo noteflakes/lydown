@@ -1,3 +1,6 @@
+require 'fileutils'
+require 'pathname'
+
 module Lydown::Rendering
   class Setting < Base
     include Notes
@@ -7,7 +10,7 @@ module Lydown::Rendering
       'accidentals', 'beams', 'end_barline', 'macros', 'empty_staves',
       'midi_tempo', 'instrument_names', 'instrument_name_style',
       'parts', 'score', 'movement_source', 'colla_parte', 'include',
-      'mode', 'nomode', 'bar_numbers'
+      'mode', 'nomode', 'bar_numbers', 'document'
     ]
 
     RENDERABLE_SETTING_KEYS = [
@@ -60,10 +63,7 @@ module Lydown::Rendering
           @context[:movement] = value
           @context.reset(:movement)
         when 'include'
-          includes = @context.get_current_setting(:includes) 
-          includes ||= []
-          includes << value
-          @context.set_setting(:includes, includes)
+          add_include(:includes, value)
         when 'mode'
           set_mode(value.nil? ? :none : value.to_sym)
         when 'nomode'
@@ -81,8 +81,13 @@ module Lydown::Rendering
         while l < level
           path << "#{@context['process/setting_levels'][l]}/"; l += 1
         end
-        path << key
-        @context.set_setting(path, value)
+        case key
+        when 'include'
+          add_include(path + 'includes', value)
+        else
+          path << key
+          @context.set_setting(path, value)
+        end
       end
 
       @context['process/setting_levels'] ||= {}
@@ -153,6 +158,24 @@ module Lydown::Rendering
     
     def set_mode(mode)
       @context['process/mode'] = (mode == :none) ? nil : mode
+    end
+    
+    def add_include(includes_path, path)
+      includes = @context.get_current_setting(includes_path) || []
+
+      source_filename = @context['process/last_filename']
+      if source_filename
+        absolute_path = File.expand_path(
+          File.join(File.dirname(source_filename), path)
+        )
+        # calculate relative path to working directory
+        pwd = Pathname.new(FileUtils.pwd)
+        includes << Pathname.new(absolute_path).relative_path_from(pwd).to_s
+      else
+        includes << path
+      end
+
+      @context.set_setting(includes_path, includes)
     end
   end
 end

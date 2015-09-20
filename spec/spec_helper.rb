@@ -39,7 +39,9 @@ Lydown::Work::PARALLEL_PROCESS_OPTIONS.delete(:progress)
 Cache.disable!
 
 def verify_example(name, result_name = nil, opts = {})
-  lydown = LydownParser.parse(load_example("#{name}.ld"))
+  lydown = LydownParser.parse(load_example("#{name}.ld"), 
+    filename: File.join(EXAMPLES_PATH, "#{name}.ld")
+  )
   work = Lydown::Work.new(opts)
   unless opts[:inhibit_end_barline].nil?
     work.context['global/settings/inhibit_end_barline'] = opts[:inhibit_end_barline]

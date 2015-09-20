@@ -24,6 +24,16 @@ Lydown is a language and compiler for creating music scores, parts and snippets.
 - [Multiple parts](#)
 - [Multiple movements](#)
 - [Multiple voices](#)
+- [Piano scores](#)
+- [multi-part scores and part extraction](#)
+- [Colla parte and part sources](#)
+- [Mode specific code](#)
+- [Staff and system appearance](#)
+- [Rendering MIDI && mp3 files](#)
+- [Including files](#)
+  - [Including templates](#)
+- [Adding a front cover](#)
+
 
 ## About
 
@@ -575,10 +585,39 @@ Or inline using the <code>tempo</code> command, putting the tempo in parens:
     /tempo:(4=54)
     gabc
 
-Rendering of mp3 files requires both [timidity](http://timidity.sourceforge.net/) and [LAME](http://lame.sourceforge.net/) to be installed. The mp3 format needs to be 
+Rendering of mp3 files requires both [timidity](http://timidity.sourceforge.net/) and [LAME](http://lame.sourceforge.net/) to be installed.
+
+## Including files
+
+Lilypond files can be included into the generated lilypond code by using <code>include</code> settings:
+
+    - include: abc.ly
+
+Multiple files can be included by adding an include setting for each file. Mode-specific include files can be defined by nesting include statements inside of <code>score</code> or <code>parts</code> settings:
+
+    - score:
+      - include: def.ly // included only in score mode
+    - parts:
+      - include: ghi.ly // included only in part mode
+
+The include statements are placed inside of a movement's score block as lilypond [\include](http://lilypond.org/doc/v2.19/Documentation/notation/including-lilypond-files.html) commands, so for each movement different includes can be defined.
+
+To place includes at the beginning of the lilypond document, includes should be defined under the <code>document</code> setting:
+
+    - document:
+      - include: def.ly // this will be included at the top of the lilypond doc
+
+Pathnames are relative to the lydown source file.
+
+### Including templates
+
+In addition to including normal lilypond files, Lydown also supports the rendering of templates into the generated lilypond doc, by using the <code>.ely</code> extension. The templates should be written using Ruby's [ERB](http://www.stuartellis.eu/articles/erb/) syntax, and are supplied with the lydown context object as <code>self</code>. A trivial example:
+
+    \markup {
+      % will output either 'score' or 'part' according to the rendering mode
+      <%= self.render_mode %> 
+    }
 
 ## Adding a front cover
 
-When creating professional scores and parts, it is customary to add a cover page, with the title of the piece, the composer's name and other general information.
-
-
+To be continued...

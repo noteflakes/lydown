@@ -188,6 +188,9 @@ RSpec.describe Lydown::Work do
   
   it "handles include settings" do
     verify_example('settings_includes')
+    verify_example('includes_movement', 'includes_movement_score', mode: :score)
+    verify_example('includes_movement', 'includes_movement_part', parts: '', mode: :part)
+    verify_example('includes_document', 'includes_document_score', mode: :score)
   end
 
   it "handles include_parts settings" do
@@ -198,5 +201,4 @@ RSpec.describe Lydown::Work do
   it "handles bar_numbers settings" do
     verify_example('hide_bar_numbers')
   end
-
 end

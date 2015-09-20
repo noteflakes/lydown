@@ -63,6 +63,40 @@ module Lydown::Rendering
       
       "\"#{varname}\""
     end
+    
+    def add_includes(filenames, context, key, opts)
+      includes = context.get_setting(key, opts)
+      filenames.concat(includes) if includes
+    end
+    
+    def include_files(context, opts)
+      filenames = []
+      if opts.has_key?(:movement)
+        add_includes(filenames, context, :includes, opts)
+        case context.render_mode
+        when :score
+          add_includes(filenames, context, 'score/includes', opts)
+        when :part
+          add_includes(filenames, context, 'parts/includes', opts)
+          if opts[:part]
+            add_includes(filenames, context, "parts/#{opts[:part]}/includes", opts)
+          end
+        end
+      else
+        # paths to be included at top of lilypond doc should be defined under
+        # document/includes
+        add_includes(filenames, context, 'document/includes', opts)
+      end
+      
+      filenames.map do |fn|
+        case File.extname(fn)
+        when '.ely'
+          Lydown::Templates.render(fn, context)
+        else
+          "\\include \"#{fn}\""
+        end
+      end
+    end
   end
 end
 

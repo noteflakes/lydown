@@ -43,17 +43,6 @@ module Lydown::Rendering
       PAGE_BREAKS[setting] || {}
     end
     
-    def self.include_files(context, opts)
-      (context.get_setting(:includes, opts) || []).map do |fn|
-        case File.extname(fn)
-        when '.ely'
-          Lydown::Templates.render(fn, context)
-        else
-          "\\include \"#{fn}\""
-        end
-      end
-    end
-    
     # Groups movements by bookparts. Whenever a movement requires a page break
     # before, a new group is created
     def self.bookparts(context, opts)
