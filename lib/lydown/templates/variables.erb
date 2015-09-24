@@ -2,6 +2,8 @@
 <% self['movements'].each do |mvt_name, mvt|
      mvt['parts'].each do |part_name, part|
        var_opts = {movement: mvt_name, part: part_name}
+       notation_size = self.get_setting(:notation_size, var_opts)
+
        if part_name && !part_name.empty?
          voice_prefix = "#{part_name}_"
        else
@@ -11,6 +13,9 @@
 <%= var_name[var_opts.merge(stream: :music)] %> = \relative c {
   <<
     \new Voice = "<%= voice_prefix %>voice1" {
+      <% if notation_size %>
+      \<%= notation_size %>
+      <% end %>
       <%= part['music'] %>
     }
   >>
