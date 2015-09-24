@@ -51,8 +51,6 @@ module Lydown::CLI
       Lydown::CLI::Support.detect_work_directory(opts)
       Lydown::CLI::Support.detect_filename(opts)
       
-      p opts
-
       if (opts[:format] == :midi) || (opts[:format] == :mp3)
         opts[:score_only] = true
         opts[:parts_only] = false
