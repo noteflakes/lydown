@@ -85,7 +85,7 @@ ficta = {
         
 
 \layout {
-  #(layout-set-staff-size 14)
+  #(layout-set-staff-size 17)
   indent = 0\cm
 
   \context {
