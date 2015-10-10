@@ -5,6 +5,7 @@ Lydown is a language and compiler for creating music scores, parts and snippets.
 - [Hello world in lydown](#hello-world-in-lydown)
 - [Compiling the lydown code](#compiling-the-lydown-code)
 - [Proofing mode](#proofing-mode)
+- [Interactive mode](#interactive-mode)
 - [The lydown syntax](#the-lydown-syntax)
 	- [Notes and durations](#notes-and-durations)
 	- [Accidentals](#accidentals)
@@ -13,7 +14,7 @@ Lydown is a language and compiler for creating music scores, parts and snippets.
 	- [Rests](#rests)
 	- [Beams, slurs and ties](#beams-slurs-and-ties)
 	- [Articulation and expression marks](#articulation-and-expression-marks)
-	- [Repeated articulation and rhythmic patterns: macros](#macros)
+	- [Repeated articulation and rhythmic patterns: macros](#repeated-articulation-and-rhythmic-patterns-macros)
 	- [Named macros](#named-macros)
 	- [Clefs, key and time signatures](#clefs-key-and-time-signatures)
 	- [Pickup bars](#pickup-bars)
@@ -112,6 +113,14 @@ In proof mode, lydown will generate parts and not a score. To include another pa
     lydown proof -i continuo
 
 This is useful when editing baroque music for example, or when any other part can give context and aid in verifying the music.
+
+## Interactive mode
+
+When invoked without any parameters, an interactive lydown session is started. This mode is useful when working on music involving multiple movements or multiple parts. In this mode, you can move between directories, edit files (using vim), and compile specific movements or specific parts.
+
+Just like in proofing mode, any changes you make to files within the working directory are immediately compiled and shown in the system viewer.
+
+To get a list of available commands, type <code>help</code>.
 
 ## The lydown syntax
 
