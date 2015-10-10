@@ -31,35 +31,50 @@
         <p>Lydown is a language and compiler for creating music scores, parts and snippets. The lydown code is compiled to <a href="http://lilypond.org/">lilypond</a> code and then compiled to PDF, PNG or MIDI files.</p>
 
 <ul>
-<li><a href="#">About</a></li>
-<li><a href="#">Installation</a></li>
-<li><a href="#">Hello world in lydown</a></li>
-<li><a href="#">Compiling the lydown code</a></li>
-<li><a href="#">Proofing mode</a></li>
+<li><a href="#about">About</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#hello-world-in-lydown">Hello world in lydown</a></li>
+<li><a href="#compiling-the-lydown-code">Compiling the lydown code</a></li>
+<li><a href="#proofing-mode">Proofing mode</a></li>
+<li><a href="#interactive-mode">Interactive mode</a></li>
 <li>
-<a href="#">The lydown syntax</a>
+<a href="#the-lydown-syntax">The lydown syntax</a>
 
 <ul>
-<li><a href="#">Notes and durations</a></li>
-<li><a href="#">Accidentals</a></li>
-<li><a href="#">Octaves</a></li>
-<li><a href="#">Barlines</a></li>
-<li><a href="#">Rests</a></li>
-<li><a href="#">Beams, slurs and ties</a></li>
-<li><a href="#">Articulation and expression marks</a></li>
-<li><a href="#">Repeated articulation and rhythmic patterns: macros</a></li>
-<li><a href="#">Named macros</a></li>
-<li><a href="#">Clefs, key and time signatures</a></li>
-<li><a href="#">Pickup bars</a></li>
-<li><a href="#">Lilypond Commands and inline settings</a></li>
-<li><a href="#">Inline lyrics</a></li>
-<li><a href="#">Stream switching</a></li>
-<li><a href="#">Figured bass</a></li>
+<li><a href="#notes-and-durations">Notes and durations</a></li>
+<li><a href="#accidentals">Accidentals</a></li>
+<li><a href="#otaves">Octaves</a></li>
+<li><a href="#barlines">Barlines</a></li>
+<li><a href="#rests">Rests</a></li>
+<li><a href="#beams-slurs-and-ties">Beams, slurs and ties</a></li>
+<li><a href="#articulation-and-expression-marks">Articulation and expression marks</a></li>
+<li><a href="#repeated-articulation-and-rhythmic-patterns-macros">Repeated articulation and rhythmic patterns: macros</a></li>
+<li><a href="#named-macros">Named macros</a></li>
+<li><a href="#clefs-key-and-time-signatures">Clefs, key and time signatures</a></li>
+<li><a href="#pickup-bars">Pickup bars</a></li>
+<li><a href="#lilypond-commands-and-inline-settings">Lilypond Commands and inline settings</a></li>
+<li><a href="#inline-lyrics">Inline lyrics</a></li>
+<li><a href="#stream-switching">Stream switching</a></li>
+<li><a href="#figured-bass">Figured bass</a></li>
 </ul>
 </li>
-<li><a href="#">Multiple parts</a></li>
-<li><a href="#">Multiple movements</a></li>
-<li><a href="#">Multiple voices</a></li>
+<li><a href="#multiple-parts">Multiple parts</a></li>
+<li><a href="#multiple-movements">Multiple movements</a></li>
+<li><a href="#multiple-voices">Multiple voices</a></li>
+<li><a href="#piano-scores">Piano scores</a></li>
+<li><a href="#multi-part-scores-and-part-extraction">multi-part scores and part extraction</a></li>
+<li><a href="#colla-parte-and-part-sources">Colla parte and part sources</a></li>
+<li><a href="#mode-specific-code">Mode specific code</a></li>
+<li><a href="#staff-and-system-appearance">Staff and system appearance</a></li>
+<li><a href="#rendering-midi-mp3-files">Rendering MIDI &amp;&amp; mp3 files</a></li>
+<li>
+<a href="#including-files">Including files</a>
+
+<ul>
+<li><a href="#including-templates">Including templates</a></li>
+</ul>
+</li>
+<li><a href="#adding-a-front-cover">Adding a front cover</a></li>
 </ul>
 
 <h2>
@@ -156,6 +171,15 @@ lydown proof -i continuo
 </code></pre>
 
 <p>This is useful when editing baroque music for example, or when any other part can give context and aid in verifying the music.</p>
+
+<h2>
+<a id="interactive-mode" class="anchor" href="#interactive-mode" aria-hidden="true"><span class="octicon octicon-link"></span></a>Interactive mode</h2>
+
+<p>When invoked without any parameters, an interactive lydown session is started. This mode is useful when working on music involving multiple movements or multiple parts. In this mode, you can move between directories, edit files (using vim), and compile specific movements or specific parts.</p>
+
+<p>Just like in proofing mode, any changes you make to files within the working directory are immediately compiled and shown in the system viewer.</p>
+
+<p>To get a list of available commands, type <code>help</code>.</p>
 
 <h2>
 <a id="the-lydown-syntax" class="anchor" href="#the-lydown-syntax" aria-hidden="true"><span class="octicon octicon-link"></span></a>The lydown syntax</h2>
@@ -724,12 +748,49 @@ cdef
 gabc
 </code></pre>
 
-<p>Rendering of mp3 files requires both <a href="http://timidity.sourceforge.net/">timidity</a> and <a href="http://lame.sourceforge.net/">LAME</a> to be installed. The mp3 format needs to be </p>
+<p>Rendering of mp3 files requires both <a href="http://timidity.sourceforge.net/">timidity</a> and <a href="http://lame.sourceforge.net/">LAME</a> to be installed.</p>
+
+<h2>
+<a id="including-files" class="anchor" href="#including-files" aria-hidden="true"><span class="octicon octicon-link"></span></a>Including files</h2>
+
+<p>Lilypond files can be included into the generated lilypond code by using <code>include</code> settings:</p>
+
+<pre><code>- include: abc.ly
+</code></pre>
+
+<p>Multiple files can be included by adding an include setting for each file. Mode-specific include files can be defined by nesting include statements inside of <code>score</code> or <code>parts</code> settings:</p>
+
+<pre><code>- score:
+  - include: def.ly // included only in score mode
+- parts:
+  - include: ghi.ly // included only in part mode
+</code></pre>
+
+<p>The include statements are placed inside of a movement's score block as lilypond <a href="http://lilypond.org/doc/v2.19/Documentation/notation/including-lilypond-files.html">\include</a> commands, so for each movement different includes can be defined.</p>
+
+<p>To place includes at the beginning of the lilypond document, includes should be defined under the <code>document</code> setting:</p>
+
+<pre><code>- document:
+  - include: def.ly // this will be included at the top of the lilypond doc
+</code></pre>
+
+<p>Pathnames are relative to the lydown source file.</p>
+
+<h3>
+<a id="including-templates" class="anchor" href="#including-templates" aria-hidden="true"><span class="octicon octicon-link"></span></a>Including templates</h3>
+
+<p>In addition to including normal lilypond files, Lydown also supports the rendering of templates into the generated lilypond doc, by using the <code>.ely</code> extension. The templates should be written using Ruby's <a href="http://www.stuartellis.eu/articles/erb/">ERB</a> syntax, and are supplied with the lydown context object as <code>self</code>. A trivial example:</p>
+
+<pre><code>\markup {
+  % will output either 'score' or 'part' according to the rendering mode
+  &lt;%= self.render_mode %&gt; 
+}
+</code></pre>
 
 <h2>
 <a id="adding-a-front-cover" class="anchor" href="#adding-a-front-cover" aria-hidden="true"><span class="octicon octicon-link"></span></a>Adding a front cover</h2>
 
-<p>When creating professional scores and parts, it is customary to add a cover page, with the title of the piece, the composer's name and other general information.</p>
+<p>To be continued...</p>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/ciconia">ciconia</a></p>
