@@ -9,7 +9,7 @@ module Lydown::CLI
       puts "Lydown version #{Lydown::VERSION}"
       exit!(0)
     end
-
+    
     desc "compile [PATH]", "compile the lydown source at PATH"
     method_option :format, aliases: '-f', 
       default: 'pdf', desc: 'Set output format (pdf/png/ly/midi/mp3)', 

@@ -18,7 +18,7 @@ module Lydown::CLI::Compiler
     }
     
     def process(opts)
-      t1 = Time.now
+      @start_time = Time.now
 
       opts = opts.deep_clone
       work = create_work_from_opts(opts)
@@ -26,8 +26,10 @@ module Lydown::CLI::Compiler
       jobs = create_jobs_from_opts(work, opts)
       process_jobs(work, jobs, opts)
       
-      t2 = Time.now
-      $stderr.puts "Elapsed: #{'%.1f' % [t2-t1]}s"
+      now = Time.now
+      unless opts[:silent] || opts[:format] == :midi
+        $stderr.puts "Elapsed: #{'%.1f' % [now - @start_time]}s"
+      end
     end
     
     def create_jobs_from_opts(work, opts)
@@ -212,7 +214,7 @@ module Lydown::CLI::Compiler
     end
     
     def open_target(opts)
-      filename = "#{opts[:output_target]}.#{opts[:format]}"
+      filename = "#{opts[:output_target]}.#{opts[:format] || 'pdf'}"
       
       unless File.file?(filename)
         filename2 = "#{opts[:output_target]}-page1.#{opts[:format]}"
@@ -224,18 +226,31 @@ module Lydown::CLI::Compiler
       end
       
       if opts[:format] == :midi
-        open_midi_target(filename)
+        open_midi_target(filename, opts)
       else
         system("open #{filename}")
       end
     end
     
-    def open_midi_target(filename)
+    def open_midi_target(filename, opts)
+      now = Time.now
+      unless opts[:silent]
+        $stderr.puts "Elapsed: #{'%.1f' % [now - @start_time]}s"
+      end
+
       $stderr << "Playing #{filename}..."
       Open3.popen2e("timidity #{filename}") do |input, output, wait_thr|
-        input.close
-        output.read
-        output.close
+        begin
+          prev_handler = trap("INT") do
+            Process.kill("INT", wait_thr.pid)
+            prev_handler.call if prev_handler
+          end
+          input.close
+          output.read
+          output.close
+        ensure
+          trap("INT", prev_handler)
+        end
       end
     end
   end

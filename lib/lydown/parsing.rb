@@ -6,7 +6,7 @@ require 'lydown/parsing/lydown.treetop'
 
 class LydownParser
   def self.parse(source, opts = {})
-    if opts[:no_progress]
+    if opts[:no_progress_bar]
       do_parse(source, opts)
     else
       Lydown::CLI.show_progress('Parse', source.length * 2) do |bar|

@@ -3,55 +3,55 @@ require 'directory_watcher'
 module Lydown::CLI::Proofing
   class << self
     def start_proofing(opts)
-      source = opts[:source_filename]
-      
-      Lydown::CLI::Diff.fill_cache(source)
-      
       $stderr.puts "Proof mode: #{source} -> #{opts[:output_filename]}"
-      last_proof_path = nil
 
-      watch_directory(source, opts)
-    end
-    
-    def watch_directory(source, opts)
-      dw = DirectoryWatcher.new(
-        File.expand_path(source),
-        glob: ["**/*.ld"],
-        pre_load: true
-      )
-      dw.interval = 0.25
-
-      dw.add_observer do |*args|
-        args.each do |e|
-          if e.type == :modified
-            path = File.expand_path(e.path)
-            if path =~ /^#{File.expand_path(source)}\/(.+)/
-              path = $1
-            end
-            last_proof_path = e.path unless File.basename(e.path) == 'movement.ld'
-            if last_proof_path
-              file_opts = opts.deep_merge opts_for_path(last_proof_path, opts)
-              file_opts[:base_path] = path
-              process(file_opts)
-            end
-          end
-        end
-      end
-       
       trap("INT") {return}
-      dw.start
+      watch(opts)
       loop {sleep 1000}
     ensure
-      dw.stop
+      unwatch
     end
     
-    def globs(path)
-      Dir.chdir(path) do
-        dirs = Dir['*'].select { |x| File.directory?(x) }
+    def watch(opts)
+      unwatch # teardown previous watcher
+      
+      source = opts[:source_filename]
+      Lydown::CLI::Diff.fill_cache(source)
+      @last_proof_path = nil
+      
+      @watcher = DirectoryWatcher.new(source, glob: ["**/*.ld"], pre_load: true)
+      
+      @watcher.interval = 0.25
+      @watcher.add_observer do |*events|
+        events.each do |e|
+          handle_changed_file(e, opts) if e.type == :modified
+        end
       end
+      @watcher.start
+    end
     
-      dirs = dirs.map { |x| "#{x}/**/*" }
-      dirs
+    def unwatch
+      return unless @watcher
+
+      @watcher.stop
+      @watcher = nil
+    end
+    
+    def handle_changed_file(event, opts)
+      path = File.expand_path(event.path)
+      if path =~ /^#{opts[:source_filename]}\/(.+)/
+        path = $1
+      end
+      @last_proof_path = event.path unless File.basename(event.path) == 'movement.ld'
+      if @last_proof_path
+        file_opts = opts.deep_merge(opts_for_path(@last_proof_path, opts))
+        file_opts[:base_path] = path
+        process(file_opts)
+      end
+    rescue => e
+      puts e.class
+      puts e.message
+      puts e.backtrace.join("\n")
     end
     
     def opts_for_path(path, opts)
@@ -87,7 +87,10 @@ module Lydown::CLI::Proofing
     def process(opts)
       if opts[:line_range] != [nil, nil]
         t = Time.now.strftime("%H:%M:%S")
-        $stderr.puts "[#{t}] Changed: #{opts[:base_path]} (lines #{opts[:line_range][0]}..#{opts[:line_range][1]})"
+        unless opts[:silent]
+          $stderr.puts "[#{t}] Changed: #{opts[:base_path]} \
+            (lines #{opts[:line_range][0]}..#{opts[:line_range][1]})"
+        end
         Lydown::CLI::Compiler.process(opts)
       end
     end

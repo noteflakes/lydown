@@ -155,14 +155,16 @@ module Lydown
       proof_mode =  @context['options/proof_mode']
       paths = streams.keys
       
-      processed_streams = Parallel.map(paths, PARALLEL_PARSE_OPTIONS.clone) do |path|
+      opts = PARALLEL_PARSE_OPTIONS.clone
+      opts[:progress] = nil if @context['options/no_progress_bar']
+      processed_streams = Parallel.map(paths, opts) do |path|
         content = IO.read(path)
         Cache.hit(content) do
           LydownParser.parse(content, {
             filename: File.expand_path(path),
             source: content,
             proof_mode: proof_mode,
-            no_progress: true
+            no_progress_bar: true
           })
         end
       end
@@ -180,7 +182,11 @@ module Lydown
     
     def translate_movement_files(state)
       stream_entries = prepare_work_stream_array(state)
-      processed_contexts = Parallel.map(stream_entries, PARALLEL_PROCESS_OPTIONS.clone) do |entry|
+
+      opts = PARALLEL_PROCESS_OPTIONS.clone
+      opts[:progress] = nil if @context['options/no_progress_bar']
+
+      processed_contexts = Parallel.map(stream_entries, opts) do |entry|
         mvmt_stream, stream = *entry
         ctx = @context.clone_for_translation
         Cache.hit(ctx, mvmt_stream, stream) do

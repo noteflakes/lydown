@@ -2,4 +2,8 @@
 
 require 'lydown/cli'
 
-Lydown::CLI::Commands.start(ARGV)
+if ARGV.empty?
+  Lydown::CLI::REPL.run
+else
+  Lydown::CLI::Commands.start(ARGV)
+end
