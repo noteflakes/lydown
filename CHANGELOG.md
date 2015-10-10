@@ -1,3 +1,8 @@
+## Version 0.11.0 2015-10-10
+
+- Implement interactive mode (see README)
+- Add support for including different files for score, part
+
 ## Version 0.10.0 2015-09-20
 
 - Add support for shorthand override commands.
