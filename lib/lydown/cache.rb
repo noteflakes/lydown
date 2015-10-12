@@ -1,5 +1,4 @@
 require 'digest/md5'
-require 'msgpack'
 
 module Cache
   class << self
@@ -26,7 +25,7 @@ module Cache
     
     def calculate_hash(*params)
       params.map do |p|
-        Digest::MD5.hexdigest(p.is_a?(String) ? p : p.to_msgpack)
+        Digest::MD5.hexdigest(p.is_a?(String) ? p : p.to_s)
       end.join('-')
     end
       

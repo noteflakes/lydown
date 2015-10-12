@@ -366,10 +366,6 @@ module Lydown
       self['options/mode'] || self['render_opts/mode']
     end
     
-    def to_msgpack
-      @context.to_msgpack
-    end
-    
     # Returns a list of parts to extract for the specified opts. Only parts
     # that should be extracted (based on the render_modes setting) are included.
     def part_list_for_extraction(opts)

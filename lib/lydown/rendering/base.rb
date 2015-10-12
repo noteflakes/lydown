@@ -10,7 +10,7 @@ module Lydown::Rendering
     def translate
       # do nothing by default
     end
-
+    
     def next_event
       idx = @idx + 1
       while idx < @stream.size

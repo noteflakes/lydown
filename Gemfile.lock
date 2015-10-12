@@ -1,12 +1,11 @@
 PATH
   remote: .
   specs:
-    lydown (0.10.0)
+    lydown (0.11.0)
       combine_pdf (= 0.2.5)
       diff-lcs (= 1.2.5)
       directory_watcher (= 1.5.1)
       escape_utils (= 1.0.0)
-      msgpack (= 0.6.2)
       parallel (= 1.6.1)
       rspec (= 3.2.0)
       ruby-progressbar (= 1.7.5)
@@ -21,7 +20,6 @@ GEM
     diff-lcs (1.2.5)
     directory_watcher (1.5.1)
     escape_utils (1.0.0)
-    msgpack (0.6.2)
     parallel (1.6.1)
     polyglot (0.3.5)
     rspec (3.2.0)
