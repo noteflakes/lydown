@@ -3,7 +3,7 @@ Lydown is a language and compiler for creating music scores, parts and snippets.
 - [About](#about)
 - [Installation](#installation)
 - [Hello world in lydown](#hello-world-in-lydown)
-- [More examples and resources](#more-examples-resources)
+- [More examples and resources](#more-examples-and-resources)
 - [Compiling lydown code](#compiling-lydown-code)
 - [Proofing mode](#proofing-mode)
 - [Interactive mode](#interactive-mode)
