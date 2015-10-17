@@ -3,7 +3,7 @@ Lydown is a language and compiler for creating music scores, parts and snippets.
 - [About](#about)
 - [Installation](#installation)
 - [Hello world in lydown](#hello-world-in-lydown)
-- [More examples](#more-examples)
+- [More examples and resources](#more-examples-resources)
 - [Compiling lydown code](#compiling-lydown-code)
 - [Proofing mode](#proofing-mode)
 - [Interactive mode](#interactive-mode)
@@ -83,7 +83,7 @@ relative c' {
 }
 ```
 
-## More examples & resources
+## More examples and resources
 
 Examples of lydown code, used to test lydown, could be found in the [specs directory of the lydown repository](https://github.com/ciconia/lydown/tree/master/spec/examples).
 
