@@ -1,27 +1,27 @@
 ## Version 0.11.0 2015-10-10
 
-- Implement interactive mode (see README)
-- Add support for including different files for score, part
+- Go into interactive mode when no command is given #50 (see README)
+- Add support for including different files for score, part 
 
 ## Version 0.10.0 2015-09-20
 
-- Add support for shorthand override commands.
+- Add support for shorthand override commands #13
 - Add support for hiding bar numbers.
 - Various improvements to proof mode.
-- Add support for full bar silences.
+- Add support for full bar silences #39
 - Cache results of parse and render stages for faster processing.
-- Add support for mode specific code.
+- Add support for mode specific code #21
 - Add support for including auxiliary parts in extracted parts.
 - Add support for \partBreak command.
-- Add support for includes (with templating for files with .ely extension).
-- Add support for colla parte and part source settings.
+- Add support for includes (with templating for files with .ely extension) #41
+- Add support for colla parte and part source settings #26
 - Add support for custom part titles.
 - Add support for score/part specific page breaks, using \bookpart sections.
-- Add support for inline midi tempo (hidden tempo).
-- Add support for blank extenders in bass figures, allow putting extender only at end of tenue, instead of on each note.
+- Add support for inline midi tempo (hidden tempo) #16
+- Add support for blank extenders in bass figures, allow putting extender only at end of tenue, instead of on each note #18
 - Fix rendering of note expressions.
-- Render lilypond code using variables.
-- Add support for breve and longa values ('0' and 'l' respectively).
+- Render lilypond code using variables #8
+- Add support for breve and longa values ('0' and 'l' respectively) #7
 - Add support for smallcaps instrument name style, using the <code>instrument_name_style</code> setting.
 - Prevent removal of continuo staff when empty_staves is set to <code>hide</code>.
 - Add support for aligned note markup: <code>\<"right-aligned"</code>, <code>\>"left-aligned"</code>, <code>\|"centered"</code>.
@@ -37,13 +37,13 @@
 
 ## Version 0.9.0 2015-08-06
 - Show progress bars when parsing/processing/compiling code (#4)
-- Implement MIDI output (#6)
+- Implement MIDI output #6
 - Set default tagline
 - Refactor work and work context code
-- Parallelize parsing and translation of lydown code (#5)
+- Parallelize parsing and translation of lydown code #5
 - Fix rendering of macros with rests
-- Improve Ripple code translation (#1)
-- Use absolute octave marker for first note (#3)
+- Improve Ripple code translation #1
+- Use absolute octave marker for first note #3
 - Add \prallupbefore command to stdlib
 
 ## Version 0.8.1 2015-07-22
@@ -52,7 +52,7 @@
 ## Version 0.8.0 2015-07-22
 - Refactor command line tool. The lydown command now accepts subcommands:
   compile (default), version, translate.
-- Implement translation from Ripple into Lydown.
+- Implement translation from Ripple into Lydown #1.
 
 ## Version 0.7.2 2015-07-15
 
@@ -130,7 +130,7 @@
 - Fixed lyrics rendering in scores
 - Second stanzas for lyrics
 - Support for unmetered music (time: unmetered)
-- Support for invisible bar lines (line breaks for unmetered music)
+- Support for invisible bar lines (line breaks for unmetered music) #10
 - Named macros
 
 ## Version 0.2 2015-05-16
