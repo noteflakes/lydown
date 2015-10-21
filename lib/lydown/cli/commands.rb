@@ -110,6 +110,11 @@ module Lydown::CLI
       Lydown::CLI::Translation.process(opts)
     end
     
+    desc "install [PACKAGE] [VERSION]", "install a package"
+    def install(*args)
+      Lydown::CLI::Installer.install(*args)
+    end
+    
     def method_missing(method, *args)
       args = ["compile", method.to_s] + args
       self.class.start(args)

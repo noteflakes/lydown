@@ -1,3 +1,5 @@
+- Add <code>lydown install</code> command for installing lilypond.
+
 ## Version 0.11.0 2015-10-10
 
 - Go into interactive mode when no command is given #50 (see README)
