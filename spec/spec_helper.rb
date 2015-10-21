@@ -1,3 +1,4 @@
+Bundler.setup(:default, :spec)
 require File.join(File.expand_path(File.dirname(__FILE__)), '../lib/lydown')
 
 EXAMPLES_PATH = File.join(File.expand_path(File.dirname(__FILE__)), 'examples')

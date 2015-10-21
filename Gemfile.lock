@@ -7,7 +7,6 @@ PATH
       directory_watcher (= 1.5.1)
       escape_utils (= 1.0.0)
       parallel (= 1.6.1)
-      rspec (= 3.2.0)
       ruby-progressbar (= 1.7.5)
       thor (= 0.19.1)
       treetop (= 1.6.2)
@@ -46,3 +45,4 @@ PLATFORMS
 
 DEPENDENCIES
   lydown!
+  rspec (= 3.2.0)
