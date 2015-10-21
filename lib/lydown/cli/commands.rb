@@ -7,6 +7,12 @@ module Lydown::CLI
       require 'lydown/version'
       
       puts "Lydown version #{Lydown::VERSION}"
+      
+      lilypond_version = Lydown::CLI::Support.detect_lilypond_version(false)
+      if lilypond_version
+        puts "Lilypond version #{lilypond_version}"
+      end
+      
       exit!(0)
     end
     
@@ -35,6 +41,8 @@ module Lydown::CLI
       desc: 'Create separate file for each movement'
     method_option :verbose, type: :boolean
     def compile(*args)
+      Lydown::CLI::Support.detect_lilypond_version(true)
+      
       require 'lydown'
       
       opts = Lydown::CLI::Support.copy_options(options)
@@ -75,6 +83,8 @@ module Lydown::CLI
       enum: %w{pdf png ly}
     method_option :include_parts, aliases: '-i', desc: 'Include parts (comma separated)'
     def proof(*args)
+      Lydown::CLI::Support.detect_lilypond_version(true)
+
       require 'lydown'
 
       opts = Lydown::CLI::Support.copy_options(options)

@@ -4,6 +4,8 @@ require 'readline'
 module Lydown::CLI::REPL
   class << self
     def run
+      Lydown::CLI::Support.detect_lilypond_version(true)
+
       require 'lydown'
       
       orig_dir = FileUtils.pwd
