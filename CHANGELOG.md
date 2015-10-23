@@ -1,4 +1,5 @@
-- Add <code>lydown install</code> command for installing lilypond.
+- Add standalone releases of lydown for users who don't have ruby installed (#54)
+- Add <code>lydown install</code> command for installing lilypond (#52)
 
 ## Version 0.11.0 2015-10-10
 
