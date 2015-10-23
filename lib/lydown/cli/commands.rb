@@ -5,15 +5,12 @@ module Lydown::CLI
     desc "version", "show Lydown version"
     def version
       require 'lydown/version'
-      
       puts "Lydown version #{Lydown::VERSION}"
       
       lilypond_version = Lydown::CLI::Support.detect_lilypond_version(false)
       if lilypond_version
         puts "Lilypond version #{lilypond_version}"
       end
-      
-      exit!(0)
     end
     
     desc "compile [PATH]", "compile the lydown source at PATH"
