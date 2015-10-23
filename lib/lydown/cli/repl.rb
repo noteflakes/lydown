@@ -4,7 +4,13 @@ require 'readline'
 module Lydown::CLI::REPL
   class << self
     def run
-      Lydown::CLI::Support.detect_lilypond_version(true)
+      require 'lydown/version'
+      puts "Lydown version #{Lydown::VERSION}"
+      
+      lilypond_version = Lydown::CLI::Support.detect_lilypond_version(true)
+      if lilypond_version
+        puts "Lilypond version #{lilypond_version}"
+      end
 
       require 'lydown'
       
