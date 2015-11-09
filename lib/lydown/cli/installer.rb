@@ -39,6 +39,8 @@ module Lydown::CLI::Installer
         install_lilypond_files(fn, platform, version)
       rescue => e
         STDERR.puts "Failed to install lilypond #{version}"
+        puts e.message
+        puts e.backtrace.join("\n")
         exit(1)
       end
     
@@ -77,7 +79,7 @@ module Lydown::CLI::Installer
           request_url = URI.escape(url_path)
           response = http.request_head(request_url)
           total_size = response['content-length'].to_i
-          pbar = ProgressBar.create(total: total_size)
+          pbar = ProgressBar.create(title: 'Downloading', total: total_size)
           File.open(fn, 'w') do |f|
             http.get(request_url) do |data|
               f << data
@@ -128,20 +130,40 @@ module Lydown::CLI::Installer
 
       def copy_lilypond_files(base_path, version)
         target_dir = File.expand_path("~/.lydown/packages/lilypond/#{version}")
-      
+        
+        FileUtils.rm_rf(target_dir) if File.exists?(target_dir)
+        
         # create directory for lilypond files
         FileUtils.mkdir_p(target_dir)
       
         # copy files
+        STDERR.puts "Copying..."
         %w{bin etc lib lib64 share var}.each do |entry|
           dir = File.join(base_path, entry)
-          FileUtils.cp_r(dir, target_dir) if File.directory?(dir)
+          FileUtils.cp_r(dir, target_dir, remove_destination: true) if File.directory?(dir)
         end
+        
+        install_lilypond_executable(base_path, version)
+      end
       
-        # create symlink
-        symlink_path = File.expand_path('~/bin/lilypond')
-        FileUtils.ln_sf("#{target_dir}/bin/lilypond", symlink_path)
+      BIN_SCRIPT_PATH = "#{File.expand_path('~')}/bin/lilypond"
       
+      def install_lilypond_executable(base_path, version)
+        target_dir = File.expand_path("~/.lydown/packages/lilypond/#{version}")
+
+        script = "#!/bin/sh\n#{target_dir}/bin/lilypond \"$@\"\n"
+        
+        # create executable
+        FileUtils.rm(BIN_SCRIPT_PATH) if File.file?(BIN_SCRIPT_PATH)
+        File.open(BIN_SCRIPT_PATH, 'w+') {|f| f << script}
+        FileUtils.chmod('+x', BIN_SCRIPT_PATH)
+        # symlink_path = File.expand_path('~/bin/lilypond')
+        # FileUtils.ln_sf("#{target_dir}/bin/lilypond", symlink_path)
+        
+        test_lilypond
+      end
+      
+      def test_lilypond
         STDERR.puts `lilypond -v`
       end
       
