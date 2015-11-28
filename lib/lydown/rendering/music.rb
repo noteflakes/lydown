@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'lydown/rendering/figures'
 require 'lydown/rendering/notes'
 
