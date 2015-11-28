@@ -9,6 +9,6 @@ gem "ruby-progressbar", "1.7.5"
 gem "parallel", "1.6.1"
 gem "combine_pdf", "0.2.5"
 
-group :spec do
+group :test do
   gem "rspec", "3.2.0"
 end
