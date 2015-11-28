@@ -15,13 +15,13 @@ RSpec.describe Lydown::Work do
   
   it "compiles correctly to PDF" do
     # do not check if lilypond is not installed
-    return if `which lilypond`.empty?
-    
-    lydown_code = LydownParser.parse(load_example('simple.ld'))
-    work = Lydown::Work.new
-    work.translate(lydown_code)
-    ly = work.to_lilypond(no_lib: true)
-    expect {Lydown::Lilypond.compile(ly, output_filename: 'spec/tmp/test')}.not_to raise_error
+    unless `which lilypond`.empty?
+      lydown_code = LydownParser.parse(load_example('simple.ld'))
+      work = Lydown::Work.new
+      work.translate(lydown_code)
+      ly = work.to_lilypond(no_lib: true)
+      expect {Lydown::Lilypond.compile(ly, output_filename: 'spec/tmp/test')}.not_to raise_error
+    end
   end
 
   it "handles multiple parts" do
