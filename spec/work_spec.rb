@@ -14,6 +14,9 @@ RSpec.describe Lydown::Work do
   end
   
   it "compiles correctly to PDF" do
+    # do not check if lilypond is not installed
+    return if `which lilypond`.empty?
+    
     lydown_code = LydownParser.parse(load_example('simple.ld'))
     work = Lydown::Work.new
     work.translate(lydown_code)
