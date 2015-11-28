@@ -1,3 +1,9 @@
+## Version 0.12.2 2015-11-28
+
+- Cleanup compile messages
+- Do not try to process parts if none exist
+- Fix/update hello world example in README
+
 ## Version 0.12.1 2015-11-28
 
 - Detect passing a CLI command as an argument (e.g. lydown --version)
