@@ -1,16 +1,17 @@
 \version "2.18.2"
 
+"01-intro/global/music" = \relative c {
+  << \new Voice = "global_voice1" {
+    \key d \major \time 3/4
+  } >>
+}
 "01-intro/violino1/music" = \relative c {
   << \new Voice = "violino1_voice1" {
-    \time 3/4
-    \key d \major
     a'8 b cis d e4
   } >>
 }
 "01-intro/violoncello/music" = \relative c {
   << \new Voice = "violoncello_voice1" {
-    \time 3/4
-    \key d \major
     d8 cis b a gis4
   } >>
 }
@@ -32,7 +33,10 @@
         \context Staff = ViolinoIStaff {
           \set Staff.instrumentName = #"Violino I"
           \clef "treble"
-          \"01-intro/violino1/music"
+          <<
+            \"01-intro/global/music"
+            \"01-intro/violino1/music"
+          >>
           \bar "|."
         }
         >>
@@ -42,7 +46,10 @@
         \context Staff = VioloncelloStaff {
           \set Staff.instrumentName = #"Violoncello"
           \clef "bass"
-          \"01-intro/violoncello/music"
+          <<
+            \"01-intro/global/music"
+            \"01-intro/violoncello/music"
+          >>
           \bar "|."
         }
         >>

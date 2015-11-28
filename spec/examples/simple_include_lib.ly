@@ -2,8 +2,8 @@
 
 \include "lydown/lib.ly"
 
-"//music" = \relative c {
-  << \new Voice = "voice1" {
+"/global/music" = \relative c {
+  << \new Voice = "global_voice1" {
     c4 e8 g c2
   } >>
 }
@@ -15,9 +15,9 @@
   \bookpart { 
     \score {
       <<
-      \new Staff = Staff \with { }
-      \context Staff = Staff {
-        \"//music"
+      \new Staff = GlobalStaff \with { }
+      \context Staff = GlobalStaff {
+        \"/global/music"
         \bar "|."
       }
       >>

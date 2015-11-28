@@ -3,7 +3,10 @@ module Lydown::Rendering
     def self.staff_groups(context, opts, parts)
       model = context.get_setting('score/order', opts)
       parts_copy = parts.clone
-      
+      unless parts_copy == ['global']
+        parts_copy.reject! {|p| p == 'global'}
+      end
+        
       groups = []
       
       model.each do |group|
@@ -67,6 +70,10 @@ module Lydown::Rendering
         context.get_setting(:clef, opts)
     end
     
+    def self.global_stream_exists?(context, opts)
+      !!context["movements/#{opts[:movement]}/parts/global/music"]
+    end
+    
     def self.prevent_remove_empty(context, opts)
       case context.get_setting(:remove_empty, opts)
       when false, 'false'
@@ -100,6 +107,8 @@ module Lydown::Rendering
     end
     
     def self.qualified_part_title(context, opts)
+      return '' if opts[:part] == 'global'
+      
       title = context.get_setting("parts/#{opts[:part]}/title", opts) ||
               Lydown::Rendering.default_part_title(opts[:part])
       title.strip

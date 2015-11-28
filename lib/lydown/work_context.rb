@@ -92,18 +92,13 @@ module Lydown
         filter = [filter] unless filter.is_a?(Array)
         filtered[:movements].select! {|name, m| filter.include?(name.to_s)}
       end
-
+      
       if filter = opts[:parts]
         filter = [filter] unless filter.is_a?(Array)
         filter += opts[:include_parts] if opts[:include_parts]
       end
       
       filtered[:movements].each do |movement_name, m|
-        # delete default part if other parts are present
-        if m[:parts].size > 1
-          m[:parts].delete('')
-        end
-
         filter_movement_parts(movement_name, m, filter)
       end
 
@@ -122,7 +117,8 @@ module Lydown
     def filter_movement_parts(movement_name, m, filter)
       mode = self['options/mode']
       if DEFAULT_RENDER_MODES.include?(mode)
-        m[:parts].select!  do |part_name|
+        m[:parts].select! do |part_name|
+          (part_name == 'global') || 
           part_render_modes(movement_name, part_name).include?(mode)
         end
       end
@@ -143,8 +139,10 @@ module Lydown
     end
     
     def select_filter_parts(movement_name, m, filter)
-      m[:parts].select! {|part_name, p| filter.include?(part_name)}
-    
+      m[:parts].select! do |part_name, p|
+        (part_name == 'global') || filter.include?(part_name)
+      end
+      
       # go over filter and check for colla parte
       filter.each do |part_name|
         unless m[:parts].keys.include?(part_name)
@@ -166,6 +164,12 @@ module Lydown
           end
         end
       end
+
+      # Remove global if its the only part left after filtering
+      if m[:parts].keys == ['global'] && !filter.include?('global')
+        m[:parts].delete('global')
+      end
+      
     end
     
     def add_part_includes(movement_name, m)
@@ -209,12 +213,14 @@ module Lydown
       content.each {|c| stream << c}
     end
 
+    GLOBAL_PART = 'global'.freeze
+
     def current_stream(subpath)
       if @context['process/voice_selector']
         path = "process/voices/#{@context['process/voice_selector']}/#{subpath}"
       else
         movement = @context[:movement]
-        part = @context[:part]
+        part = @context[:part] || GLOBAL_PART
         path = "movements/#{movement}/parts/#{part}/#{subpath}"
       end
       @context[path] ||= (subpath == :settings) ? {} : ''

@@ -1,8 +1,8 @@
 \version "2.18.2"
 
-"//music" = \relative c {
+"/global/music" = \relative c {
   <<
-    \new Voice = "voice1" {
+    \new Voice = "global_voice1" {
       R1*1
       
       <<
@@ -23,14 +23,14 @@
     }
   >>
 }
-"//lyrics/voice1/1" = \lyricmode {
+"/global/lyrics/voice1/1" = \lyricmode {
   Bin ich's?
   Nein ja nein ja
 }
-"//lyrics/voice2/1" = \lyricmode {
+"/global/lyrics/voice2/1" = \lyricmode {
   Ja ja!
 }
-"//lyrics/voice2/2" = \lyricmode {
+"/global/lyrics/voice2/2" = \lyricmode {
   Nei nei
 }
 
@@ -41,20 +41,20 @@
   \bookpart { 
     \score {
       <<
-      \new Staff = Staff \with { }
-      \context Staff = Staff {
-        \"//music"
+      \new Staff = GlobalStaff \with { }
+      \context Staff = GlobalStaff {
+        \"/global/music"
       }
-      \new Lyrics \with { alignAboveContext = "Staff" } {
-        \lyricsto "voice1" { \"//lyrics/voice1/1" }
-      }
-
-      \new Lyrics {
-        \lyricsto "voice2" { \"//lyrics/voice2/1" }
+      \new Lyrics \with { alignAboveContext = "GlobalStaff" } {
+        \lyricsto "global_voice1" { \"/global/lyrics/voice1/1" }
       }
 
       \new Lyrics {
-        \lyricsto "voice2" { \"//lyrics/voice2/2" }
+        \lyricsto "global_voice2" { \"/global/lyrics/voice2/1" }
+      }
+
+      \new Lyrics {
+        \lyricsto "global_voice2" { \"/global/lyrics/voice2/2" }
       }
       >>
     }

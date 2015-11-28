@@ -1,6 +1,10 @@
-<% var_name = lambda {|opts| Lydown::Rendering.variable_name(opts)} %>
+<% 
+  var_name = lambda {|opts| Lydown::Rendering.variable_name(opts)}
+%>
+
 <% self['movements'].each do |mvt_name, mvt|
      mvt['parts'].each do |part_name, part|
+       global = part_name == 'global'
        var_opts = {movement: mvt_name, part: part_name}
        notation_size = self.get_setting(:notation_size, var_opts)
 

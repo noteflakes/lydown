@@ -12,6 +12,16 @@
     voice_prefix = nil
   end
   staff_id = Lydown::Rendering::Staff.staff_id(name)
+  
+  global_music_variable = (name != 'global') && 
+    Lydown::Rendering::Staff.global_stream_exists?(self, setting_opts) &&
+    Lydown::Rendering.variable_name(
+      setting_opts.merge(part: 'global', stream: :music)
+  )
+    
+  part_music_variable = Lydown::Rendering.variable_name(
+    setting_opts.merge(stream: :music)
+  )
 
   score_mode = render_mode == :score
   
@@ -86,7 +96,14 @@
   <% end %>
   
   <%= beaming_mode %>
-  \<%= Lydown::Rendering.variable_name(setting_opts.merge(stream: :music)) %>
+  <% if global_music_variable %>
+  <<
+    \<%= global_music_variable %>
+    \<%= part_music_variable %>
+  >>
+  <% else %>
+    \<%= part_music_variable %>
+  <% end %>
   
   <% if end_barline %>
     \bar "<%= end_barline %>"

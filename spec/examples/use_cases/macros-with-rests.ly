@@ -1,7 +1,7 @@
 \version "2.18.2"
 
-"//music" = \relative c {
-  << \new Voice = "voice1" {
+"/global/music" = \relative c {
+  << \new Voice = "global_voice1" {
     %{BWV 52/5%}
     r4 r8 g'' g,4
     r r8 g' g,4
@@ -17,9 +17,9 @@
   \bookpart { 
     \score {
       <<
-      \new Staff = Staff \with { }
-      \context Staff = Staff {
-        \"//music"
+      \new Staff = GlobalStaff \with { }
+      \context Staff = GlobalStaff {
+        \"/global/music"
       }
       >>
     }

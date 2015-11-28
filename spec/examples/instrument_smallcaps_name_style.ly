@@ -23,6 +23,7 @@
         \new Staff = FluteIStaff \with { }
         \context Staff = FluteIStaff {
           \set Staff.instrumentName = \markup { \smallCaps { Flute I } }
+          \clef "treble"
           \"/flute1/music"
         }
         >>

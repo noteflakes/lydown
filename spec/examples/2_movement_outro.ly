@@ -1,7 +1,7 @@
 \version "2.18.2"
 
-"02-outro//music" = \relative c {
-  << \new Voice = "voice1" {
+"02-outro/global/music" = \relative c {
+  << \new Voice = "global_voice1" {
     \time 4/4
     \key b \major
     r4. b''8 dis gis
@@ -19,10 +19,10 @@
       }
 
       <<
-      \new Staff = Staff \with { }
-      \context Staff = Staff {
+      \new Staff = GlobalStaff \with { }
+      \context Staff = GlobalStaff {
         \set Score.skipBars = ##t 
-        \"02-outro//music"
+        \"02-outro/global/music"
       }
       >>
     }

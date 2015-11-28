@@ -1,23 +1,33 @@
 \version "2.18.2"
 
+"01-intro/global/music" = \relative c {
+  << \new Voice = "global_voice1" {
+    \key d \major \time 3/4
+  } >>
+}
 "01-intro/violino1/music" = \relative c {
   << \new Voice = "violino1_voice1" {
-    \time 3/4 \key d \major a'8 b cis d e4
+    a'8 b cis d e4
   } >>
 }
 "01-intro/violoncello/music" = \relative c {
   << \new Voice = "violoncello_voice1" {
-    \time 3/4 \key d \major d8 cis b a gis4
+    d8 cis b a gis4
+  } >>
+}
+"02-outro/global/music" = \relative c {
+  << \new Voice = "global_voice1" {
+    \key bes \major \time 2/4 
   } >>
 }
 "02-outro/violino1/music" = \relative c {
   << \new Voice = "violino1_voice1" {
-    \time 2/4 \key bes \major ees4 f8 g a2
+    ees4 f8 g a2
   } >>
 }
 "02-outro/violino2/music" = \relative c {
   << \new Voice = "violino2_voice1" {
-    \time 2/4 \key bes \major g'4 f8 ees d2
+    g'4 f8 ees d2
   } >>
 }
 
@@ -38,7 +48,10 @@
         \context Staff = ViolinoIStaff {
           \set Staff.instrumentName = #"Violino I"
           \clef "treble"
-          \"01-intro/violino1/music"
+          <<
+            \"01-intro/global/music"
+            \"01-intro/violino1/music"
+          >>
           \bar "|."
         }
         >>
@@ -48,7 +61,10 @@
         \context Staff = VioloncelloStaff {
           \set Staff.instrumentName = #"Violoncello"
           \clef "bass"
-          \"01-intro/violoncello/music"
+          <<
+            \"01-intro/global/music"
+            \"01-intro/violoncello/music"
+          >>
           \bar "|."
         }
         >>
@@ -67,7 +83,10 @@
         \context Staff = ViolinoIStaff {
           \set Staff.instrumentName = #"Violino I"
           \clef "treble"
-          \"02-outro/violino1/music"
+          <<
+            \"02-outro/global/music"
+            \"02-outro/violino1/music"
+          >>
           \bar "|."
         }
         >>
@@ -77,7 +96,10 @@
         \context Staff = ViolinoIIStaff {
           \set Staff.instrumentName = #"Violino II"
           \clef "treble"
-          \"02-outro/violino2/music"
+          <<
+            \"02-outro/global/music"
+            \"02-outro/violino2/music"
+          >>
           \bar "|."
         }
         >>

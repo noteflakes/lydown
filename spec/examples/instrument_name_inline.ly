@@ -29,6 +29,7 @@
         <<
         \new Staff = FluteIStaff \with { }
         \context Staff = FluteIStaff {
+          \clef "treble"
           \"/flute1/music"
         }
         >>

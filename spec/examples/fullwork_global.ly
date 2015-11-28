@@ -2,40 +2,36 @@
 
 "01-intro/global/music" = \relative c {
   << \new Voice = "global_voice1" {
-    \key bes \major \time 3/4
+    \key d \major \time 3/4
+    s2.*1
+    \time 4/4
   } >>
 }
 "01-intro/violino1/music" = \relative c {
   << \new Voice = "violino1_voice1" {
-    a'4 bes c d
-    \key d \major
-    a b cis d
+    a'8 b cis d e4 d2 c
   } >>
 }
 "01-intro/violoncello/music" = \relative c {
   << \new Voice = "violoncello_voice1" {
-    ees4 f g a
-    \key d \major
-    e fis g a
+    d8 cis b a gis4 a2 b
   } >>
 }
 "02-outro/global/music" = \relative c {
   << \new Voice = "global_voice1" {
-    \key bes \major \time 2/4 
+    \key bes \major \time 2/4
+    s2*2
+    \key c \major
   } >>
 }
 "02-outro/violino1/music" = \relative c {
   << \new Voice = "violino1_voice1" {
-    a'4 bes
-    \time 5/4
-    c d
+    ees4 f8 g a2 b
   } >>
 }
 "02-outro/violino2/music" = \relative c {
   << \new Voice = "violino2_voice1" {
-    ees4 f
-    \time 5/4
-    g a
+    g'4 f8 ees d2 e
   } >>
 }
 
@@ -56,7 +52,6 @@
         \context Staff = ViolinoIStaff {
           \set Staff.instrumentName = #"Violino I"
           \clef "treble"
-          \partial 8
           <<
             \"01-intro/global/music"
             \"01-intro/violino1/music"
@@ -70,7 +65,6 @@
         \context Staff = VioloncelloStaff {
           \set Staff.instrumentName = #"Violoncello"
           \clef "bass"
-          \partial 8
           <<
             \"01-intro/global/music"
             \"01-intro/violoncello/music"

@@ -5,7 +5,7 @@ RSpec.describe Lydown::Work do
     lydown_code = LydownParser.parse(load_example('simple.ld'))
     work = Lydown::Work.new
     work.translate(lydown_code)
-    ly = work.to_lilypond(stream_path: 'movements//parts//music')
+    ly = work.to_lilypond(stream_path: 'movements//parts/global/music')
     expect(ly.strip_whitespace).to eq(load_example('simple-raw.ly'))
   end
 
@@ -189,7 +189,7 @@ RSpec.describe Lydown::Work do
   it "handles include settings" do
     verify_example('settings_includes')
     verify_example('includes_movement', 'includes_movement_score', mode: :score)
-    verify_example('includes_movement', 'includes_movement_part', parts: '', mode: :part)
+    verify_example('includes_movement', 'includes_movement_part', parts: 'global', mode: :part)
     verify_example('includes_document', 'includes_document_score', mode: :score)
   end
 
@@ -200,5 +200,17 @@ RSpec.describe Lydown::Work do
 
   it "handles bar_numbers settings" do
     verify_example('hide_bar_numbers')
+  end
+  
+  it "handles renders a global music stream" do
+    verify_example('global_and_parts', nil, mode: :score, inhibit_end_barline: false)
+  end
+  
+  it "handles work with key/time changes on global stream" do
+    work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'fullwork_global'))
+    
+    ly = work.to_lilypond(mode: :score, no_lib: true).strip_whitespace
+    ex = load_example('fullwork_global.ly', strip: true)
+    expect(ly).to eq(ex)
   end
 end

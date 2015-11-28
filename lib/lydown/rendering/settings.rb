@@ -53,16 +53,22 @@ module Lydown::Rendering
           @context.set_part_context(value)
           
           # when changing parts we repeat the last set time and key signature
-          time = @context.get_current_setting(:time)
-          key =  @context.get_current_setting(:key)
+          # time = @context.get_current_setting(:time)
+          # key =  @context.get_current_setting(:key)
 
-          render_setting('time', time) unless time == '4/4'
-          render_setting('key', key) unless key == 'c major'
+          # render_setting('time', time) unless time == '4/4'
+          # render_setting('key', key) unless key == 'c major'
 
           @context.reset(:part)
         when 'movement'
           @context[:movement] = value
           @context.reset(:movement)
+
+          # when changing parts we repeat the last set time and key signature
+          time = @context.get_current_setting(:time)
+          key =  @context.get_current_setting(:key)
+          render_setting('time', time) unless time == '4/4'
+          render_setting('key', key) unless key == 'c major'
         when 'include'
           add_include(:includes, value)
         when 'mode'

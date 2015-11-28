@@ -3,6 +3,7 @@
   staff_groups = Lydown::Rendering::Staff.staff_groups(
     self, {movement: name}, movement['parts'].keys)
   parts_in_order = staff_groups.flatten
+  
   staff_hierarchy = Lydown::Rendering::Staff.staff_hierarchy(staff_groups)
     
   parts = parts_in_order.inject({}) do |m, p|
