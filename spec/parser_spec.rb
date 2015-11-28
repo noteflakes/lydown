@@ -90,7 +90,9 @@ RSpec.describe LydownParser do
     work.context['options'][:proof_mode] = true
     work.translate(stream)
     
-    link_pre = "\\once \\override NoteHead.after-line-breaking =\n            #(add-link \"txmt://open?url=file:///Users/sharon/repo/lydown/simple_macro.ld&line=%d&column=%d\")"
+    current_path = FileUtils.pwd
+    
+    link_pre = "\\once \\override NoteHead.after-line-breaking =\n            #(add-link \"txmt://open?url=file://#{current_path}/simple_macro.ld&line=%d&column=%d\")"
     
     expect(work.context['movements//parts//music']).to eq(
       "#{link_pre % [1, 8]} c4 #{link_pre % [1, 9]} e8 #{link_pre % [1, 10]} g #{link_pre % [1, 11]} c4 #{link_pre % [1, 12]} g8 #{link_pre % [1, 13]} e #{link_pre % [1, 15]} c1 "
