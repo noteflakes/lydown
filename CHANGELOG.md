@@ -1,3 +1,5 @@
+## Version 0.12.0 2015-11-28
+
 - Add standalone releases of lydown for users who don't have ruby installed (#54)
 - Add <code>lydown install</code> command for installing lilypond (#52)
 
