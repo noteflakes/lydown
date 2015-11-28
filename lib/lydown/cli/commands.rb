@@ -5,11 +5,11 @@ module Lydown::CLI
     desc "version", "show Lydown version"
     def version
       require 'lydown/version'
-      puts "Lydown version #{Lydown::VERSION}"
+      $stderr.puts "Lydown version #{Lydown::VERSION}"
       
       lilypond_version = Lydown::CLI::Support.detect_lilypond_version(false)
       if lilypond_version
-        puts "Lilypond version #{lilypond_version}"
+        $stderr.puts "Lilypond version #{lilypond_version}"
       end
     end
     
@@ -17,6 +17,7 @@ module Lydown::CLI
     method_option :format, aliases: '-f', 
       default: 'pdf', desc: 'Set output format (pdf/png/ly/midi/mp3)', 
       enum: %w{pdf png ly midi mp3}
+    method_option :pdf, type: :boolean, desc: 'Set PDF output format'
     method_option :png, type: :boolean, desc: 'Set PNG output format'
     method_option :ly, type: :boolean, desc: 'Set Lilypond output format'
     method_option :midi, type: :boolean, desc: 'Set MIDI output format'
@@ -54,7 +55,7 @@ module Lydown::CLI
       
       # Set format based on direct flag
       opts[:format] = opts[:format].to_sym if opts[:format]
-      [:png, :ly, :midi, :mp3].each {|f| opts[:format] = f if opts[f]}
+      [:pdf, :png, :ly, :midi, :mp3].each {|f| opts[:format] = f if opts[f]}
 
       opts[:parts] = opts[:parts].split(',') if opts[:parts]
       opts[:movements] = opts[:movements].split(',') if opts[:movements]
