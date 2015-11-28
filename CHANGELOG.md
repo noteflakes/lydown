@@ -1,3 +1,7 @@
+## Version 0.12.3 2015-11-28
+
+- Add support for Ruby < 2.1.0
+
 ## Version 0.12.2 2015-11-28
 
 - Cleanup compile messages
