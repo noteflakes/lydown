@@ -373,10 +373,12 @@ module Lydown
       return parts unless @context[:movements]
       
       @context[:movements].each do |mname, m|
-        m[:parts].each do |pname, p|
-          # Add only parts that render in part mode
-          if part_render_modes(mname, pname).include?(:part)
-            parts << pname unless (pname == '') || parts.include?(pname)
+        if m[:parts]
+          m[:parts].each do |pname, p|
+            # Add only parts that render in part mode
+            if part_render_modes(mname, pname).include?(:part)
+              parts << pname unless (pname == '') || parts.include?(pname)
+            end
           end
         end
       end

@@ -24,6 +24,14 @@ module Lydown::CLI::Compiler
       work = create_work_from_opts(opts)
       
       jobs = create_jobs_from_opts(work, opts)
+      
+      # check if no jobs were created. This could happen when lydown processes
+      # parts but no parts are found
+      if jobs[:compile].empty?
+        $stderr.puts "No parts found."
+        return
+      end
+      
       process_jobs(work, jobs, opts)
       
       now = Time.now
