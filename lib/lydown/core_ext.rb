@@ -213,3 +213,11 @@ class Pathname
     self.new(path).relative_path_from(pwd).to_s
   end
 end
+
+unless Binding.method_defined?(:local_variable_set)
+  class Binding
+    def local_variable_set(var, value)
+      eval("#{var.to_s} = #{value.inspect}")
+    end
+  end
+end
