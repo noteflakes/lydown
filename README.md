@@ -66,10 +66,8 @@ and verifying that it too works:
 ## Hello world in lydown
 
 ```lydown
-// helloworld.lydown
-- key: d major
-- time: 2/4
-4d\"Hello world!" 6c#bag 3f#gag6f#d 4e
+\key:D \time:2/4
+4d''\"Hello world!" 6cbag 3fgag6fd 4e
 ```
 
 And here's the equivalent lilypond code:
