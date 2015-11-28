@@ -1,3 +1,7 @@
+## Version 0.12.1 2015-11-28
+
+- Detect passing a CLI command as an argument (e.g. lydown --version)
+
 ## Version 0.12.0 2015-11-28
 
 - Add standalone releases of lydown for users who don't have ruby installed (#54)

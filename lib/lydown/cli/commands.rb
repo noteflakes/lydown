@@ -38,12 +38,19 @@ module Lydown::CLI
       desc: 'Create separate file for each movement'
     method_option :verbose, type: :boolean
     def compile(*args)
+      path = args.first || '.'
+
+      # check if user specified a command as an argument (e.g. --version)
+      if (path =~ /^\-\-(\w+)/) && respond_to?($1)
+        return send($1)
+      end
+      
       Lydown::CLI::Support.detect_lilypond_version(true)
       
       require 'lydown'
       
       opts = Lydown::CLI::Support.copy_options(options)
-      opts[:path] = args.first || '.'
+      opts[:path] = path
       
       # Set format based on direct flag
       opts[:format] = opts[:format].to_sym if opts[:format]
