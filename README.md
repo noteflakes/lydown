@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/ciconia/lydown.svg?branch=master)](https://travis-ci.org/ciconia/lydown)
+
 Lydown is a language and compiler for creating music scores, parts and snippets. The lydown code is compiled to [lilypond](http://lilypond.org/) code and then compiled to PDF, PNG or MIDI files.
 
 - [About](#about)
@@ -49,23 +51,34 @@ Lydown builds on the ideas put forth by lilypond and makes the following improve
 
 ## Installation
 
-Before installing lydown, you'll need to have installed [lilypond](http://lilypond.org/download.html).
+If you have Ruby on your machine, you can simply install lydown as a gem:
 
-You can verify that lilypond is correctly installed by running the following command:
+```bash
+gem install lydown
+```
 
-    lilypond --version
+If not, you can simply grab the [release file](https://github.com/ciconia/lydown/releases) for your OS, which already includes Ruby.
 
-If everything's ok, you can proceed by installing lydown:
+Once you got lydown installed, you can verify it woks correctly by running:
 
-    gem install lydown
+```bash
+lydown version
+```
 
-and verifying that it too works:
+Lydown will display its version and also the version lilypond installed. If lilypond is not installed on your machine, you can install it by either running:
 
-    lydown --version
+```bash
+lydown install lilypond
+```
+
+Or by downloading it from the [lilypond website](http://lilypond.org/download.html).
 
 ## Hello world in lydown
 
+The following is a basic example of the lydown syntax:
+
 ```lydown
+// helloworld.ld
 \key:D \time:2/4
 4d''\"Hello world!" 6cbag 3fgag6fd 4e
 ```
@@ -79,6 +92,12 @@ relative c' {
   \time 2/4
    d'4\"Hello world!" cs16 b a g fs32 g a g fs16 d e4
 }
+```
+
+To compile the lydown source file into a PDF and then display it, invoke lydown as follows:
+
+```bash
+lydown -O helloworld.ld
 ```
 
 ## More examples and resources
