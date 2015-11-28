@@ -1,3 +1,8 @@
+## Version 0.12.4 2015-11-28
+
+- Add support for Ruby 1.9.3
+- Add automatic build testing (https://travis-ci.org/ciconia/lydown)
+
 ## Version 0.12.3 2015-11-28
 
 - Add support for Ruby < 2.1.0
