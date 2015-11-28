@@ -58,7 +58,6 @@ module Lydown
     end
 
     def process_file(path, prefix = [], opts = {})
-      $stderr.puts path
       content = IO.read(path)
       stream = LydownParser.parse(content, {
         filename: File.expand_path(path),

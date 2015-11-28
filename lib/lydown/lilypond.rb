@@ -138,6 +138,7 @@ module Lydown
                 bar.progress = idx + 1 if idx
               end
             end
+            bar.progress = STATUS_TOTAL
           end
         else
           info = f.read
