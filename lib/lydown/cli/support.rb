@@ -57,7 +57,7 @@ module Lydown::CLI::Support
   def self.detect_lilypond_version(exit_on_error)
     msg = `lilypond --version`
     version = nil
-    if msg.lines[0] =~ /LilyPond ([\d\.]+)/
+    if msg.lines.first =~ /LilyPond ([\d\.]+)/
       version = $1
     end
     unless version && Gem::Version.new(version) >= MINIMAL_LILYPOND_VERSION
@@ -74,10 +74,12 @@ module Lydown::CLI::Support
   def self.display_lilypond_version_error_msg(version)
     if version
       STDERR.puts "ERROR: The installed lilypond (version #{version}) is too old.
-       Please install a recent version by visiting http://lilypond.org/"
+       You can install lilypond by running `lydown install lilypond` or by
+       downloading a recent version from http://lilypond.org/"
     else
       STDERR.puts "ERROR: No copy of lilypond found.
-       Please install a recent version by visiting http://lilypond.org/"
+       You can install lilypond by running `lydown install lilypond` or by
+       downloading a recent version from http://lilypond.org/"
     end
   end
 end
