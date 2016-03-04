@@ -1,5 +1,6 @@
 require 'lydown/errors'
 require 'lydown/cli/output'
+require 'lydown/cli/signals'
 
 require 'tempfile'
 require 'fileutils'
@@ -8,6 +9,49 @@ require 'open3'
 module Lydown
   module Lilypond
     class << self
+      MINIMAL_LILYPOND_VERSION = Gem::Version.new('2.18')
+      
+      def lilypond_path
+        # detect lyp-installed lilypond
+        # path = `lyp which lilypond`.lines.last rescue nil
+        # return path.chomp if path
+        #
+        # path = `which lilypond` rescue nil
+        # return path.chomp if path && !path.empty?
+        
+        return 'lilypond'
+      end
+
+      # detect the lilypond version. If lilypond is not found, or the version is
+      # less than the minimal supported version, display an error message.
+      def detect_lilypond_version(exit_on_error)
+        version = nil
+        if path = lilypond_path
+          msg = `#{lilypond_path} --version`
+          if msg.lines.first =~ /LilyPond ([\d\.]+)/
+            version = $1
+          end
+        end
+        
+        unless version && Gem::Version.new(version) >= MINIMAL_LILYPOND_VERSION
+          display_lilypond_version_error_msg(version)
+          exit!(1) if exit_on_error
+          version = nil
+        end
+        version
+      rescue => e
+        display_lilypond_version_error_msg(nil)
+        exit!(1) if exit_on_error
+      end
+  
+      def display_lilypond_version_error_msg(version)
+        if version
+          STDERR.puts "ERROR: The installed lilypond (version #{version}) is too old."
+        else
+          STDERR.puts "ERROR: No copy of lilypond found."
+        end
+      end
+
       def tmpdir
         @tmpdir ||= Dir.mktmpdir
       end
@@ -67,13 +111,24 @@ module Lydown
         end
       end
       
+      # In order to be able to run the lyp lilypond wrapper (if present),
+      # we need to reset the environment variables set by bundler when running
+      # lydown.
+      RESET_ENV = {
+        "_ORIGINAL_GEM_PATH" => "",
+        "BUNDLE_GEMFILE" => "",
+        "BUNDLE_BIN_PATH" => "",
+        "RUBYOPT" => "",
+        "RUBYLIB" => ""
+      }
+      
       # Run lilypond, pipe source into its STDIN, and capture its STDERR
       def invoke(source, opts = {})
         cmd = format_cmd(opts)
         
         err_info = ''
         exit_value = nil
-        Open3.popen2e(cmd) do |input, output, wait_thr|
+        Open3.popen2e(RESET_ENV, cmd) do |input, output, wait_thr|
           err_info = exec(wait_thr, input, output, source, opts)
           exit_value = wait_thr.value
         end
@@ -91,11 +146,12 @@ module Lydown
         format = opts[:format]
         format = nil if (format == :midi) || (format == :mp3)
 
-        cmd = 'lilypond '
+        cmd = "#{lilypond_path} "
         cmd << "-dbackend=eps " if opts[:mode] == :proof
         cmd << "-o #{opts[:output_filename]} "
         cmd << "-dno-point-and-click "
         cmd << "--#{opts[:format]} " if format
+        cmd << "-V " if opts[:verbose]
         cmd << ' - '
 
         cmd
@@ -128,7 +184,7 @@ module Lydown
       
       def read_lilypond_progress(f, opts)
         info = ''
-        unless opts[:no_progress_bar]
+        if !opts[:verbose] && !opts[:no_progress_bar]
           Lydown::CLI::show_progress('Compile', STATUS_TOTAL) do |bar|
             while !f.eof?
               line = f.gets
@@ -139,6 +195,12 @@ module Lydown
               end
             end
             bar.progress = STATUS_TOTAL
+          end
+        elsif opts[:verbose]
+          while !f.eof?
+            line = f.gets
+            STDERR.puts line
+            info += line
           end
         else
           info = f.read

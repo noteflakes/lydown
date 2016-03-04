@@ -9,7 +9,7 @@ module Lydown::CLI::REPL
       require 'lydown/version'
       puts "Lydown version #{Lydown::VERSION}"
       
-      lilypond_version = Lydown::CLI::Support.detect_lilypond_version(true)
+      lilypond_version = Lydown::Lilypond.detect_lilypond_version(true)
       if lilypond_version
         puts "Lilypond version #{lilypond_version}"
       end

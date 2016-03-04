@@ -2,12 +2,16 @@ require 'thor'
 
 module Lydown::CLI
   class Commands < Thor
+    package_name "lydown"
+    map "-v" => :version
+    class_option :verbose, aliases: '-V', :type => :boolean, desc: 'show verbose output'
+
     desc "version", "show Lydown version"
     def version
       require 'lydown/version'
       $stderr.puts "Lydown version #{Lydown::VERSION}"
       
-      lilypond_version = Lydown::CLI::Support.detect_lilypond_version(false)
+      lilypond_version = Lydown::Lilypond.detect_lilypond_version(false)
       if lilypond_version
         $stderr.puts "Lilypond version #{lilypond_version}"
       end
@@ -46,12 +50,14 @@ module Lydown::CLI
         return send($1)
       end
       
-      Lydown::CLI::Support.detect_lilypond_version(true)
+      Lydown::Lilypond.detect_lilypond_version(true)
       
       require 'lydown'
       
       opts = Lydown::CLI::Support.copy_options(options)
       opts[:path] = path
+      
+      puts "opts: #{opts.inspect}"
       
       # Set format based on direct flag
       opts[:format] = opts[:format].to_sym if opts[:format]
@@ -78,7 +84,7 @@ module Lydown::CLI
       # compile parts
       unless opts[:score_only]
         $stderr.puts "Processing parts..."
-        Lydown::CLI::Compiler.process(opts.merge(mode: :part))
+        Lydown::Lilypond.process(opts.merge(mode: :part))
       end
     end
   
@@ -113,11 +119,6 @@ module Lydown::CLI
       opts[:path] = args.first || '.'
     
       Lydown::CLI::Translation.process(opts)
-    end
-    
-    desc "install [PACKAGE] [VERSION]", "install a package"
-    def install(*args)
-      Lydown::CLI::Installer.install(*args)
     end
     
     def method_missing(method, *args)

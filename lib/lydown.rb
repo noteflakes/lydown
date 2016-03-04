@@ -1,10 +1,13 @@
+$LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__))
+
 require 'lydown/core_ext'
 require 'lydown/cache'
 
 module Lydown
   require 'yaml'
-  DEFAULTS = YAML.load(IO.read(File.join(File.dirname(__FILE__), 
-    'lydown/defaults.yml'))).deep!
+  
+  DEFAUTLS_FILENAME = File.expand_path('lydown/defaults.yml', File.dirname(__FILE__))
+  DEFAULTS = YAML.load(IO.read(DEFAUTLS_FILENAME)).deep!
 end
 
 require 'lydown/errors'

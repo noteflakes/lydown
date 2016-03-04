@@ -85,9 +85,6 @@ ficta = {
         
 
 \layout {
-  #(layout-set-staff-size 17)
-  indent = 0\cm
-
   \context {
     \Score
     \override InstrumentName #'self-alignment-X = #right
@@ -95,8 +92,10 @@ ficta = {
     
     \override BarNumber #'padding = 1.5
     
+%     \override Stem #'details #'beamed-minimum-free-lengths = #'(1.83 1.5 1.25)
+
     %make note stems a bit thicker
-    \override Stem.thickness = #2
+    \override Stem.thickness = #(lambda (grob) (+ 1.8 (* 0.05 (random:normal))))
     
     % slurs and ties are a bit curvier and thicker
     % ties are also a bit more distant from note heads
@@ -120,6 +119,12 @@ ficta = {
     \Staff
     \override StaffSymbol.color = #(rgb-color 0.25 0.2 0.2)
     
+    \override VerticalAxisGroup.default-staff-staff-spacing = #'(
+      (basic-distance . 50)
+      (minimum-distance . 9)
+      (padding . 5)
+      (stretchability . 20)
+    )
   }
   
   \context {
@@ -136,46 +141,65 @@ ficta = {
 }
 
 \paper {
-%   #(set-default-paper-size "A5")
-  
-%   system-system-spacing #'basic-distance = #17
-  
-  top-margin = 1.4\cm
-  bottom-margin = 1.4\cm
+  #(set-default-paper-size "a4" 'landscape)
+
+  #(layout-set-staff-size 14)
+
+  indent = 0\cm
+
+  top-margin = 10\mm
+  bottom-margin = 10\mm
   two-sided = ##t
-  inner-margin = 1.4\cm
-  outer-margin = 2\cm
+  inner-margin = 8.75\mm
+  outer-margin = 17.5\mm
+  binding-offset = 0\mm
   
   markup-system-spacing #'padding = #3
   markup-system-spacing #'stretchability = #10
   score-markup-spacing #'padding = #7
-  top-system-spacing #'padding = #3
   top-markup-spacing #'padding = #3
-  system-system-spacing #'minimum-distance = #9
+
+  system-system-spacing #'minimum-distance = #12
+  system-system-spacing #'padding = #9
   system-system-spacing #'stretchability = #15
+
+
+  top-staff-margin = 24.5\mm
+  bottom-staff-margin = 24.5\mm
+
+  % set distance of top staff relative to margin
+  top-system-spacing #'basic-distance = #(+ (/ (- top-staff-margin top-margin) staff-space) 2)
+  top-system-spacing #'minimum-distance = #(+ (/ (- top-staff-margin top-margin) staff-space) 2)
+  top-system-spacing #'padding = -50 % negative padding to ignore skyline
+  top-system-spacing #'stretchability = 0 % fixed position
+
+  % set distance of top staff relative to margin
+  bottom-last-spacing #'basic-distance = #(+ (/ (- bottom-staff-margin bottom-margin) staff-space) 2)
+  bottom-last-spacing #'minimum-distance = #(+ (/ (- bottom-staff-margin bottom-margin) staff-space) 2)
+  bottom-last-spacing #'padding = -50 % negative padding to ignore skyline
+  bottom-last-spacing #'stretchability = 0 % fixed position
+
+%
+%
+%
+%   top-system-spacing #'basic-distance = #2
+%   top-system-spacing #'minimum-distance = #0
+%   top-system-spacing #'padding = #-10
+%   top-system-spacing #'stretchability = #0
   
   
 %   ragged-last-bottom = ##t
-  ragged-bottom = ##t
+%   ragged-bottom = ##t
   
   print-first-page-number = ##f
+  
+  oddHeaderMarkup = \markup \on-the-fly #not-first-page \fill-line {
+     \null \fromproperty #'page:page-number-string
+  }
 
-	oddHeaderMarkup = \markup
-	\fill-line {
-	  %% force the header to take some space, otherwise the
-	  %% page layout becomes a complete mess.
-	  " "
-%     \on-the-fly #not-first-page {
-	  	\on-the-fly #print-page-number-check-first \fromproperty #'page:page-number-string
-%     }
-	}
-
-	evenHeaderMarkup = \markup
-	\fill-line {
-	  \on-the-fly #print-page-number-check-first \fromproperty #'page:page-number-string
-	  " "
-	}
-
+  evenHeaderMarkup = \markup \fill-line {
+    \fromproperty #'page:page-number-string \null
+  }
 }
 
 % trill = #(make-articulation "stopped")

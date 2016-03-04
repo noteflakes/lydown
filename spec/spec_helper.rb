@@ -1,7 +1,7 @@
 Bundler.setup(:default, :spec)
-require File.join(File.expand_path(File.dirname(__FILE__)), '../lib/lydown')
+require File.expand_path('../lib/lydown', File.dirname(__FILE__))
 
-EXAMPLES_PATH = File.join(File.expand_path(File.dirname(__FILE__)), 'examples')
+EXAMPLES_PATH = File.expand_path('examples', File.dirname(__FILE__))
 
 $spec_mode = true
 
