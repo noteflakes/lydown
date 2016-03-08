@@ -413,4 +413,35 @@ module Lydown::Parsing
       end
     end
   end
+  
+  module Repeat
+    class Start < Root
+      def to_stream(stream, opts)
+        ref = {type: :repeat_start, raw: text_value, count: 2}
+        if text_value =~ /(\d+)$/
+          ref[:count] = $1.to_i
+        end
+        
+        stream << event_hash(stream, opts, ref)
+      end
+    end
+    
+    class Volta < Root
+      def to_stream(stream, opts)
+        stream << event_hash(stream, opts, {
+          type: :repeat_volta,
+          raw:  text_value
+        })
+      end
+    end
+
+    class End < Root
+      def to_stream(stream, opts)
+        stream << event_hash(stream, opts, {
+          type: :repeat_end,
+          raw:  text_value
+        })
+      end
+    end
+  end
 end

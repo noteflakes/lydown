@@ -12,8 +12,10 @@ Lydown is a language and compiler for creating music scores, parts and snippets.
 - [The lydown syntax](#the-lydown-syntax)
 	- [Notes and durations](#notes-and-durations)
 	- [Accidentals](#accidentals)
-	- [Octaves](#otaves)
+	- [Octaves](#octaves)
+  - [Grace notes](#grace-notes)
 	- [Barlines](#barlines)
+	- [Repeats with alternatives](#repeats-with-alternatives)
 	- [Rests](#rests)
 	- [Beams, slurs and ties](#beams-slurs-and-ties)
 	- [Articulation and expression marks](#articulation-and-expression-marks)
@@ -279,6 +281,14 @@ c'''  // third octave
 For the following notes, the octave markers <code>'</code> and <code>,</code> are used for jumping between octaves, using the same rules as 
  lilypond's [relative mode](http://www.lilypond.org/doc/v2.18/Documentation/notation/writing-pitches#relative-octave-entry):
 
+### Grace notes
+
+Grace notes are signified using the `$` prefix:
+
+```lydown
+$^6d8edcd2c // appoggiatura
+```
+
 ### Barlines
 
 Just like in lilypond, barlines are taken care of automatically according to the time signature. Final bar lines and repeat bar lines can be entered explicitly by using shorthand syntax:
@@ -292,6 +302,19 @@ When entering unmetered music, an invisible barline can be added in order to pro
 ```lydown
 -time: unmetered
 cdef ?| gag
+```
+
+### Repeats with alternatives
+
+Repeats with alternatives can be written by using the following syntax:
+
+```lydown
+|:*2 // start a repeat
+|*   // start a volta
+*|   // end the repeat
+
+// example: 2 repeats
+|:*2 1c d |* e f |* g a *| b c
 ```
 
 ### Rests and silences

@@ -46,9 +46,19 @@ grammar Lydown
     [ \t]+
   end
   rule event
-    (inline_command / inline_lyrics / voice_selector / barline / source_ref / 
+    (inline_command / inline_lyrics / voice_selector / repeat_start / volta /
+      repeat_end / barline / source_ref / 
       grace_duration / duration / standalone_figures / chord / note / rest / 
       silence / phrasing / tie) white_space*
+  end
+  rule repeat_start
+    '|:*' [0-9]+ <Repeat::Start>
+  end
+  rule volta
+    '|*' <Repeat::Volta>
+  end
+  rule repeat_end
+    '*|' <Repeat::End>
   end
   rule barline
     ('?|' / ':|][|:' / '[|:' / ':|]' / [\|\.\:]+) <Barline>

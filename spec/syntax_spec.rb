@@ -127,6 +127,10 @@ RSpec.describe Lydown do
     verify_example('grace_notes')
   end
   
+  it "correctly handles repeats with voltas" do
+    verify_example('repeats')
+  end
+  
   it "correctly parses nested settings" do
     path = File.join(EXAMPLES_PATH, 'nested_settings')
 
