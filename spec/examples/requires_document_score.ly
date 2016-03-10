@@ -1,8 +1,7 @@
 \version "2.18.2"
 
-\include "spec/examples/abc.ly"
-
-% Hello from template
+\require "abc"
+\require "def"
 
 "//music" = \relative c {
   << \new Voice = "voice1" {
@@ -15,7 +14,7 @@
   }
 
   \bookpart { 
-    \include "spec/examples/jkl.ly"
+    \require "ghi"
     
     \score {
       \new StaffGroup << 

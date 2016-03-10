@@ -98,6 +98,33 @@ module Lydown::Rendering
         end
       end
     end
+    
+    def add_requires(packages, context, key, opts)
+      requires = context.get_setting(key, opts)
+      packages.concat(requires) if requires
+    end
+    
+    def packages_to_load(context, opts)
+      packages = []
+      if opts.has_key?(:movement)
+        add_requires(packages, context, :requires, opts)
+        case context.render_mode
+        when :score
+          add_requires(packages, context, 'score/requires', opts)
+        when :part
+          add_requires(packages, context, 'parts/requires', opts)
+          if opts[:part]
+            add_requires(packages, context, "parts/#{opts[:part]}/requires", opts)
+          end
+        end
+      else
+        # paths to be included at top of lilypond doc should be defined under
+        # document/requires
+        add_requires(packages, context, 'document/requires', opts)
+      end
+      
+      packages.uniq
+    end      
   end
 end
 

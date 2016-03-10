@@ -11,7 +11,7 @@ module Lydown::Rendering
       'key', 'time', 'pickup', 'clef', 'part', 'movement', 'tempo',
       'accidentals', 'beams', 'end_barline', 'macros', 'empty_staves',
       'midi_tempo', 'instrument_names', 'instrument_name_style',
-      'parts', 'score', 'movement_source', 'colla_parte', 'include',
+      'parts', 'score', 'movement_source', 'colla_parte', 'include', 'require',
       'mode', 'nomode', 'bar_numbers', 'document', 'notation_size'
     ]
 
@@ -67,6 +67,8 @@ module Lydown::Rendering
           @context.reset(:movement)
         when 'include'
           add_include(:includes, value)
+        when 'require'
+          add_require(:requires, value)
         when 'mode'
           set_mode(value.nil? ? :none : value.to_sym)
         when 'nomode'
@@ -87,6 +89,8 @@ module Lydown::Rendering
         case key
         when 'include'
           add_include(path + 'includes', value)
+        when 'require'
+          add_require(path + 'requires', value)
         else
           path << key
           @context.set_setting(path, value)
@@ -179,6 +183,12 @@ module Lydown::Rendering
       end
 
       @context.set_setting(includes_path, includes)
+    end
+
+    def add_require(requires_path, package)
+      requires = @context.get_current_setting(requires_path) || []
+      requires << package
+      @context.set_setting(requires_path, requires)
     end
   end
 end

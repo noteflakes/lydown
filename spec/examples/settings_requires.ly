@@ -1,24 +1,25 @@
 \version "2.18.2"
 
-\pinclude "lydown/lib.ly"
-
 "//music" = \relative c {
   << \new Voice = "voice1" {
-    c4 e8 g c2
+    a'4 b c d
   } >>
 }
+
 
 \book {
   \header {
   }
 
   \bookpart { 
+    \require "abc"
+    \require "def"
+
     \score {
       <<
       \new Staff = Staff \with { }
       \context Staff = Staff {
         \"//music"
-        \bar "|."
       }
       >>
     }

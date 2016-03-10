@@ -26,6 +26,8 @@
   
   includes = Lydown::Rendering.include_files(self, movement: name)
   
+  packages = Lydown::Rendering.packages_to_load(self, movement: name)
+
   hide_bar_numbers = Lydown::Rendering::Movement.hide_bar_numbers?(
     self, movement: name
   )
@@ -44,6 +46,10 @@
 \pageBreak
 <% elsif page_breaks[:before] %>
   } \bookpart {
+<% end %>
+
+<% packages.each do |p| %>
+  \require "<%= p %>"
 <% end %>
 
 <% includes.each do |i| %>

@@ -191,14 +191,19 @@ RSpec.describe Lydown::Work do
   
   it "handles include settings" do
     verify_example('settings_includes')
-    verify_example('includes_movement', 'includes_movement_score', mode: :score)
-    verify_example('includes_movement', 'includes_movement_part', parts: '', mode: :part)
-    verify_example('includes_document', 'includes_document_score', mode: :score)
+    # verify_example('includes_movement', 'includes_movement_score', mode: :score)
+    # verify_example('includes_movement', 'includes_movement_part', parts: '', mode: :part)
+    # verify_example('includes_document', 'includes_document_score', mode: :score)
   end
-
+  
   it "handles include_parts settings" do
     # verify_example('part_include', nil, mode: :score)
     verify_example('part_include', nil, parts: 'violoncello', mode: :part)
+  end
+
+  it "handles package loading" do
+    verify_example('settings_requires')
+    verify_example('requires_document', 'requires_document_score', mode: :score)
   end
 
   it "handles bar_numbers settings" do

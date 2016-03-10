@@ -1,7 +1,12 @@
 \version "2.18.2"
 
 <% unless self['render_opts/no_lib'] %>
-\include "<%= File.join(LY_LIB_DIR, 'lib.ly') %>"
+\pinclude "<%= File.join(LY_LIB_DIR, 'lib.ly') %>"
+<% end %>
+
+<% packages = Lydown::Rendering.packages_to_load(self, {}) %>
+<% packages.each do |p| %>
+  \require "<%= p %>"
 <% end %>
 
 <% includes = Lydown::Rendering.include_files(self, {}) %>
