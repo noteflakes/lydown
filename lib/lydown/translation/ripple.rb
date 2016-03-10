@@ -24,7 +24,7 @@ class RippleParser
 
   def self.format_parser_error(source, parser, opts)
     msg = "#{parser.failure_reason} at #{parser.failure_line}:#{parser.failure_column}\n"
-    msg << "  #{source.lines[parser.failure_line - 1].chomp}\n #{' ' * parser.failure_column}^"
+    # msg << "  #{source.lines[parser.failure_line - 1].chomp}\n #{' ' * parser.failure_column}^"
     msg
   end
 end

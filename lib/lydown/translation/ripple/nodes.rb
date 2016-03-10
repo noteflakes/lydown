@@ -69,11 +69,18 @@ module Lydown::Translation::Ripple
         opts[:post_macro_value] = nil
       end
 
-      stream << "%s%s%s" % [
+      stream << "%s%s%s%s" % [
+        note[:grace],
         note[:duration],
         note[:head],
         expressions
       ]
+    end
+    
+    class Grace < Root
+      def translate(note, opts)
+        note[:grace] = "$#{text_value.dup}"
+      end
     end
     
     class Head < Root
@@ -108,7 +115,7 @@ module Lydown::Translation::Ripple
     def translate(stream, opts)
       signature = {}
       _translate(self, signature, opts)
-      opts[:key] = "#{signature[:head]} #{signature[:mode]}"
+      opts[:key] = "#{signature[:head]} #{signature[:mode]}".strip
       stream << "- key: #{opts[:key]}\n"
     end
     
@@ -186,6 +193,39 @@ module Lydown::Translation::Ripple
     def translate(stream, opts)
       cmd = text_value.gsub(' ', ':')
       stream << " #{cmd} "
+    end
+  end
+  
+  class Noop < Root
+    def translate(stream, opts)
+      # noop
+    end
+  end
+  
+  class Repeat < Root
+    def translate(stream, opts)
+      _translate(self, stream, opts)
+      stream << "*| "
+    end
+    
+    class Start < Root
+      def translate(stream, opts)
+        stream << "|:*2 "
+        _translate(self, stream, opts)
+      end
+    end
+    
+    class Alternative < Root
+      def translate(stream, opts)
+        stream << "|* "
+        _translate(self, stream, opts)
+      end
+    end
+  end
+  
+  class Barline < Root
+    def translate(stream, opts)
+      stream << " #{text_value} "
     end
   end
 end

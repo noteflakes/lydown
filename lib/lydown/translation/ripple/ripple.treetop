@@ -10,15 +10,28 @@ grammar Ripple
   end
   
   rule event
-    (relative_cmd / curly_brace / key_signature / time_signature /
-    full_rest / note / phrasing / named_macro / stop_macro / command) white_space?
+    (relative_command / repeat / curly_brace / key_signature / time_signature / 
+     tempo_command / partial_command / full_rest / note / phrasing / named_macro / stop_macro / 
+     noop / barline / command / comment
+    ) white_space?
   end
   
-  rule relative_cmd
-    '\relative' [\s]+ relative_cmd_note
+  rule no_brace_events
+    white_space? no_brace_event* <Root>
   end
   
-  rule relative_cmd_note
+  rule no_brace_event
+    (key_signature / time_signature / partial_command / 
+     tempo_command / full_rest / note / phrasing / named_macro / stop_macro / 
+     noop / barline / command / comment
+    ) white_space?
+  end
+  
+  rule relative_command
+    '\relative' [\s]+ relative_command_note
+  end
+  
+  rule relative_command_note
     [a-g] accidental? octave* <RelativeCommand>
   end
   
@@ -27,19 +40,31 @@ grammar Ripple
   end
   
   rule key_signature
-    '\key' [\s]+ note_head [\s+] key_mode <KeySignature>
+    '\key' white_space+ key_note_head white_space+ key_mode <KeySignature>
   end
   
   rule key_mode
-    '\major' / '\minor' <KeySignature::Mode>
+    '\\' ('major' / 'minor') <KeySignature::Mode>
   end
   
   rule note
-    note_head duration? expression* <Note>
+    grace? note_head duration? expression* <Note>
+  end
+  
+  rule grace
+    appoggiatura
+  end
+  
+  rule appoggiatura
+    '^' <Note::Grace>
   end
   
   rule note_head
     [a-gr] accidental octave* accidental_flag? <Note::Head>
+  end
+  
+  rule key_note_head
+    [a-g] accidental <Note::Head>
   end
   
   rule octave
@@ -70,8 +95,12 @@ grammar Ripple
     [0-9\/]+ <TimeSignature>
   end
   
+  rule partial_command
+    '\partial' white_space [0-9]+
+  end
+  
   rule full_rest
-    'R' [0-9]+ ('*' [0-9]+)? <FullRest>
+    'R' [0-9\.]+ ('*' [0-9]+)? <FullRest>
   end
   
   rule phrasing
@@ -97,4 +126,52 @@ grammar Ripple
   rule clef_command
     '\clef ' [a-z0-9_]+ <Command>
   end
+  
+  rule tempo_command
+    '\tempo "' [^"]+ '"' <Noop>
+  end
+  
+  rule noop
+    midi_block
+  end
+  
+  rule midi_block
+    'm{{' [^\}]+ '}}' <Noop>
+  end
+  
+  rule repeat
+    repeat_start white_space? repeat_alternatives <Repeat>
+  end
+  
+  rule repeat_start
+    repeat_start_prefix no_brace_events repeat_start_postfix <Repeat::Start>
+  end
+  
+  rule repeat_start_prefix
+    '\repeat volta 2' white_space? '{'
+  end
+    
+  rule repeat_start_postfix
+    '}' white_space?
+  end
+  
+  rule repeat_alternatives
+    '\alternative' white_space? '{' repeat_alternative+ '}' <Root>
+  end
+
+  rule repeat_alternative
+    white_space? '{' no_brace_events '}' white_space? <Repeat::Alternative>
+  end
+ 
+  rule comment
+    '%' [^\n]*
+  end
+ 
+  rule barline
+    '\bar "'? barline_sign '"'?
+  end
+ 
+  rule barline_sign
+    '?|' / ':|][|:' / '[|:' / ':|]' / [\|\.\:]+ <Barline>
+ end
 end
