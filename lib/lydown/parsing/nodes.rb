@@ -104,9 +104,15 @@ module Lydown::Parsing
 
   class DurationValue < Root
     def to_stream(stream, opts)
-      stream << event_hash(stream, opts, {
-        type: :duration, value: text_value
-      })
+      event = {
+        type: :duration,
+        value: text_value.strip
+      }
+      if event[:value] =~ /\!/
+        event[:value].gsub!('!', '')
+        event[:cross_bar_dotting] = true
+      end
+      stream << event_hash(stream, opts, event)
     end
   end
 

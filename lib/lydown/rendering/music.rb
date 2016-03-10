@@ -32,6 +32,7 @@ module Lydown::Rendering
         @context['process/figures_duration_value'] = value
       else
         @context['process/duration_values'] = [value]
+        @context['process/cross_bar_dotting'] = @event[:cross_bar_dotting]
         @context['process/tuplet_mode'] = nil
         @context['process/duration_macro'] = nil unless @context['process/macro_group']
       end

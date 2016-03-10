@@ -11,6 +11,13 @@
     c\breve e1 g c\longa
 
     r c\longa. c\breve.
+    
+    c4 d \once \override Tie #'transparent = ##t e2 ~
+         \once \override NoteHead #'transparent = ##t 
+         \once \override Dots #'extra-offset = #'(-1.3 . 0) 
+         \once \override Stem #'transparent = ##t 
+         e2.*0 s4
+      f4 e d
   } >>
 }
 

@@ -224,6 +224,10 @@ module Lydown::Rendering
     end
     
     def lilypond_note(event, options = {})
+      if @context['process/cross_bar_dotting']
+        return cross_bar_dot_lilypond_note(event, options)
+      end
+      
       head = Accidentals.translate_note_name(@context, event[:head])
       if options[:head_only]
         head
@@ -247,6 +251,37 @@ module Lydown::Rendering
           options[:no_whitespace] ? '' : ' '
         ].join
       end
+    end
+    
+    TRANSPARENT_TIE = "\\once \\override Tie #'transparent = ##t"
+    TRANSPARENT_NOTE = <<EOF
+\\once \\override NoteHead #'transparent = ##t 
+\\once \\override Dots #'extra-offset = #'(-1.3 . 0) 
+\\once \\override Stem #'transparent = ##t
+EOF
+    
+    def cross_bar_dot_lilypond_note(event, options)
+      @context['process/cross_bar_dotting'] = nil
+      
+      original_duration = @context['process/duration_values'][0]
+      original_duration =~ /([0-9]+)(\.+)/
+      value, dots =  $1, $2
+      
+      main_note = lilypond_note(event, options.merge(value: value))
+
+      cross_bar_note_head = lilypond_note(event, options.merge(head_only: true))
+      cross_bar_note = "#{cross_bar_note_head}#{original_duration}*0"
+      
+      silence = "s#{value.to_i * 2} "
+      
+      [
+        TRANSPARENT_TIE,
+        main_note,
+        '~',
+        TRANSPARENT_NOTE,
+        cross_bar_note,
+        silence
+      ].join(' ')
     end
 
     def lilypond_chord(event, notes, options = {})
