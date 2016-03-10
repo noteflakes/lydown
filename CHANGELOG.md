@@ -1,40 +1,50 @@
+## Version 0.13.0 2016-03-10
+
+- Remove lilypond installer (rely on lyp instead).
+- Add support for repeats with alternatives.
+- Improved translation of Ripple code.
+- Add support for cross-bar augmentation dots.
+- Add support for package loading.
+- Remove house-style, goes in separate package.
+- Switch to better syntax for grace notes.
+
 ## Version 0.12.4 2015-11-28
 
-- Add support for Ruby 1.9.3
-- Add automatic build testing (https://travis-ci.org/ciconia/lydown)
+- Add support for Ruby 1.9.3.
+- Add automatic build testing (https://travis-ci.org/ciconia/lydown).
 
 ## Version 0.12.3 2015-11-28
 
-- Add support for Ruby < 2.1.0
+- Add support for Ruby < 2.1.0.
 
 ## Version 0.12.2 2015-11-28
 
-- Cleanup compile messages
-- Do not try to process parts if none exist
-- Fix/update hello world example in README
+- Cleanup compile messages.
+- Do not try to process parts if none exist.
+- Fix/update hello world example in README.
 
 ## Version 0.12.1 2015-11-28
 
-- Detect passing a CLI command as an argument (e.g. lydown --version)
+- Detect passing a CLI command as an argument (e.g. lydown --version).
 
 ## Version 0.12.0 2015-11-28
 
-- Add standalone releases of lydown for users who don't have ruby installed (#54)
-- Add <code>lydown install</code> command for installing lilypond (#52)
+- Add standalone releases of lydown for users who don't have ruby installed (#54).
+- Add <code>lydown install</code> command for installing lilypond (#52).
 
 ## Version 0.11.0 2015-10-10
 
-- Go into interactive mode when no command is given #50 (see README)
-- Add support for including different files for score, part 
+- Go into interactive mode when no command is given #50 (see README).
+- Add support for including different files for score, part.
 
 ## Version 0.10.0 2015-09-20
 
-- Add support for shorthand override commands #13
+- Add support for shorthand override commands #13.
 - Add support for hiding bar numbers.
 - Various improvements to proof mode.
-- Add support for full bar silences #39
+- Add support for full bar silences #39.
 - Cache results of parse and render stages for faster processing.
-- Add support for mode specific code #21
+- Add support for mode specific code #21.
 - Add support for including auxiliary parts in extracted parts.
 - Add support for \partBreak command.
 - Add support for includes (with templating for files with .ely extension) #41
