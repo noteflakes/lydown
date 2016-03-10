@@ -3,7 +3,7 @@ require 'directory_watcher'
 module Lydown::CLI::Proofing
   class << self
     def start_proofing(opts)
-      $stderr.puts "Proof mode: #{source} -> #{opts[:output_filename]}"
+      $stderr.puts "Proof mode: #{opts[:source_filename]} -> #{opts[:output_filename]}"
 
       trap("INT") {return}
       watch(opts)
