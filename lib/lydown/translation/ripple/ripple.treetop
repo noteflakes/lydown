@@ -52,11 +52,7 @@ grammar Ripple
   end
   
   rule grace
-    appoggiatura
-  end
-  
-  rule appoggiatura
-    '^' <Note::Grace>
+    [\^] <Note::Grace>
   end
   
   rule note_head

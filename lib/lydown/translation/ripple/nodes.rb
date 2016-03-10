@@ -68,9 +68,12 @@ module Lydown::Translation::Ripple
         note[:duration] ||= opts[:post_macro_value]
         opts[:post_macro_value] = nil
       end
+      
+      if note[:duration] && note[:grace]
+        note[:duration] += note[:grace]
+      end
 
-      stream << "%s%s%s%s" % [
-        note[:grace],
+      stream << "%s%s%s" % [
         note[:duration],
         note[:head],
         expressions
@@ -79,7 +82,7 @@ module Lydown::Translation::Ripple
     
     class Grace < Root
       def translate(note, opts)
-        note[:grace] = "$#{text_value.dup}"
+        note[:grace] = text_value
       end
     end
     

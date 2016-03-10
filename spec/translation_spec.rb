@@ -1,6 +1,6 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'spec_helper')
 require 'fileutils'
-require 'lydown/cli'
+require File.expand_path('../lib/lydown/cli', File.dirname(__FILE__))
 
 RSpec.describe Lydown::Translation do
   it "translates simple ripple code to lydown" do
@@ -31,7 +31,7 @@ RSpec.describe Lydown::Translation do
     
     basso = IO.read('spec/examples/translate/mvmt1/basso.ld')
     violino1 = IO.read('spec/examples/translate/mvmt1/violino1.ld')
-    expect(basso).to eq(load_example('translation_simple.ld'))
-    expect(violino1).to eq(load_example('translation_macros.ld'))
+    expect(basso.strip).to eq(load_example('translation_simple.ld').strip)
+    expect(violino1.strip).to eq(load_example('translation_macros.ld').strip)
   end
 end
