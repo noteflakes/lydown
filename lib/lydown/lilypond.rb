@@ -124,12 +124,17 @@ module Lydown
       
       # Run lilypond, pipe source into its STDIN, and capture its STDERR
       def invoke(source, opts = {})
-        cmd = format_cmd(opts)
+        tmp_source_path = Tempfile.new('lydown').path
+        File.open(tmp_source_path, 'w') {|f| f << source}
+
+        cmd = format_cmd(opts, tmp_source_path)
+        puts cmd if opts[:verbose]
         
         err_info = ''
         exit_value = nil
+        
         Open3.popen2e(RESET_ENV, cmd) do |input, output, wait_thr|
-          err_info = exec(wait_thr, input, output, source, opts)
+          err_info = exec(wait_thr, input, output, opts)
           exit_value = wait_thr.value
         end
         if exit_value != 0
@@ -142,7 +147,7 @@ module Lydown
         end
       end
       
-      def format_cmd(opts)
+      def format_cmd(opts, source_path)
         format = opts[:format]
         format = nil if (format == :midi) || (format == :mp3)
 
@@ -152,14 +157,13 @@ module Lydown
         cmd << "-dno-point-and-click "
         cmd << "--#{opts[:format]} " if format
         cmd << "-V " if opts[:verbose]
-        cmd << ' - '
+        cmd << source_path
 
         cmd
       end
       
-      def exec(wait_thr, input, output, source, opts)
+      def exec(wait_thr, input, output, opts)
         Lydown::CLI.register_abortable_process(wait_thr.pid)
-        input.puts source
         input.close_write
         err_info = read_lilypond_progress(output, opts)
         output.close
