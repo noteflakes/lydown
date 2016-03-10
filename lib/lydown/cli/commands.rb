@@ -41,7 +41,7 @@ module Lydown::CLI
       desc: 'Open output file after compilation'
     method_option :separate, type: :boolean, aliases: '-S',
       desc: 'Create separate file for each movement'
-    method_option :verbose, type: :boolean
+    method_option :verbose, aliases: '-V', type: :boolean
     def compile(*args)
       path = args.first || '.'
 
@@ -50,14 +50,10 @@ module Lydown::CLI
         return send($1)
       end
       
-      Lydown::Lilypond.detect_lilypond_version(true)
-      
       require 'lydown'
       
       opts = Lydown::CLI::Support.copy_options(options)
       opts[:path] = path
-      
-      puts "opts: #{opts.inspect}"
       
       # Set format based on direct flag
       opts[:format] = opts[:format].to_sym if opts[:format]
@@ -84,7 +80,7 @@ module Lydown::CLI
       # compile parts
       unless opts[:score_only]
         $stderr.puts "Processing parts..."
-        Lydown::Lilypond.process(opts.merge(mode: :part))
+        Lydown::CLI::Compiler.process(opts.merge(mode: :part))
       end
     end
   
@@ -94,8 +90,6 @@ module Lydown::CLI
       enum: %w{pdf png ly}
     method_option :include_parts, aliases: '-i', desc: 'Include parts (comma separated)'
     def proof(*args)
-      Lydown::CLI::Support.detect_lilypond_version(true)
-
       require 'lydown'
 
       opts = Lydown::CLI::Support.copy_options(options)
