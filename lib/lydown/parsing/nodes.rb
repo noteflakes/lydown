@@ -103,15 +103,30 @@ module Lydown::Parsing
   end
 
   class DurationValue < Root
+    GRACE_KIND = {
+      '°' => :grace,
+      '`' => :acciaccatura,
+      '^' => :appoggiatura
+    }
+
     def to_stream(stream, opts)
-      event = {
-        type: :duration,
-        value: text_value.strip
-      }
-      if event[:value] =~ /\!/
-        event[:value].gsub!('!', '')
-        event[:cross_bar_dotting] = true
+      if text_value.strip =~ /^(.+)([°`^])$/
+        event = {
+          type: :grace,
+          value: $1,
+          kind: GRACE_KIND[$2]
+        }
+      else
+        event = {
+          type: :duration,
+          value: text_value.strip
+        }
+        if event[:value] =~ /\!/
+          event[:value].gsub!('!', '')
+          event[:cross_bar_dotting] = true
+        end
       end
+      
       stream << event_hash(stream, opts, event)
     end
   end
@@ -130,22 +145,6 @@ module Lydown::Parsing
           value: value,
           fraction: fraction,
           group_length: group_length
-        })
-      end
-    end
-  end
-
-  class GraceDuration < Root
-    GRACE_KIND = {
-      nil => :grace,
-      '/' => :acciaccatura,
-      '^' => :appoggiatura
-    }
-    
-    def to_stream(stream, opts)
-      if text_value =~ /^\$([\/\^])?(\d+)$/
-        stream << event_hash(stream, opts, {
-          type: :grace, value: $2, kind: GRACE_KIND[$1]
         })
       end
     end

@@ -283,11 +283,20 @@ For the following notes, the octave markers <code>'</code> and <code>,</code> ar
 
 ### Grace notes
 
-Grace notes are signified using the `$` prefix:
+Grace notes are signified by appending a grace kind after the the duration value:
 
 ```lydown
-$^6d8edcd2c // appoggiatura
+// grace
+6°d8edcd2c
+
+// appoggiatura
+6^d8cbag
+
+// acciaccatura
+6`dc8bcde
 ```
+
+The grace holds until the next change of duration.
 
 ### Barlines
 
