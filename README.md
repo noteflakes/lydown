@@ -837,6 +837,14 @@ To place includes at the beginning of the lilypond document, includes should be 
 
 Pathnames are relative to the lydown source file.
 
+## Requiring packages
+
+[Lyp](https://github.com/noteflakes/lyp) packages can be loaded by using `-include` settings, usually in `work.ld`:
+
+```lydown
+- require: better-slurs
+```
+
 ### Including templates
 
 In addition to including normal lilypond files, Lydown also supports the rendering of templates into the generated lilypond doc, by using the <code>.ely</code> extension. The templates should be written using Ruby's [ERB](http://www.stuartellis.eu/articles/erb/) syntax, and are supplied with the lydown context object as <code>self</code>. A trivial example:
