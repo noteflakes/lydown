@@ -1,0 +1,18 @@
+<%
+  info = Lydown::Rendering.layout_info(self)
+  layout = Lydown::Rendering::Layout
+%>
+
+\header { tagline = ##f } % no tagline
+
+<% if layout %>
+\paper {
+  <%= layout.define_paper_size(info) %>
+  #(layout-set-staff-size <%= layout.to_pp(info[:staff_size]) %>)
+}
+
+\layout {
+  
+}
+<% end %>
+

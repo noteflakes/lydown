@@ -1,8 +1,15 @@
-ly_dir: ./_ly
-pdf_dir: ./_pdf
-midi_dir: ./_midi
-lilypond_cmd: lilypond
+layout:
+  paper: A4 portrait
+  staff_size: 6mm
+  inner_margin: 12mm
+  outer_margin: 18mm
+  margin_top: 10mm
+  margin_bottm: 10mm
+  margin_top_staff: 24mm
+  margin_bottom_staff: 24mm
 parts:
+  layout:
+    staff_size: 7mm
   soprano:
     clef: treble
     beaming: manual
@@ -177,6 +184,8 @@ parts:
   flute2:
     midi_instrument: flute
 score:
+  layout:
+    staff_size: 4mm
   order:
     - [flute, flauto1, flauto2, flauto3, flute1, flute2, flute3]
     - [oboe, oboe1, oboe2, oboe3]

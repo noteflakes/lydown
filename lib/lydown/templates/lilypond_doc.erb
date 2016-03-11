@@ -18,10 +18,7 @@
 <%= Lydown::Rendering::PROOFING_LY_SETTINGS %>
 <% end %>
 
-<% if self['layout'] %>
-\layout {
-}
-<% end %>
+<%= Lydown::Templates.render(:layout, self) %>
 
 <%= Lydown::Templates.render(:variables, self) %>
 
