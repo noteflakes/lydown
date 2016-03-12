@@ -1,4 +1,5 @@
 require 'lydown/templates'
+require 'lydown/inverso'
 require 'lydown/work'
 require 'lydown/rendering/base'
 require 'lydown/rendering/literal'

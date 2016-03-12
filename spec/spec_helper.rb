@@ -50,7 +50,8 @@ def verify_example(name, result_name = nil, opts = {})
     work.context['global/settings/inhibit_end_barline'] = true
   end
   work.translate(lydown)
-  ly = work.to_lilypond(opts.merge(no_lib: true)).strip_whitespace
+  ly_opts = opts.merge(no_lib: true, no_layout: !opts[:do_layout])
+  ly = work.to_lilypond(ly_opts).strip_whitespace
 
   ex = load_example("#{result_name || name}.ly", strip: true)
   expect(ly).to eq(ex)

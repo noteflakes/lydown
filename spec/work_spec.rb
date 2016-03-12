@@ -1,6 +1,12 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'spec_helper')
 
 RSpec.describe Lydown::Work do
+  before do
+    @opts =       {no_lib: true, no_layout: true}
+    @part_opts =  {mode: :part, no_lib: true, no_layout: true}
+    @score_opts = {mode: :score, no_lib: true, no_layout: true}
+  end
+  
   it "compiles correctly to raw" do
     lydown_code = LydownParser.parse(load_example('simple.ld'))
     work = Lydown::Work.new
@@ -19,7 +25,7 @@ RSpec.describe Lydown::Work do
       lydown_code = LydownParser.parse(load_example('simple.ld'))
       work = Lydown::Work.new
       work.translate(lydown_code)
-      ly = work.to_lilypond(no_lib: true)
+      ly = work.to_lilypond(@opts)
       expect {Lydown::Lilypond.compile(ly, output_filename: 'spec/tmp/test')}.not_to raise_error
     end
   end
@@ -30,11 +36,11 @@ RSpec.describe Lydown::Work do
     work.translate(lydown_code)
     work.context['global/settings/inhibit_end_barline'] = true
     
-    ly = work.to_lilypond(parts: 'violino1', mode: :part, no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@part_opts.merge(parts: 'violino1')).strip_whitespace
     ex = load_example('2_part_violino1.ly', strip: true)
     expect(ly).to eq(ex)
     
-    ly = work.to_lilypond(parts: 'violino2', mode: :part, no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@part_opts.merge(parts: 'violino2')).strip_whitespace
     ex = load_example('2_part_violino2.ly', strip: true)
     expect(ly).to eq(ex)
   end
@@ -52,7 +58,7 @@ RSpec.describe Lydown::Work do
     work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'simple'))
     work.context['global/settings/inhibit_end_barline'] = true
     
-    ly = work.to_lilypond(mode: :part, no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@part_opts).strip_whitespace
     ex = load_example('simple_part.ly', strip: true)
     expect(ly).to eq(ex)
   end
@@ -61,15 +67,15 @@ RSpec.describe Lydown::Work do
     work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'multipart'))
     work.context['global/settings/inhibit_end_barline'] = true
     
-    ly = work.to_lilypond(parts: 'violino1', mode: :part, no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@part_opts.merge(parts: 'violino1')).strip_whitespace
     ex = load_example('multipart_violino1.ly', strip: true)
     expect(ly).to eq(ex)
     
-    ly = work.to_lilypond(parts: 'violino2', mode: :part, no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@part_opts.merge(parts: 'violino2')).strip_whitespace
     ex = load_example('multipart_violino2.ly', strip: true)
     expect(ly).to eq(ex)
 
-    ly = work.to_lilypond(mode: :score, no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@score_opts).strip_whitespace
     ex = load_example('multipart_score.ly', strip: true)
     expect(ly).to eq(ex)
   end
@@ -78,15 +84,15 @@ RSpec.describe Lydown::Work do
     work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, '2_movement.ld'))
     work.context['global/settings/inhibit_end_barline'] = true
     
-    ly = work.to_lilypond(movements: '01-intro', no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@opts.merge(movements: '01-intro')).strip_whitespace
     ex = load_example('2_movement_intro.ly', strip: true)
     expect(ly).to eq(ex)
     
-    ly = work.to_lilypond(movements: '02-outro', mode: :part, no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@part_opts.merge(movements: '02-outro')).strip_whitespace
     ex = load_example('2_movement_outro.ly', strip: true)
     expect(ly).to eq(ex)
 
-    ly = work.to_lilypond(mode: :part, no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@part_opts).strip_whitespace
     ex = load_example('2_movement.ly', strip: true)
     expect(ly).to eq(ex)
   end
@@ -94,27 +100,27 @@ RSpec.describe Lydown::Work do
   it "handles work with multiple movements, parts" do
     work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'fullwork'))
     
-    ly = work.to_lilypond(mode: :score, no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@score_opts).strip_whitespace
     ex = load_example('fullwork.ly', strip: true)
     expect(ly).to eq(ex)
 
-    ly = work.to_lilypond(movements: '01-intro', mode: :score, no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@score_opts.merge(movements: '01-intro')).strip_whitespace
     ex = load_example('fullwork_intro.ly', strip: true)
     expect(ly).to eq(ex)
 
-    ly = work.to_lilypond(movements: '02-outro', mode: :score, no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@score_opts.merge(movements: '02-outro')).strip_whitespace
     ex = load_example('fullwork_outro.ly', strip: true)
     expect(ly).to eq(ex)
 
-    ly = work.to_lilypond(movements: '01-intro', parts: 'violino1', no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@opts.merge(movements: '01-intro', parts: 'violino1')).strip_whitespace
     ex = load_example('fullwork_intro_violino1.ly', strip: true)
     expect(ly).to eq(ex)
     
-    ly = work.to_lilypond(parts: 'violino2', no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@opts.merge(parts: 'violino2')).strip_whitespace
     ex = load_example('fullwork_violino2.ly', strip: true)
     expect(ly).to eq(ex)
     
-    ly = work.to_lilypond(parts: 'violoncello', no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@opts.merge(parts: 'violoncello')).strip_whitespace
     ex = load_example('fullwork_violoncello.ly', strip: true)
     expect(ly).to eq(ex)
   end
@@ -126,7 +132,7 @@ RSpec.describe Lydown::Work do
   it "preserves common settings (work, movement files) between parts and movements" do
     work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'fullwork_settings'))
     
-    ly = work.to_lilypond(mode: :score, no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@score_opts).strip_whitespace
     ex = load_example('fullwork_settings.ly', strip: true)
     expect(ly).to eq(ex)
   end
@@ -134,7 +140,7 @@ RSpec.describe Lydown::Work do
   it "adds the lydown library include file to the rendered file" do
     work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'simple'))
     
-    ly = work.to_lilypond.strip_whitespace.gsub(LY_LIB_DIR, 'lydown')
+    ly = work.to_lilypond(no_layout: true).strip_whitespace.gsub(LY_LIB_DIR, 'lydown')
     ex = load_example('simple_include_lib.ly', strip: true)
     expect(ly).to eq(ex)
   end
@@ -142,7 +148,7 @@ RSpec.describe Lydown::Work do
   it "adds a midi block with optional tempo when midi format is specified" do
     work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'simple_with_midi_tempo'))
     
-    ly = work.to_lilypond(mode: :score, format: :midi, no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@score_opts.merge(format: :midi)).strip_whitespace
     ex = load_example('simple_midi.ly', strip: true)
     expect(ly).to eq(ex)
   end
@@ -152,19 +158,19 @@ RSpec.describe Lydown::Work do
 
     work = Lydown::Work.new(path: path)
     work.context['global/settings/inhibit_end_barline'] = true
-    ly = work.to_lilypond(no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@opts).strip_whitespace
     ex = load_example('midi_tempo_normal.ly', strip: true)
     expect(ly).to eq(ex)
 
     work = Lydown::Work.new(path: path, format: :midi)
     work.context['global/settings/inhibit_end_barline'] = true
-    ly = work.to_lilypond(format: :midi, no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@opts.merge(format: :midi)).strip_whitespace
     ex = load_example('midi_tempo_midi.ly', strip: true)
     expect(ly).to eq(ex)
 
     work = Lydown::Work.new(path: path, format: :mp3)
     work.context['global/settings/inhibit_end_barline'] = true
-    ly = work.to_lilypond(no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@opts).strip_whitespace
     ex = load_example('midi_tempo_midi.ly', strip: true)
     expect(ly).to eq(ex)
   end
@@ -172,11 +178,11 @@ RSpec.describe Lydown::Work do
   it "handles nested setting for part and score" do
     work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'nested_settings'))
     
-    ly = work.to_lilypond(mode: :part, no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@part_opts).strip_whitespace
     ex = load_example('nested_settings_part.ly', strip: true)
     expect(ly).to eq(ex)
 
-    ly = work.to_lilypond(mode: :score, no_lib: true).strip_whitespace
+    ly = work.to_lilypond(@score_opts).strip_whitespace
     ex = load_example('nested_settings_score.ly', strip: true)
     expect(ly).to eq(ex)
   end

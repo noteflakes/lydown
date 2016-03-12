@@ -13,6 +13,7 @@ end
 require 'lydown/errors'
 require 'lydown/parsing'
 require 'lydown/templates'
+require 'lydown/inverso'
 require 'lydown/rendering'
 require 'lydown/lilypond'
 require 'lydown/work_context'

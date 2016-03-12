@@ -190,3 +190,5 @@ prallupbefore = {
   
 }
 
+\header { tagline = ##f } % no tagline
+

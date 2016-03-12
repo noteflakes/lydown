@@ -1,4 +1,4 @@
-require 'lydown/templates'
+require 'lydown/inverso'
 require 'lydown/cli/output'
 require 'parallel'
 
@@ -40,7 +40,7 @@ module Lydown
         filtered.extend(TemplateBinding)
 
         # Remove empty lines from the rendered code
-        Lydown::Templates.render(:lilypond_doc, filtered)
+        Inverso::Template.render(:lilypond_doc, context: filtered)
       end
     end
 

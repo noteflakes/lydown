@@ -11,7 +11,7 @@ module Lydown::Rendering
     def self.render_voices(context)
       context['process/voice_selector'] = nil
       
-      music = Lydown::Templates.render(:multi_voice, context, part: context[:part])
+      music = Inverso::Template.render(:multi_voice, context: context, part: context[:part])
       
       context.emit(:music, music)
       
