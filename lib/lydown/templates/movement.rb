@@ -2,7 +2,9 @@ render_mode = context.render_mode
 staff_groups = Lydown::Rendering::Staff.staff_groups(
   context, {movement: name}, movement['parts'].keys)
 parts_in_order = staff_groups.flatten
-staff_hierarchy = Lydown::Rendering::Staff.staff_hierarchy(staff_groups)
+
+staff_group_hierarchy = Lydown::Rendering::Staff.staff_group_hierarchy(context, staff_groups)
+
   
 parts = parts_in_order.inject({}) do |m, p|
   m[p] = movement['parts'][p]
@@ -90,43 +92,53 @@ unless tacet
   \layout { 
     {{?ragged_right}}ragged-right = ##t{{/}}
     {{?ragged_last}}ragged-last = ##t{{/}}
+
+    {{?score_mode && (empty_staves == 'hide')}}
+    \context {
+      \RemoveEmptyStaffContext
+      \override VerticalAxisGroup #'remove-first = ##t
+    }
+    {{/}}
+
+    {{?hide_bar_numbers}}
+    \context {
+      \Score
+      \omit BarNumber
+    }
+    {{/}}
   }
+  
+  {{?n = movement['bar_number']}}
+  \set Score.currentBarNumber = {{n}}
+  \set Score.barNumberVisibility = #all-bar-numbers-visible
+  \bar ""
+  {{/}}
+  
+  \new OrchestraGroup \with {
+  } <<
   `
   
-  if score_mode
+  staff_group_hierarchy.each do |group|
     `
-    {{?empty_staves == 'hide'}}
-    \layout {
-      \context {
-        \RemoveEmptyStaffContext
-        \override VerticalAxisGroup #'remove-first = ##t
-      }
-    }      
-    {{/}}
+    \new {{group[:class]}} \with {
+      {{group[:config]}}
+    } <<
+    `
     
-    \new StaffGroup <<
-      \set StaffGroup.systemStartDelimiterHierarchy = {{staff_hierarchy}}
-    `
-  end
+    group[:parts].each do |part_name|
+      part = movement['parts'][part_name]
+      __render__(:part, context: context, name: part_name, part: part,
+        movement_name: name, movement: movement)
+    end
     
-  if n = movement['bar_number']
-    `
-    \set Score.currentBarNumber = #{{n}}
-    \set Score.barNumberVisibility = #all-bar-numbers-visible
-    \bar ""
-    `
-  end
-      
-  parts.each do |n, p|
-    __render__(:part, context: context, 
-      name: n, part: p, movement: movement, movement_name: name)
-  end
-  
-  if score_mode
     `
     >>
     `
   end
+  
+  `
+  >>
+  `
 
   if midi_mode
     `
@@ -138,17 +150,6 @@ unless tacet
     `
   end
     
-  if hide_bar_numbers
-    `
-    \layout {
-      \context {
-        \Score
-        \omit BarNumber
-      }
-    }
-    `
-  end
-
   `
   }
   `

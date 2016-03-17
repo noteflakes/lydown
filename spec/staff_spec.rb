@@ -24,7 +24,7 @@ RSpec.describe Lydown::Rendering::Staff do
       'violino2', 'viola', 'violino1'
     ])
     
-    hierarchy = Lydown::Rendering::Staff.staff_hierarchy(groups)
+    hierarchy = Lydown::Rendering::Staff.staff_group_hierarchy(groups)
     expect(hierarchy).to eq(
     "#'(SystemStartBar (SystemStartBrace violino1 violino2) viola )")
   end

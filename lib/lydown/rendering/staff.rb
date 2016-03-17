@@ -23,43 +23,38 @@ module Lydown::Rendering
       groups
     end
     
-    SYSTEM_START = {
-      "brace" => "SystemStartBrace",
-      "bracket" => "SystemStartBracket"
-    }
+    # returns a hierarchy of staffgroups, each containing group configuration
+    # and a list of parts
+    def self.staff_group_hierarchy(context, staff_groups)
+      staff_groups.map {|group|
+        {
+          class: 'StaffGroup',
+          config: staff_group_config(context, group),
+          parts:  group
+        }
+      }
+    end
     
-    BRACKET_PARTS = %w{soprano alto tenore basso soprano1 soprano2 
-      alto1 alto2 tenore1 tenore2 basso1 basso2}
+    VOCAL_GROUP_SPAN_BAR_OVERRIDE = 
+      "\\override SpanBar #'break-visibility = #'#( #t #f #t )"
     
-    def self.staff_group_directive(group)
-      if group.size == 1
-        nil
-      elsif BRACKET_PARTS.include?(group.first)
-        "SystemStartBracket"
+    def self.staff_group_config(context, group)
+      if is_vocal_group?(group)
+        VOCAL_GROUP_SPAN_BAR_OVERRIDE
       else
-        "SystemStartBrace"
+        ''
       end
     end
     
-    # renders a systemStartDelimiterHierarchy expression
-    def self.staff_hierarchy(staff_groups)
-      directive = nil
-      expr = staff_groups.inject('') do |m, group|
-        directive = staff_group_directive(group)
-        if directive
-          m << "(#{directive} #{group.join(' ')}) "
-        else
-          m << "#{group.join(' ')} "
-        end
-        m
-      end
-      
-      if (staff_groups.size == 1) && (staff_groups[0].size > 1) && directive == "SystemStartBracket"
-        # If all staves are already group, no need to add the system bracket
-        "#'#{expr}"
-      else
-        "#'(SystemStartBar #{expr})"
-      end
+    VOCAL_PARTS = %w{
+      soprano alto tenore basso soprano1 soprano2 alto1 alto2 tenore1 tenore2
+      basso1 basso2 1soprano 2soprano 1alto 2alto 1tenore 2tenore 1basso 2basso
+      1soprano1 1soprano2 2soprano1 2soprano2 1alto1 1alto2 2alto1 2alto2
+      1tenore1 1tenore2 2tenore1 2tenore2 1basso1 1basso2 2basso1 2basso2
+    }
+    
+    def self.is_vocal_group?(group)
+      !!group.find {|part| VOCAL_PARTS.include? part }
     end
     
     def self.clef(context, opts)
