@@ -34,8 +34,17 @@ part_title =  (context.render_mode == :part) &&
               Lydown::Rendering::Staff.qualified_part_title(context, part: part)
               
 markup = lambda {|m| Lydown::Rendering::Markup.convert(m) }
+
+page_break = context.get_setting("#{context.render_mode}/document/page_break", {})
+
 `
 \book {
+  {{?page_break == 'blank page before'}}
+  \paper { 
+     first-page-number = #-1 
+  } 
+  {{/}}
+  
   \header {
     {{?t = work[:composer]}}composer = {{markup[t]}}{{/}}
     {{?t = work[:opus]}}opus = {{markup[t]}}{{/}}
@@ -47,6 +56,20 @@ markup = lambda {|m| Lydown::Rendering::Markup.convert(m) }
   }
 
   \bookpart {
+    
+  {{?page_break == 'before'}}
+  \pageBreak
+  {{/}}
+  
+  {{?page_break == 'blank page before'}}
+    \paper { oddHeaderMarkup = ##f evenHeaderMarkup = ##f }
+    \markup " "
+  } \bookpart {
+    \paper { oddHeaderMarkup = ##f evenHeaderMarkup = ##f
+      bookTitleMarkup = ##f } \markup { " " }
+  } \bookpart { 
+    \paper { bookTitleMarkup = ##f }
+  {{/}}
 `
 
   context['movements'].each do |n, m|

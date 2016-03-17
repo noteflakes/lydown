@@ -88,6 +88,10 @@ end
   
   {{beaming_mode}}
 
+  {{? t = context.get_setting(:transpose, setting_opts)}}
+  \transpose {{t}}
+  {{/}}
+  
   \{{Lydown::Rendering.variable_name(setting_opts.merge(stream: :music))}}
 
   {{? end_barline}}
@@ -104,10 +108,14 @@ if part['lyrics']
       var_name = Lydown::Rendering.variable_name(setting_opts.merge(
         stream: :lyrics, voice: voice, idx: idx))
       `
-      \new Lyrics 
-      {{? above_staff}}
-        \with { alignAboveContext = "{{staff_id}}" }
-      {{/}}
+      \new Lyrics  \with {
+        {{? above_staff}}
+          \with { alignAboveContext = "{{staff_id}}" }
+        {{/}}
+        {{? size = context.get_setting(:staff_size, setting_opts)}}
+          fontSize = #{{ size }}
+        {{/}}
+      }
       { \lyricsto "{{voice_prefix}}{{voice}}" { \{{var_name}} } }
       `
     end
