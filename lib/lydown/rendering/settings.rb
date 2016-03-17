@@ -7,13 +7,12 @@ module Lydown::Rendering
   class Setting < Base
     include Notes
     
-    SETTING_KEYS = [
-      'key', 'time', 'pickup', 'clef', 'part', 'movement', 'tempo',
-      'accidentals', 'beams', 'end_barline', 'macros', 'empty_staves',
-      'midi_tempo', 'instrument_names', 'instrument_name_style',
-      'parts', 'score', 'movement_source', 'colla_parte', 'include', 'require',
-      'mode', 'nomode', 'bar_numbers', 'document', 'notation_size'
-    ]
+    SETTING_KEYS = %w{
+      key time pickup clef part movement tempo accidentals beams end_barline 
+      macros empty_staves midi_tempo instrument_names instrument_name_style 
+      parts score movement_source colla_parte include require mode nomode 
+      bar_numbers document notation_size work
+    }
 
     RENDERABLE_SETTING_KEYS = [
       'key', 'time', 'clef', 'beams'
@@ -38,7 +37,7 @@ module Lydown::Rendering
       end
       
       key = @event[:key]
-      value = @event[:value]
+      value = @event[:value].gsub("\\n", "\n")
       level = @event[:level] || 0
       
       unless (level > 0) || SETTING_KEYS.include?(key)

@@ -34,6 +34,7 @@ hide_bar_numbers = Lydown::Rendering::Movement.hide_bar_numbers?(
 if page_breaks[:blank_page_before]
 `
 } \bookpart {
+  \paper { bookTitleMarkup = ##f }
   \markup \column {
   \null \null \null \null \null \null
   \null \null \null \null \null \null
@@ -42,12 +43,17 @@ if page_breaks[:blank_page_before]
   \fill-line { "(this page has been left blank to facilitate page turning)" } 
   }
 } \bookpart {
-\pageBreak
+  \paper { bookTitleMarkup = ##f }
+  \pageBreak
 `
 elsif page_breaks[:before]
 `
-} \bookpart {
+\pageBreak
 `
+# `
+# } \bookpart {
+#   \paper { bookTitleMarkup = ##f }
+# `
 end
 
 packages.each do |p|
@@ -69,15 +75,23 @@ unless tacet
   if movement_title && render_mode != :proof
     `
       \header { 
-        piece = \markup { 
-          \bold \large { {{movement_title}} } 
-          {{?movement_source}}
-            \hspace #1 \italic { {{movement_source}} }
-          {{/}}
-        }
+        piece = {{movement_title.inspect}}
+        {{?movement_source}}
+          movement-source = {{movement_source.inspect}}
+        {{/}}
       }
     `
   end
+  
+  layout = Lydown::Rendering.layout_info(context, movement: name)
+  ragged_right =  layout[:ragged_right] == "true"
+  ragged_last =   layout[:ragged_last] == "true"
+  `
+  \layout { 
+    {{?ragged_right}}ragged-right = ##t{{/}}
+    {{?ragged_last}}ragged-last = ##t{{/}}
+  }
+  `
   
   if score_mode
     `
@@ -138,12 +152,13 @@ unless tacet
   `
   }
   `
-else # tacet %>
+else # tacet
 `
-  \markup { 
-    \line { \bold \large { {{movement_title}} } }
-    \line { \pad-markup #3 " " }
-    
+  \score {
+    \header {
+      piece = {{movement_title.inspect}}
+    }
+    \new Devnull { c }
   }
 `
 end

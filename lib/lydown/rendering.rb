@@ -16,6 +16,7 @@ require 'lydown/rendering/voices'
 require 'lydown/rendering/source_ref'
 require 'lydown/rendering/skipping'
 require 'lydown/rendering/layout'
+require 'lydown/rendering/markup'
 
 module Lydown::Rendering
   class << self
@@ -128,18 +129,17 @@ module Lydown::Rendering
       packages.uniq
     end
     
-    def layout_info(context)
-      layout = context.get_setting(:layout) || {}
+    def layout_info(context, opts = {})
+      layout = (context.get_setting(:layout, opts) || {}).deep!
       
       case context.render_mode
       when :score
-        layout.deep_merge!(context.get_setting('score/layout') || {})
+        layout.deep_merge!(context.get_setting('score/layout', opts) || {})
       when :part
-        layout.deep_merge!(context.get_setting('parts/layout') || {})
+        layout.deep_merge!(context.get_setting('parts/layout', opts) || {})
       end
       
-      puts "layout:"
-      p layout
+      layout
     end
   end
 end

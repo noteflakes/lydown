@@ -1,12 +1,13 @@
 layout:
   paper: A4 portrait
+  indent: 0mm
   staff_size: 6mm
-  inner_margin: 12mm
-  outer_margin: 18mm
+  margin_inner: 12mm
+  margin_outer: 18mm
   margin_top: 10mm
-  margin_bottm: 10mm
-  margin_top_staff: 24mm
-  margin_bottom_staff: 24mm
+  margin_bottom: 10mm
+  margin_top_content: 24mm
+  margin_bottom_content: 24mm
 parts:
   layout:
     staff_size: 7mm
@@ -189,8 +190,7 @@ score:
   order:
     - [flute, flauto1, flauto2, flauto3, flute1, flute2, flute3]
     - [oboe, oboe1, oboe2, oboe3]
-    - [violino, violino1, violino2, violino3, violin1, violin2, violin3]
-    - viola
+    - [violino, violino1, violino2, violino3, violin1, violin2, violin3, viola]
     - [viola1, viola2]
     - [gamba, gamba1, gamba2]
     - [soprano1, soprano2, soprano, alto1, alto2, alto, tenore1, tenore2, tenore, basso1, basso2, basso]

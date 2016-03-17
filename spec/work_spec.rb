@@ -145,6 +145,14 @@ RSpec.describe Lydown::Work do
     expect(ly).to eq(ex)
   end
   
+  it "adds a layout black to the rendered file" do
+    work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'simple'))
+    
+    ly = work.to_lilypond(no_lib: true).strip_whitespace.gsub(LY_LIB_DIR, 'lydown')
+    ex = load_example('simple_include_layout.ly', strip: true)
+    expect(ly).to eq(ex)
+  end
+  
   it "adds a midi block with optional tempo when midi format is specified" do
     work = Lydown::Work.new(path: File.join(EXAMPLES_PATH, 'simple_with_midi_tempo'))
     

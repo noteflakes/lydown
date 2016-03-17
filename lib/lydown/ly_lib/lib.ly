@@ -190,5 +190,76 @@ prallupbefore = {
   
 }
 
+#(define-markup-command (when-property layout props symbol markp) (symbol? 
+markup?)
+  (if (chain-assoc-get symbol props)
+      (interpret-markup layout props markp)
+      (ly:make-stencil empty-stencil)))
+      
+#(define-markup-command (apply-fromproperty layout props fn symbol)
+  (procedure? symbol?)
+  (let ((m (chain-assoc-get symbol props)))
+    (if (markup? m)
+        (interpret-markup layout props (fn m))
+        empty-stencil)))
+
 \header { tagline = ##f } % no tagline
 
+setVerticalMargins = #(define-scheme-function
+  (parser location top-staff top-markup bottom) (number? number? number?)
+  #{
+  \paper {
+    top-system-spacing #'basic-distance = #top-staff
+    top-system-spacing #'minimum-distance = #top-staff
+    top-system-spacing #'padding = -100 % negative padding to ignore skyline
+    top-system-spacing #'stretchability = 0 % fixed position
+
+    top-markup-spacing #'basic-distance = #top-markup
+    top-markup-spacing #'minimum-distance = #top-markup
+    top-markup-spacing #'padding = -100 % negative padding to ignore skyline
+    top-markup-spacing #'stretchability = 0 % fixed position
+
+    last-bottom-spacing #'basic-distance = #bottom
+    last-bottom-spacing #'minimum-distance = #bottom
+    last-bottom-spacing #'padding = -100 % negative padding to ignore skyline
+    last-bottom-spacing #'stretchability = 0 % fixed position
+  }
+  #}
+  )
+
+% scoreMode = #(define-music-function (parser location music) (ly:music?)
+%   (if (eq? lydown:render-mode 'score)
+%     #{ #music #}
+%     #{ #}
+%   ))
+
+scoreMode = #(define-void-function (parser location music) (scheme?)
+  (if (eq? lydown:render-mode 'score)
+    #{ #music #}
+  ))
+  
+partMode = #(define-music-function (parser location music) (ly:music?)
+  (if (eq? lydown:render-mode 'part)
+    #{ #music #}
+    #{ #}
+  ))
+
+#(define lydown:score-mode (eq? lydown:render-mode 'score))
+#(define lydown:part-mode (eq? lydown:render-mode 'part))
+
+\layout {
+  % The OrchestraGroup is used in score mode as a wrapping context for staff
+  % groups. It is based on the ChoirStaff in order to allow individual span
+  % bars.
+  \context {
+    \ChoirStaff
+    \name "OrchestraGroup"
+    \accepts StaffGroup
+    systemStartDelimiter = #'SystemStartBar
+  }
+  
+  \context {
+    \Score
+    \accepts OrchestraGroup
+  }
+}
