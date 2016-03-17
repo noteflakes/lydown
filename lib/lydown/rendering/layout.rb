@@ -75,7 +75,7 @@ module Lydown::Rendering
         "%.1f" % staff_dist[:margin_top],
         "%.1f" % dist[:margin_top],
         "%.1f" % staff_dist[:margin_bottom]
-      ].tap {|o| p o}
+      ]
     end
   end
 end
