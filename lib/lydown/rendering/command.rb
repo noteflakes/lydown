@@ -97,5 +97,9 @@ module Lydown::Rendering
     def cmd_partBreak
       @context.emit(:music, "\\break ") if (@context.render_mode == :part)
     end
+    
+    def cmd_scoreBreak
+      @context.emit(:music, "\\break ") if (@context.render_mode == :score)
+    end
   end
 end
