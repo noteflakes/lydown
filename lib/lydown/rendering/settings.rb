@@ -11,7 +11,7 @@ module Lydown::Rendering
       key time pickup clef part movement tempo accidentals beams end_barline 
       macros empty_staves midi_tempo instrument_names instrument_name_style 
       parts score movement_source colla_parte include require mode nomode 
-      bar_numbers document notation_size work transpose
+      bar_numbers document notation_size work transpose editions layout
     }
 
     RENDERABLE_SETTING_KEYS = [

@@ -26,6 +26,15 @@ module Lydown
 
     def to_lilypond(opts = {})
       @context[:render_opts] = opts.stringify_keys
+      
+      if edition = @context['render_opts/edition']
+        edition_settings = @context["global/settings/editions/#{edition}"]
+        if edition_settings
+          @context["global/settings/editions/#{edition}"] = nil
+          @context["global/settings"].deep_merge!(edition_settings)
+        end
+      end
+      
       @context[:variables] = {}
 
       if opts[:stream_path]

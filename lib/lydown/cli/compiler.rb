@@ -165,6 +165,11 @@ module Lydown::CLI::Compiler
     
     def output_filename(opts)
       fn = opts[:output_filename].dup
+
+      if opts[:edition]
+        fn << "-#{opts[:edition]}"
+      end
+      
       if opts[:movements] && opts[:movements].size == 1
         fn << "-#{opts[:movements].first}"
       end

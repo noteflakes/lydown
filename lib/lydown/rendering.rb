@@ -130,13 +130,13 @@ module Lydown::Rendering
     end
     
     def layout_info(context, opts = {})
-      layout = (context.get_setting(:layout, opts) || {}).deep!
+      layout = (context.get_merged_setting_tree(:layout, opts) || {}).deep!
       
       case context.render_mode
       when :score
-        layout.deep_merge!(context.get_setting('score/layout', opts) || {})
+        layout.deep_merge!(context.get_merged_setting_tree('score/layout', opts) || {})
       when :part
-        layout.deep_merge!(context.get_setting('parts/layout', opts) || {})
+        layout.deep_merge!(context.get_merged_setting_tree('parts/layout', opts) || {})
       end
       
       layout

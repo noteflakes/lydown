@@ -42,6 +42,7 @@ module Lydown::CLI
     method_option :separate, type: :boolean, aliases: '-S',
       desc: 'Create separate file for each movement'
     method_option :verbose, aliases: '-V', type: :boolean
+    method_option :edition, aliases: '-e', type: :string
     def compile(*args)
       path = args.first || '.'
 

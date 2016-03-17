@@ -245,12 +245,17 @@ module Lydown
     def query_setting(movement, part, path)
       path = "#{settings_path(movement, part)}/#{path}"
       value = @context[path]
+
       unless value.nil?
         @temp_setting_value = value
         true
       else
         false
       end
+    end
+    
+    def rendered_edition
+      @rendered_edition = @context['render_opts/edition']
     end
     
     def query_defaults(path)
@@ -274,17 +279,20 @@ module Lydown
       # setting value once it's found. That way we can use the
       # || operator to stop searching once we've found it.
       @temp_setting_value = nil
+      
       if opts[:part]
         parts_section_path = "parts/#{opts[:part]}/#{path}"
         
         query_setting(opts[:movement], opts[:part], path) ||
         query_setting(nil, opts[:part], path) ||
-        query_setting(opts[:movement], nil, path) ||
-        query_setting(nil, nil, path) ||
         
         # search in parts section
         query_setting(opts[:movement], nil, parts_section_path) ||
+        query_setting(opts[:movement], nil, path) ||
+
         query_setting(nil, nil, parts_section_path) ||
+
+        query_setting(nil, nil, path) ||
         
         query_defaults("parts/#{opts[:part]}/#{path}") ||
         query_defaults(path)
