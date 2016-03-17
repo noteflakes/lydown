@@ -184,10 +184,28 @@ parts:
     midi_instrument: flute
   flute2:
     midi_instrument: flute
+  trumpet:
+    midi_instrument: trumpet
+  tromba:
+    midi_instrument: trumpet
+  trumpet1:
+    midi_instrument: trumpet
+  trumpet2:
+    midi_instrument: trumpet
+  trumpet3:
+    midi_instrument: trumpet
+  tromba1:
+    midi_instrument: trumpet
+  tromba2:
+    midi_instrument: trumpet
+  tromba3:
+    midi_instrument: trumpet
+      
 score:
   layout:
     staff_size: 4mm
   order:
+    - [trumpet, tromba, trumpet1, trumpet2, trumpet3, tromba1, tromba2, tromba3]
     - [flute, flauto1, flauto2, flauto3, flute1, flute2, flute3]
     - [oboe, oboe1, oboe2, oboe3]
     - [violino, violino1, violino2, violino3, violin1, violin2, violin3, viola]
