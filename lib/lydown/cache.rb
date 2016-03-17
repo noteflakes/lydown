@@ -1,4 +1,5 @@
 require 'digest/md5'
+require 'fileutils'
 
 module Cache
   class << self
@@ -46,8 +47,11 @@ module Cache
       end
     end
     
+    CACHE_DIR = "/tmp/lydown/cache"
+    FileUtils.mkdir_p(CACHE_DIR)
+    
     def filename(cache_key)
-      "/tmp/lydown-cache-#{cache_key}"
+      "#{CACHE_DIR}/#{cache_key}"
     end
   end
 end
