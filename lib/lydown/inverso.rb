@@ -29,7 +29,7 @@ module Inverso
         begin
           #{templ}
         end
-        __buffer__
+        __buffer__.gsub(/^\s+$/, '').gsub(/\n+/m, "\n")
       end
 EOF
 
