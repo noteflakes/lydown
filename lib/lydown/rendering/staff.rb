@@ -100,6 +100,13 @@ module Lydown::Rendering
       title.strip
     end
     
+    def self.heading_part_title(context, opts)
+      title = context.get_setting("parts/#{opts[:part]}/heading_title", opts) ||
+              context.get_setting("parts/#{opts[:part]}/title", opts) ||
+              Lydown::Rendering.default_part_title(opts[:part])
+      title.strip
+    end
+    
     def self.part_title(context, opts)
       title = qualified_part_title(context, opts)
 

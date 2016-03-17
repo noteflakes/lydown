@@ -32,7 +32,7 @@ work = context.get_setting('work', {})
 
 part_title =  (context.render_mode == :part) && 
               (part = context['render_opts/parts']) &&
-              Lydown::Rendering::Staff.qualified_part_title(context, part: part)
+              Lydown::Rendering::Staff.heading_part_title(context, part: part)
               
 markup = lambda {|m| Lydown::Rendering::Markup.convert(m) }
 
