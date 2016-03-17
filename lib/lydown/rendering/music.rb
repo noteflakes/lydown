@@ -286,9 +286,16 @@ module Lydown::Rendering
   end
 
   class Barline < Base
+    
+    LILYPOND_BARLINES = {
+      '|:' => '.|:',
+      ':|' => ':|.',
+      '?|' => ''
+    }
+    
     def translate
       barline = @event[:barline]
-      barline = '' if barline == '?|'
+      barline = LILYPOND_BARLINES[barline] || barline
       @context.emit(:music, "\\bar \"#{barline}\" ")
     end
   end
