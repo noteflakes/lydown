@@ -99,6 +99,10 @@ unless tacet
       \override VerticalAxisGroup #'remove-first = ##t
     }
     {{/}}
+    
+    {{?layout['system_count']}}
+    system-count = {{layout['system_count']}}
+    {{/}}
 
     {{?hide_bar_numbers}}
     \context {
