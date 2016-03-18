@@ -101,5 +101,13 @@ module Lydown::Rendering
     def cmd_scoreBreak
       @context.emit(:music, "\\break ") if (@context.render_mode == :score)
     end
+
+    def cmd_partPageBreak
+      @context.emit(:music, "\\pageBreak ") if (@context.render_mode == :part)
+    end
+    
+    def cmd_scorePageBreak
+      @context.emit(:music, "\\pageBreak ") if (@context.render_mode == :score)
+    end
   end
 end
