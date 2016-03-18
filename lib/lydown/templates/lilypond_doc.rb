@@ -52,6 +52,7 @@ page_break = context.get_setting("#{context.render_mode}/document/page_break", {
     {{?t = work[:title]}}title = {{markup[t]}}{{/}}
     {{?t = work[:subtitle]}}subtitle = {{markup[t]}}{{/}}
     {{?t = work[:source]}}source = {{markup[t]}}{{/}}
+    {{?t = work[:edition] || ""}}edition = {{markup[t]}}{{/}}
     {{?part_title}}instrument = {{markup[part_title]}}{{/}}
     {{?context.render_mode == :score}}score-mode = ##t{{/}}
   }
