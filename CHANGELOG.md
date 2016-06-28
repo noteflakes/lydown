@@ -1,3 +1,18 @@
+## Version 0.14.0 2016-06-28
+
+- Remove support for Ruby 1.9.x.
+- Refactor templating system.
+- Add `\partPageBreak`, `\scorePageBreak` commands.
+- Add heading_title setting for setting part title in heading.
+- Add support for edition-specific settings (activated using `-e` switch).
+- Add support for transpose setting.
+- Properly render complex staff hierarchy (with proper staff groups).
+- Add default settings for trumpet/tromba.
+- Translate :| / |: bars to :|. / .|: respectively.
+- Add `\scoreBreak` command (counterpart of `\partBreak`).
+- Cleaner file structure.
+- Add support for layout parameters (#11).
+
 ## Version 0.13.0 2016-03-10
 
 - Remove lilypond installer (rely on lyp instead).
