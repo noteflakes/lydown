@@ -8,8 +8,8 @@
     g\p r^\markup { Jünger ("alto"): }
     r^\markup { \italic { bl ah } }
     r_\markup { bleh }
-    g^\markup { \right-align { \italic { right-aligned } } } 
-    b_\markup { \left-align { \italic { left-aligned } } } 
+    g^\markup { \right-align { \italic { right-aligned } } }
+    b_\markup { \left-align { \italic { left-aligned } } }
     d^\markup { \center-align { \italic { centered } } }
     R1*1^\markup { fullbar }
     R1*2^\markup { double fullbar }
@@ -20,14 +20,19 @@
   \header {
   }
 
-  \bookpart { 
+  \bookpart {
     \score {
-      <<
-      \new Staff = Staff \with { }
-      \context Staff = Staff {
-        \"//music"
-      }
+      \new OrchestraGroup \with { } <<
+        \new StaffGroup \with { \consists "Bar_number_engraver" } <<
+          <<
+          \new Staff = Staff \with { }
+          \context Staff = Staff {
+            \"//music"
+          }
+          >>
+        >>
       >>
+      \layout { }
     }
   }
 }

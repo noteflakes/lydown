@@ -1,4 +1,5 @@
 \version "2.18.2"
+#(define lydown:render-mode 'part)
 
 "02-outro//music" = \relative c {
   << \new Voice = "voice1" {
@@ -12,19 +13,24 @@
   \header {
   }
 
-  \bookpart { 
+  \bookpart {
     \score {
       \header {
-        piece = \markup { \bold \large { 2. Outro } }
+        piece = "2. Outro"
       }
 
-      <<
-      \new Staff = Staff \with { }
-      \context Staff = Staff {
-        \set Score.skipBars = ##t 
-        \"02-outro//music"
-      }
+      \new OrchestraGroup \with { } <<
+        \new StaffGroup \with { \consists "Bar_number_engraver" } <<
+          <<
+          \new Staff = Staff \with { }
+          \context Staff = Staff {
+            \set Score.skipBars = ##t
+            \"02-outro//music"
+          }
+          >>
+        >>
       >>
+      \layout { }
     }
   }
 }

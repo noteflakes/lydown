@@ -1,17 +1,27 @@
 `
 \version "2.18.2"
 
+{{? context.render_mode}}
 #(define lydown:render-mode '{{context.render_mode}})
+{{/}}
 
 {{? !context['render_opts/no_lib']}}
 \pinclude "{{File.join(LY_LIB_DIR, 'lib.ly')}}"
 {{/}}
 `
 
-includes = Lydown::Rendering.include_files(context, {})
-includes.each {|i| __emit__[i]}
+Lydown::Rendering.get_set_variables(context).each do |k, v|
+`
+#(define lydown:{{k}} {{v}})
+`
+end
 
-if context.render_mode == :proof
+proof_mode = context.render_mode == :proof
+
+includes = Lydown::Rendering.include_files(context, {})
+includes.each {|i| __emit__[i, " "]}
+
+if proof_mode
   __emit__[Lydown::Rendering::PROOFING_LY_SETTINGS]
 end
 
@@ -28,57 +38,58 @@ end
 
 __render__(:variables, _)
 
-work = context.get_setting('work', {})
-
-part_title =  (context.render_mode == :part) && 
+work = context.get_setting('work', {}) || {}
+markup = lambda {|m| Lydown::Rendering::Markup.convert(m) }
+part_title =  (context.render_mode == :part) &&
               (part = context['render_opts/parts']) &&
               Lydown::Rendering::Staff.heading_part_title(context, part: part)
-              
-markup = lambda {|m| Lydown::Rendering::Markup.convert(m) }
-
-page_break = context.get_setting("#{context.render_mode}/document/page_break", {})
+doc_page_break = (context.render_mode == :part) ?
+  context.get_setting("parts/#{context['render_opts/parts']}/document/page_break", {}) :
+  context.get_setting("#{context.render_mode}/document/page_break", {})
 
 `
+{{? !proof_mode}}
 \book {
-  {{?page_break == 'blank page before'}}
-  \paper { 
-     first-page-number = #-1 
-  } 
+{{/}}
+  {{?doc_page_break == 'blank page before'}}
+  \paper {
+     first-page-number = #-1
+  }
   {{/}}
-  
   \header {
     {{?t = work[:composer]}}composer = {{markup[t]}}{{/}}
     {{?t = work[:opus]}}opus = {{markup[t]}}{{/}}
     {{?t = work[:title]}}title = {{markup[t]}}{{/}}
     {{?t = work[:subtitle]}}subtitle = {{markup[t]}}{{/}}
     {{?t = work[:source]}}source = {{markup[t]}}{{/}}
-    {{?t = work[:edition] || ""}}edition = {{markup[t]}}{{/}}
+    {{?t = work[:edition]}}edition = {{markup[t]}}{{/}}
     {{?part_title}}instrument = {{markup[part_title]}}{{/}}
-    {{?context.render_mode == :score}}score-mode = ##t{{/}}
   }
 
+  {{? !proof_mode}}
   \bookpart {
-    
-  {{?page_break == 'before'}}
+  {{/}}
+
+  {{?doc_page_break == 'before'}}
   \pageBreak
   {{/}}
-  
-  {{?page_break == 'blank page before'}}
+
+  {{?doc_page_break == 'blank page before'}}
     \paper { oddHeaderMarkup = ##f evenHeaderMarkup = ##f }
     \markup " "
   } \bookpart {
     \paper { oddHeaderMarkup = ##f evenHeaderMarkup = ##f
       bookTitleMarkup = ##f } \markup { " " }
-  } \bookpart { 
+  } \bookpart {
     \paper { bookTitleMarkup = ##f }
   {{/}}
 `
 
-  context['movements'].each do |n, m|
-    __render__(:movement, context: context, name: n, movement: m)
-  end
-  
+context['movements'].each do |n, m|
+  __render__(:movement, context: context, name: n, movement: m)
+end
 `
-  }
-}
+{{? !proof_mode}}
+} }
+{{/}}
 `

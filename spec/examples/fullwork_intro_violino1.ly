@@ -12,20 +12,25 @@
   \header {
   }
 
-  \bookpart { 
+  \bookpart {
     \score {
       \header {
-        piece = \markup { \bold \large { 1. Intro } }
+        piece = "1. Intro"
       }
 
-      <<
-      \new Staff = ViolinoIStaff \with { }
-      \context Staff = ViolinoIStaff {
-        \clef "treble"
-        \"01-intro/violino1/music"
-        \bar "|."
-      }
+      \new OrchestraGroup \with { } <<
+        \new StaffGroup \with { \consists "Bar_number_engraver" } <<
+          <<
+          \new Staff = ViolinoIStaff \with { }
+          \context Staff = ViolinoIStaff {
+            \clef "treble"
+            \"01-intro/violino1/music"
+            \bar "|."
+          }
+          >>
+        >>
       >>
+      \layout { }
     }
   }
 }

@@ -12,6 +12,7 @@ module Lydown::Rendering
       macros empty_staves midi_tempo instrument_names instrument_name_style 
       parts score movement_source colla_parte include require mode nomode 
       bar_numbers document notation_size work transpose editions layout
+      movement_title
     }
 
     RENDERABLE_SETTING_KEYS = [
@@ -24,7 +25,7 @@ module Lydown::Rendering
       'empty_staves' => ['hide', 'show'],
       'instrument_names' => ['hide', 'show', 'inline', 'inline-right-align', 'inline-center-align'],
       'instrument_name_style' => ['normal', 'smallcaps'],
-      'page_break' => ['none', 'before', 'after', 'before and after', 'blank page before'],
+      'page_break' => ['none', 'before', 'after', 'before and after', 'blank page before', 'bookpart before'],
       'mode' => ['score', 'part', 'none'],
       'bar_numbers' => ['hide', 'shows'],
       'notation_size' => ['huge', 'large', 'normalsize', 'small', 'tiny', 'teeny']
@@ -37,7 +38,7 @@ module Lydown::Rendering
       end
       
       key = @event[:key]
-      value = @event[:value].gsub("\\n", "\n")
+      value = @event[:value] && @event[:value].gsub("\\n", "\n")
       level = @event[:level] || 0
       
       unless (level > 0) || SETTING_KEYS.include?(key)
@@ -90,6 +91,10 @@ module Lydown::Rendering
           add_include(path + 'includes', value)
         when 'require'
           add_require(path + 'requires', value)
+        when 'lyrics_markup_file'
+          set_lyrics_markup(path, value)
+        when 'order' # staff order
+          set_staff_order(path, value)
         else
           path << key
           @context.set_setting(path, value)
@@ -166,6 +171,11 @@ module Lydown::Rendering
       @context['process/mode'] = (mode == :none) ? nil : mode
     end
     
+    def set_staff_order(path, order)
+      order = order.split(',').map {|s| s.strip}
+      @context.set_setting("#{path}order", order)
+    end
+    
     def add_include(includes_path, path)
       includes = @context.get_current_setting(includes_path) || []
 
@@ -182,6 +192,14 @@ module Lydown::Rendering
       end
 
       @context.set_setting(includes_path, includes)
+    end
+    
+    def set_lyrics_markup(path, fn)
+      source_filename = @context['process/last_filename']
+      if source_filename
+        fn = File.expand_path(File.join(File.dirname(source_filename), fn))
+      end
+      @context.set_setting("#{path}lyrics_markup", IO.read(fn))
     end
 
     def add_require(requires_path, package)

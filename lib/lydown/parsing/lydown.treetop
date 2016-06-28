@@ -34,7 +34,7 @@ grammar Lydown
       comment? <Setting>
   end
   rule setting_key
-    [a-z0-9_]+ <Setting::Key>
+    [a-z0-9_\-]+ <Setting::Key>
   end
   rule setting_value
     (!"\n" !"//" .)* <Setting::Value>
@@ -61,7 +61,7 @@ grammar Lydown
     '*|' <Repeat::End>
   end
   rule barline
-    ('?|' / ':|][|:' / '[|:' / ':|]' / [\|\.\:]+) <Barline>
+    ('?|' / ':|][|:' / '[|:' / ':|]' / [\|\.\:']+) <Barline>
   end
   rule duration
     tuplet_value / duration_value / duration_macro
@@ -204,7 +204,10 @@ grammar Lydown
     [\<\>\|\\]? [a-zA-Z_\-\.0-9]+ <Command::Key>
   end
   rule inline_command_argument
-    (string / [^\s\t\n\:]+) <Command::Argument>
+    (string / parenthesized_command_argument / [^\s\t\n\:]+)+ <Command::Argument>
+  end
+  rule parenthesized_command_argument
+    '(' (parenthesized_command_argument / [^\)]+) ')'
   end
   rule voice_selector
     [1234u] ':' <VoiceSelector>

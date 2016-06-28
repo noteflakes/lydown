@@ -12,18 +12,23 @@
   \header {
   }
 
-  \bookpart { 
+  \bookpart {
     \score {
       \header {
-        piece = \markup { \bold \large { 1. Intro } }
+        piece = "1. Intro"
       }
 
-      <<
-      \new Staff = Staff \with { }
-      \context Staff = Staff {
-        \"01-intro//music"
-      }
+      \new OrchestraGroup \with { } <<
+        \new StaffGroup \with { \consists "Bar_number_engraver" } <<
+          <<
+          \new Staff = Staff \with { }
+          \context Staff = Staff {
+            \"01-intro//music"
+          }
+          >>
+        >>
       >>
+      \layout { }
     }
   }
 }

@@ -8,7 +8,7 @@
     e r r d
     g r f r
     a1
-    c,8 d e c c d e c 
+    c,8 d e c c d e c
     c d e c
   } >>
 }
@@ -28,19 +28,23 @@
   \header {
   }
 
-  \bookpart { 
+  \bookpart {
     \score {
-      <<
-      \new Staff = ContinuoStaff \with { \override VerticalAxisGroup.remove-empty = ##f }
+      \new OrchestraGroup \with { } <<
+        \new StaffGroup \with { \consists "Bar_number_engraver" } <<
+          <<
+          \new Staff = ContinuoStaff \with { \override VerticalAxisGroup.remove-empty = ##f }
 
-      \context Staff = ContinuoStaff {
-        \clef "bass"
-        \"/continuo/music"
-      }
+          \context Staff = ContinuoStaff {
+            \clef "bass"
+            \"/continuo/music"
+          }
 
-      \new FiguredBass { \"/continuo/figures" }
-
+          \new FiguredBass { \"/continuo/figures" }
+          >>
+        >>
       >>
+      \layout { }
     }
   }
 }

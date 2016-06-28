@@ -1,6 +1,7 @@
 Bundler.setup(:default, :spec)
 require File.expand_path('../lib/lydown', File.dirname(__FILE__))
 
+SPEC_PATH = File.expand_path('.', File.dirname(__FILE__))
 EXAMPLES_PATH = File.expand_path('examples', File.dirname(__FILE__))
 
 $spec_mode = true
@@ -40,7 +41,7 @@ Lydown::Work::PARALLEL_PROCESS_OPTIONS.delete(:progress)
 Cache.disable!
 
 def verify_example(name, result_name = nil, opts = {})
-  lydown = LydownParser.parse(load_example("#{name}.ld"), 
+  lydown = LydownParser.parse(load_example("#{name}.ld"),
     filename: File.join(EXAMPLES_PATH, "#{name}.ld")
   )
   work = Lydown::Work.new(opts)
@@ -58,6 +59,21 @@ def verify_example(name, result_name = nil, opts = {})
   if opts[:compile]
     expect {Lydown::Lilypond.compile(ly)}.not_to raise_error
   end
+end
+
+def translate_example(name, opts = {})
+  lydown = LydownParser.parse(load_example("#{name}.ld"),
+    filename: File.join(EXAMPLES_PATH, "#{name}.ld")
+  )
+  work = Lydown::Work.new(opts)
+  unless opts[:inhibit_end_barline].nil?
+    work.context['global/settings/inhibit_end_barline'] = opts[:inhibit_end_barline]
+  else
+    work.context['global/settings/inhibit_end_barline'] = true
+  end
+  work.translate(lydown)
+  ly_opts = opts.merge(no_lib: true, no_layout: !opts[:do_layout])
+  work.to_lilypond(ly_opts).strip_whitespace
 end
 
 def work_from_example(name)

@@ -3,7 +3,9 @@ module Lydown::Rendering
     def self.movement_title(context, name)
       return nil if name.nil? || name.empty?
       
-      if name =~ /^(?:([0-9]+)([a-z]*))\-(.+)$/
+      if t = context.get_setting('movement_title', movement: name)
+        title = t
+      elsif name =~ /^(?:([0-9]+)([a-z]*))\-(.+)$/
         title = "#{$1.to_i}#{$2}. #{$3.capitalize}"
       else
         title = name
@@ -24,7 +26,8 @@ module Lydown::Rendering
       'before' => {before: true},
       'after'  => {after: true},
       'before and after' => {before: true, after: true},
-      'blank page before' => {blank_page_before: true}
+      'blank page before' => {blank_page_before: true},
+      'bookpart before' => {bookpart_before: true}
     }
     
     def self.page_breaks(context, opts)
@@ -32,8 +35,8 @@ module Lydown::Rendering
       when :score
         context.get_setting('score/page_break', opts)
       when :part
-        part = opts[:part] || context[:part] || 
-          (context['options/parts'] ? context['options/parts'][0] : '')
+        part = opts[:part] || context[:part] || context['render_opts/parts']
+        
         context.get_setting(:page_break, opts.merge(part: part)) ||
           context.get_setting('parts/page_break', opts)
       else

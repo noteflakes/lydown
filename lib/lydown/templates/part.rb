@@ -33,16 +33,20 @@ cadenza = time == 'unmetered'
 skip_bars = (render_mode == :proof) || (render_mode == :part)
 
 instrument_names = context.get_setting(:instrument_names, setting_opts)
-hide_instrument_names = 
-  (instrument_names == 'hide') || 
+hide_instrument_names =
+  (instrument_names == 'hide') ||
   (instrument_names =~ /^inline\-?(.+)?$/)
-  
+
 if instrument_names =~ /^inline\-?(.+)?$/
   alignment = $1 && "\\#{$1}"
   inline_part_title = Lydown::Rendering::Staff.inline_part_title(
     context, setting_opts.merge(alignment: alignment)
   )
 end
+
+layout = Lydown::Rendering.layout_info(context, setting_opts)
+show_original_clef = score_mode && (layout[:original_clefs] == 'show')
+original_clef = context.get_setting(:original_clef, setting_opts)
 
 `
 <<
@@ -51,7 +55,7 @@ end
   {{? prevent_remove_empty }}
     \override VerticalAxisGroup.remove-empty = ##f
   {{/}}
-  
+
   {{? size = context.get_setting(:staff_size, setting_opts)}}
     fontSize = #{{ size }}
     \override StaffSymbol.staff-space = #(magstep {{ size }})
@@ -63,13 +67,21 @@ end
   {{? skip_bars }}
     \set Score.skipBars = ##t
   {{/}}
-    
+
   {{? tempo = context.get_setting(:tempo, setting_opts)}}
     \tempo "{{tempo}}"
   {{/}}
 
   {{? score_mode && !hide_instrument_names}}
     \set Staff.instrumentName = {{part_title}}
+  {{/}}
+
+  {{? show_original_clef && original_clef }}
+  \incipit { \omit MensuralStaff.TimeSignature \clef "{{original_clef}}" s4 }
+  {{/}}
+  {{? show_original_clef && !original_clef }}
+  \incipit { \override MensuralStaff.StaffSymbol.color = #(rgb-color 1 1 1)
+    \omit MensuralStaff.TimeSignature \omit MensuralStaff.Clef  s4 }
   {{/}}
 
   {{? midi_instrument}}
@@ -85,13 +97,13 @@ end
   {{? score_mode && inline_part_title}}
     {{inline_part_title}}
   {{/}}
-  
+
   {{beaming_mode}}
 
   {{? t = context.get_setting(:transpose, setting_opts)}}
   \transpose {{t}}
   {{/}}
-  
+
   \{{Lydown::Rendering.variable_name(setting_opts.merge(stream: :music))}}
 
   {{? end_barline}}
@@ -110,7 +122,7 @@ if part['lyrics']
       `
       \new Lyrics  \with {
         {{? above_staff}}
-          \with { alignAboveContext = "{{staff_id}}" }
+          alignAboveContext = "{{staff_id}}"
         {{/}}
         {{? size = context.get_setting(:staff_size, setting_opts)}}
           fontSize = #{{ size }}
@@ -132,4 +144,3 @@ end
 `
 >>
 `
- 

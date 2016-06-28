@@ -5,7 +5,7 @@
     c8 d e( f) g a( b c)
 
     d16-. e( fis d) e-. fis( g ees)
-    
+
     d(\p c) d( b)
   } >>
 }
@@ -14,14 +14,19 @@
   \header {
   }
 
-  \bookpart { 
+  \bookpart {
     \score {
-      <<
-      \new Staff = Staff \with { }
-      \context Staff = Staff {
-        \"//music"
-      }
+      \new OrchestraGroup \with { } <<
+        \new StaffGroup \with { \consists "Bar_number_engraver" } <<
+          <<
+          \new Staff = Staff \with { }
+          \context Staff = Staff {
+            \"//music"
+          }
+          >>
+        >>
       >>
+      \layout { }
     }
   }
 }

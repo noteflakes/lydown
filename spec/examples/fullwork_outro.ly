@@ -1,4 +1,5 @@
 \version "2.18.2"
+#(define lydown:render-mode 'score)
 
 "02-outro/violino1/music" = \relative c {
   << \new Voice = "violino1_voice1" {
@@ -19,34 +20,36 @@
   \header {
   }
 
-  \bookpart { 
+  \bookpart {
     \score {
       \header {
-        piece = \markup { \bold \large { 2. Outro } }
+        piece = "2. Outro"
       }
 
-      \new StaffGroup <<
-        \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBar (SystemStartBrace violino1 violino2) )
-        <<
-        \new Staff = ViolinoIStaff \with { }
-        \context Staff = ViolinoIStaff {
-          \set Staff.instrumentName = #"Violino I"
-          \clef "treble"
-          \"02-outro/violino1/music"
-          \bar "|."
-        }
-        >>
+      \new OrchestraGroup \with { } <<
+        \new StaffGroup \with { \consists "Bar_number_engraver" } <<
+          <<
+          \new Staff = ViolinoIStaff \with { }
+          \context Staff = ViolinoIStaff {
+            \set Staff.instrumentName = #"Violino I"
+            \clef "treble"
+            \"02-outro/violino1/music"
+            \bar "|."
+          }
+          >>
 
-        <<
-        \new Staff = ViolinoIIStaff \with { }
-        \context Staff = ViolinoIIStaff {
-          \set Staff.instrumentName = #"Violino II"
-          \clef "treble"
-          \"02-outro/violino2/music"
-          \bar "|."
-        }
+          <<
+          \new Staff = ViolinoIIStaff \with { }
+          \context Staff = ViolinoIIStaff {
+            \set Staff.instrumentName = #"Violino II"
+            \clef "treble"
+            \"02-outro/violino2/music"
+            \bar "|."
+          }
+          >>
         >>
       >>
+      \layout { }
     }
   }
 }

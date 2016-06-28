@@ -5,7 +5,7 @@
     a'8. g16[ f8] ees'
     c c c c d d d d R1*1
     d16(\p c) d( b)
-    
+
     %{command in the middle of a macro group%}
     e8 \clef "bass" e,, e e' e d16 c
 
@@ -21,14 +21,19 @@
   \header {
   }
 
-  \bookpart { 
+  \bookpart {
     \score {
-      <<
-      \new Staff = Staff \with { }
-      \context Staff = Staff {
-        \"//music"
-      }
+      \new OrchestraGroup \with { } <<
+        \new StaffGroup \with { \consists "Bar_number_engraver" } <<
+          <<
+          \new Staff = Staff \with { }
+          \context Staff = Staff {
+            \"//music"
+          }
+          >>
+        >>
       >>
+      \layout { }
     }
   }
 }

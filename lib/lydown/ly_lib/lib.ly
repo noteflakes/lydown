@@ -1,49 +1,53 @@
+#(define-markup-command (mm-feed layout props amount) (number?)
+ (let ((o-s (ly:output-def-lookup layout 'output-scale)))
+   (ly:make-stencil "" '(0 . 0) (cons 0 (abs (/ amount o-s))))))
+
 segno = {
-  \once \override Score.RehearsalMark #'font-size = #-2
+  \once \override Score.RehearsalMark.font-size = #-2
   \mark \markup { \musicglyph #"scripts.segno" }
 }
 
 segnobottom = {
-  \once \override Score.RehearsalMark #'direction = #DOWN
-  \once \override Score.RehearsalMark #'font-size = #-2
+  \once \override Score.RehearsalMark.direction = #DOWN
+  \once \override Score.RehearsalMark.font-size = #-2
   \mark \markup { \musicglyph #"scripts.segno" }
 }
 
 dalsegno = {
-  \once \override Score.RehearsalMark #'break-visibility = #begin-of-line-invisible
-  \once \override Score.RehearsalMark #'direction = #DOWN
-  \once \override Score.RehearsalMark #'self-alignment-X = #RIGHT
-  \once \override Score.RehearsalMark #'font-size = #-2
+  \once \override Score.RehearsalMark.break-visibility = #begin-of-line-invisible
+  \once \override Score.RehearsalMark.direction = #DOWN
+  \once \override Score.RehearsalMark.self-alignment-X = #RIGHT
+  \once \override Score.RehearsalMark.font-size = #-2
   \mark \markup { \fontsize #2 {"dal segno "} \musicglyph #"scripts.segno" }
 }
 
 dacapo = {
-  \once \override Score.RehearsalMark #'break-visibility = #begin-of-line-invisible
-  \once \override Score.RehearsalMark #'direction = #DOWN
-  \once \override Score.RehearsalMark #'self-alignment-X = #RIGHT
+  \once \override Score.RehearsalMark.break-visibility = #begin-of-line-invisible
+  \once \override Score.RehearsalMark.direction = #DOWN
+  \once \override Score.RehearsalMark.self-alignment-X = #RIGHT
   \mark \markup {\bold {\italic {"Da capo"}}}
 }
 
 dalsegnoadlib = {
-  \once \override Score.RehearsalMark #'direction = #DOWN
-  \once \override Score.RehearsalMark #'self-alignment-X = #LEFT
-  \once \override Score.RehearsalMark #'font-size = #-2
+  \once \override Score.RehearsalMark.direction = #DOWN
+  \once \override Score.RehearsalMark.self-alignment-X = #LEFT
+  \once \override Score.RehearsalMark.font-size = #-2
   \mark \markup { \musicglyph #"scripts.segno" ad lib }
 }
 
 finedellaparteprima = {
-  \once \override Score.RehearsalMark #'break-visibility = #begin-of-line-invisible
-  \once \override Score.RehearsalMark #'direction = #DOWN
-  \once \override Score.RehearsalMark #'self-alignment-X = #RIGHT
+  \once \override Score.RehearsalMark.break-visibility = #begin-of-line-invisible
+  \once \override Score.RehearsalMark.direction = #DOWN
+  \once \override Score.RehearsalMark.self-alignment-X = #RIGHT
   \mark \markup {\bold {\italic {"Fine della parte prima"}}}
 }
 
 padbarlinebefore = {
-  \once \override Staff.BarLine #'extra-spacing-width = #'(-2 . 0)
+  \once \override Staff.BarLine.extra-spacing-width = #'(-2 . 0)
 }
 
 padbarlineafter = {
-  \once \override Staff.BarLine #'extra-spacing-width = #'(0 . 2)
+  \once \override Staff.BarLine.extra-spacing-width = #'(0 . 2)
 }
 
 editF = \markup { \center-align \concat { \bold { \italic ( }
@@ -59,7 +63,8 @@ fort = \markup { \center-align \bold { \italic fort }}
 ten = \markup { \italic ten. }
 
 ficta = {
-  \once \override AccidentalSuggestion #'avoid-slur = #'outside
+  \once \override AccidentalSuggestion.avoid-slur = #'outside
+  \once \override AccidentalSuggestion.parenthesized = ##t
   \once \set suggestAccidentals = ##t
 }
 
@@ -184,8 +189,8 @@ prallupbefore = {
   \context { 
     \FiguredBass 
     figuredBassFormatter = #better-format-bass-figure
-%     \override BassFigure #'font-size = #-1
-%     \override BassFigure #'font-name = #"Georgia"
+%     \override BassFigure.font-size = #-1
+%     \override BassFigure.font-name = #"Georgia"
   }
   
 }
@@ -209,29 +214,30 @@ setVerticalMargins = #(define-scheme-function
   (parser location top-staff top-markup bottom) (number? number? number?)
   #{
   \paper {
-    top-system-spacing #'basic-distance = #top-staff
-    top-system-spacing #'minimum-distance = #top-staff
-    top-system-spacing #'padding = -100 % negative padding to ignore skyline
-    top-system-spacing #'stretchability = 0 % fixed position
+    top-system-spacing.basic-distance = #top-staff
+    top-system-spacing.minimum-distance = #top-staff
+    top-system-spacing.padding = -100 % negative padding to ignore skyline
+    top-system-spacing.stretchability = 0 % fixed position
 
-    top-markup-spacing #'basic-distance = #top-markup
-    top-markup-spacing #'minimum-distance = #top-markup
-    top-markup-spacing #'padding = -100 % negative padding to ignore skyline
-    top-markup-spacing #'stretchability = 0 % fixed position
+    top-markup-spacing.basic-distance = #top-markup
+    top-markup-spacing.minimum-distance = #top-markup
+    top-markup-spacing.padding = -100 % negative padding to ignore skyline
+    top-markup-spacing.stretchability = 0 % fixed position
 
-    last-bottom-spacing #'basic-distance = #bottom
-    last-bottom-spacing #'minimum-distance = #bottom
-    last-bottom-spacing #'padding = -100 % negative padding to ignore skyline
-    last-bottom-spacing #'stretchability = 0 % fixed position
+    last-bottom-spacing.basic-distance = #bottom
+    last-bottom-spacing.minimum-distance = #bottom
+    last-bottom-spacing.padding = -100 % negative padding to ignore skyline
+    last-bottom-spacing.stretchability = 0 % fixed position
   }
   #}
-  )
+)
 
-% scoreMode = #(define-music-function (parser location music) (ly:music?)
-%   (if (eq? lydown:render-mode 'score)
-%     #{ #music #}
-%     #{ #}
-%   ))
+halfBarline = {
+  \once \hide Score.SpanBar
+  \once \override Score.BarLine.bar-extent = #'(-1 . 1)
+  \noBreak
+  \bar "|"
+}
 
 scoreMode = #(define-void-function (parser location music) (scheme?)
   (if (eq? lydown:render-mode 'score)
@@ -263,3 +269,42 @@ partMode = #(define-music-function (parser location music) (ly:music?)
     \accepts OrchestraGroup
   }
 }
+
+tacetScore = {
+  \new Staff \with {
+    \override StaffSymbol.staff-space = 0.001
+    \override StaffSymbol.line-count = 1
+    \override StaffSymbol.thickness = 0
+    \override StaffSymbol.color = #(rgb-color 1 1 1)
+    \remove "Time_signature_engraver"
+    \remove "Clef_engraver"
+  }
+  { s4 }
+}
+
+% Shaping commands
+
+sR = #(define-music-function (parser location r) (number?)
+  #{ \once \override Slur.ratio = #r #}
+)
+sE = #(define-music-function (parser location e) (number?)
+  #{ \once \override Slur.eccentricity = #e #}
+)
+
+sHL = #(define-music-function (parser location l) (number?)
+  #{ \once \override Slur.height-limit = #l #}
+)
+
+sP = #(define-music-function (parser location p1 p2) (number? number?)
+  #{ \once \override Slur.positions = #(cons p1 p2) #}
+)
+
+#(define (convert-shape-coords s)
+  (map (lambda (v) (if (eq? v #f) '(0 . 0) v)) s)
+)
+
+sS = #(define-music-function (parser location s) (scheme?)
+  #{ \once \shape #(convert-shape-coords s) Slur #}
+)
+
+knee = \once \override Beam.auto-knee-gap = #0

@@ -7,7 +7,7 @@
 
     c \bar ".|:" d \bar ":..:" e \bar ":|.|:" f \bar ":|.:"
     g \bar ":.|.:" a \bar "[|:" b \bar ":|][|:"
-    c \bar ":|]" d \bar ":|." e \bar ":|:" f \bar ":|" g \bar "" a
+    c \bar ":|]" d \bar ":|." e \bar ":|:" f \bar ":|." g \bar "" a
   } >>
 }
 
@@ -15,14 +15,19 @@
   \header {
   }
 
-  \bookpart { 
+  \bookpart {
     \score {
-      <<
-      \new Staff = Staff \with { }
-      \context Staff = Staff {
-        \"//music"
-      }
+      \new OrchestraGroup \with { } <<
+        \new StaffGroup \with { \consists "Bar_number_engraver" } <<
+          <<
+          \new Staff = Staff \with { }
+          \context Staff = Staff {
+            \"//music"
+          }
+          >>
+        >>
       >>
+      \layout { }
     }
   }
 }

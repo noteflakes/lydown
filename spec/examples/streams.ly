@@ -19,20 +19,25 @@
   \header {
   }
 
-  \bookpart { 
+  \bookpart {
     \score {
-      <<
-      \new Staff = Staff \with { }
-      \context Staff = Staff {
-        \"//music"
-      }
-      \new Lyrics {
-        \lyricsto "voice1"  { \"//lyrics/voice1/1" }
-      }
-      \new Lyrics {
-        \lyricsto "voice1"  { \"//lyrics/voice1/2" }
-      }
+      \new OrchestraGroup \with { } <<
+        \new StaffGroup \with { \consists "Bar_number_engraver" } <<
+          <<
+          \new Staff = Staff \with { }
+          \context Staff = Staff {
+            \"//music"
+          }
+          \new Lyrics \with { } {
+            \lyricsto "voice1"  { \"//lyrics/voice1/1" }
+          }
+          \new Lyrics \with { } {
+            \lyricsto "voice1"  { \"//lyrics/voice1/2" }
+          }
+          >>
+        >>
       >>
+      \layout { }
     }
   }
 }

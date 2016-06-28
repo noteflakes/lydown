@@ -10,15 +10,20 @@
   \header {
   }
 
-  \bookpart { 
+  \bookpart {
     \score {
-      <<
-      \new Staff = Staff \with { }
-      \context Staff = Staff {
-        \tempo "Allegretto"
-        \"//music"
-      }
+      \new OrchestraGroup \with { } <<
+        \new StaffGroup \with { \consists "Bar_number_engraver" } <<
+          <<
+          \new Staff = Staff \with { }
+          \context Staff = Staff {
+            \tempo "Allegretto"
+            \"//music"
+          }
+          >>
+        >>
       >>
+      \layout { }
     }
   }
 }

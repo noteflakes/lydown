@@ -12,25 +12,31 @@
   \header {
   }
 
-  \bookpart { 
-    \markup { 
-      \line { \bold \large { 1. Intro - tacet } }
-      \line { \pad-markup #3 " " }
-    }
-    
+  \bookpart {
     \score {
       \header {
-        piece = \markup { \bold \large { 2. Outro } }
+        piece = "1. Intro - tacet"
+      }
+      \tacetScore
+    }
+    \score {
+      \header {
+        piece = "2. Outro"
       }
 
-      <<
-      \new Staff = ViolinoIIStaff \with { }
-      \context Staff = ViolinoIIStaff {
-        \clef "treble"
-        \"02-outro/violino2/music"
-        \bar "|."
-      }
+      \new OrchestraGroup \with { } <<
+        \new StaffGroup \with { \consists "Bar_number_engraver" } <<
+          <<
+          \new Staff = ViolinoIIStaff \with { }
+          \context Staff = ViolinoIIStaff {
+            \clef "treble"
+            \"02-outro/violino2/music"
+            \bar "|."
+          }
+          >>
+        >>
       >>
+      \layout { }
     }
   }
 }

@@ -1,6 +1,5 @@
 layout:
   paper: A4 portrait
-  indent: 0mm
   staff_size: 6mm
   margin_inner: 12mm
   margin_outer: 18mm
@@ -110,6 +109,12 @@ parts:
   violino2:
     clef: treble
     midi_instrument: violin
+  violon1:
+    clef: treble
+    midi_instrument: violin
+  violon2:
+    clef: treble
+    midi_instrument: violin
   violini:
     clef: treble
     midi_instrument: violin
@@ -138,6 +143,15 @@ parts:
     clef: alto
     midi_instrument: viola
   gamba2:
+    clef: alto
+    midi_instrument: viola
+  viole:
+    clef: alto
+    midi_instrument: viola
+  viole1:
+    clef: alto
+    midi_instrument: viola
+  viole2:
     clef: alto
     midi_instrument: viola
   fagott:
@@ -203,14 +217,14 @@ parts:
       
 score:
   layout:
-    staff_size: 4mm
+    staff_size: 4.8mm
   order:
     - [trumpet, tromba, trumpet1, trumpet2, trumpet3, tromba1, tromba2, tromba3]
     - [flute, flauto1, flauto2, flauto3, flute1, flute2, flute3]
     - [oboe, oboe1, oboe2, oboe3]
-    - [violino, violino1, violino2, violino3, violin1, violin2, violin3, viola]
+    - [violino, violino1, violino2, violino3, violin1, violin2, violin3, viola, violon1, violon2]
     - [viola1, viola2]
-    - [gamba, gamba1, gamba2]
+    - [gamba, viole, gamba1, gamba2, viole1, viole2]
     - [soprano1, soprano2, soprano, alto1, alto2, alto, tenore1, tenore2, tenore, basso1, basso2, basso]
-    - continuo
+    - [fagotto, continuo, "basse-continue"]
 end_barline: "|."

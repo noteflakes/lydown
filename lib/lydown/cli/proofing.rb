@@ -65,7 +65,7 @@ module Lydown::CLI::Proofing
       if dir =~ /^\.\/(.+)$/
         dir = $1
       end
-      if dir =~ /#{base}\/([^\/]+)/
+      if File.expand_path(dir) =~ /#{base}\/([^\/]+)/
         mvt = $1
       else
         mvt = nil

@@ -1,4 +1,5 @@
 \version "2.18.2"
+#(define lydown:render-mode 'score)
 
 "/violino1/music" = \relative c {
   << \new Voice = "violino1_voice1" {
@@ -17,28 +18,30 @@
   \header {
   }
 
-  \bookpart { 
+  \bookpart {
     \score {
-      \new StaffGroup <<
-        \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBar (SystemStartBrace violino1 violino2) )
-        <<
-        \new Staff = ViolinoIStaff \with { }
-        \context Staff = ViolinoIStaff {
-          \set Staff.instrumentName = #"Violino I"
-          \clef "treble"
-          \"/violino1/music"
-        }
-        >>
+      \new OrchestraGroup \with { } <<
+        \new StaffGroup \with { \consists "Bar_number_engraver" } <<
+          <<
+          \new Staff = ViolinoIStaff \with { }
+          \context Staff = ViolinoIStaff {
+            \set Staff.instrumentName = #"Violino I"
+            \clef "treble"
+            \"/violino1/music"
+          }
+          >>
 
-        <<
-        \new Staff = ViolinoIIStaff \with { }
-        \context Staff = ViolinoIIStaff {
-          \set Staff.instrumentName = #"Violino II"
-          \clef "treble"
-          \"/violino2/music"
-        }
+          <<
+          \new Staff = ViolinoIIStaff \with { }
+          \context Staff = ViolinoIIStaff {
+            \set Staff.instrumentName = #"Violino II"
+            \clef "treble"
+            \"/violino2/music"
+          }
+          >>
         >>
       >>
+      \layout { }
     }
   }
 }

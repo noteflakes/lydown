@@ -11,17 +11,22 @@
   \header {
   }
 
-  \bookpart { 
+  \bookpart {
     \require "abc"
     \require "def"
 
     \score {
-      <<
-      \new Staff = Staff \with { }
-      \context Staff = Staff {
-        \"//music"
-      }
+      \new OrchestraGroup \with { } <<
+        \new StaffGroup \with { \consists "Bar_number_engraver" } <<
+          <<
+          \new Staff = Staff \with { }
+          \context Staff = Staff {
+            \"//music"
+          }
+          >>
+        >>
       >>
+      \layout { }
     }
   }
 }

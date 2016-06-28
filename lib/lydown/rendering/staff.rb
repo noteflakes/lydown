@@ -1,7 +1,12 @@
 module Lydown::Rendering
   module Staff
     def self.staff_groups(context, opts, parts)
+      if context.render_mode == :part
+        opts = opts.merge(part: context['render_opts/parts'])
+      end
+      
       model = context.get_setting('score/order', opts)
+      
       parts_copy = parts.clone
       
       groups = []

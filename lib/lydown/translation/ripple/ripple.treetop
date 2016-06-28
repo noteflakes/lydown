@@ -48,7 +48,7 @@ grammar Ripple
   end
   
   rule note
-    grace? note_head duration? expression* <Note>
+    grace? note_head duration? articulation* expression* <Note>
   end
   
   rule grace
@@ -79,8 +79,12 @@ grammar Ripple
     [0-9]+ '.'* <Note::Duration>
   end
   
+  rule articulation
+    '-' [\+] <Note::Articulation>
+  end
+  
   rule expression
-    '\\' [a-zA-Z]+ <Note::Expression>
+    '_'? '\\' [a-zA-Z]+ <Note::Expression>
   end
 
   rule time_signature

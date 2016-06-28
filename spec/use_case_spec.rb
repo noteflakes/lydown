@@ -22,6 +22,10 @@ RSpec.describe Lydown do
   it "correctly handles duration macros with commands" do
     verify_example('use_cases/macros-with-commands')
   end
+  
+  it "correctly handles duration macros with figures" do
+    verify_example('use_cases/macros-with-figures')
+  end
 
   it "correctly translates first note octave" do
     ld = Lydown::Translation.process(ripple: load_example('use_cases/gamba-translation.rpl'))

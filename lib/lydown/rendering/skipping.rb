@@ -2,12 +2,20 @@ module Lydown::Rendering
   PROOFING_LY_SETTINGS = <<EOF
     \\paper {
       indent=0\\mm
-      line-width=110\\mm
       oddFooterMarkup=##f
       oddHeaderMarkup=##f
       bookTitleMarkup = ##f
       scoreTitleMarkup = ##f
-      page-breaking = #ly:minimal-breaking
+      page-breaking = #ly:minimal-breaking %#ly:one-line-auto-height-breaking
+      top-margin=10\\mm
+      bottom-margin=10\\mm
+    }
+
+    \\layout {
+      \\context {
+        \\Score
+        \\remove "Bar_number_engraver"
+      }  
     }
 EOF
   

@@ -1,4 +1,5 @@
 \version "2.18.2"
+#(define lydown:render-mode 'part)
 
 "/violino1/music" = \relative c {
   << \new Voice = "violino1_voice1" {
@@ -9,18 +10,24 @@
 
 \book {
   \header {
+    instrument = "Violino I" 
   }
 
-  \bookpart { 
+  \bookpart {
     \score {
-      <<
-      \new Staff = ViolinoIStaff \with { }
-      \context Staff = ViolinoIStaff {
-        \set Score.skipBars = ##t 
-        \clef "treble"
-        \"/violino1/music"
-      }
+      \new OrchestraGroup \with { } <<
+        \new StaffGroup \with { \consists "Bar_number_engraver" } <<
+          <<
+          \new Staff = ViolinoIStaff \with { }
+          \context Staff = ViolinoIStaff {
+            \set Score.skipBars = ##t
+            \clef "treble"
+            \"/violino1/music"
+          }
+          >>
+        >>
       >>
+      \layout { }
     }
   }
 }

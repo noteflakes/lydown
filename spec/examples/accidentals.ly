@@ -20,13 +20,13 @@
 
     \key d \major
     dis des fisis f f
-    
+
     \key bes \major
     dis e eeses e
-    
+
     \key fis \minor
     fisis
-    
+
     \key ees \major
     eeses
   } >>
@@ -36,14 +36,19 @@
   \header {
   }
 
-  \bookpart { 
+  \bookpart {
     \score {
-      <<
-      \new Staff = Staff \with { }
-      \context Staff = Staff {
-        \"//music"
-      }
+      \new OrchestraGroup \with { } <<
+        \new StaffGroup \with { \consists "Bar_number_engraver" } <<
+          <<
+          \new Staff = Staff \with { }
+          \context Staff = Staff {
+            \"//music"
+          }
+          >>
+        >>
       >>
+      \layout { }
     }
   }
 }

@@ -106,7 +106,13 @@ module Lydown::Translation::Ripple
         note[:duration] = text_value
       end
     end
-    
+
+    class Articulation < Root
+      def translate(note, opts)
+        note[:expressions] << text_value
+      end
+    end
+
     class Expression < Root
       def translate(note, opts)
         note[:expressions] << text_value

@@ -19,22 +19,28 @@
   \header {
   }
 
-  \bookpart { 
+  \bookpart {
     \score {
-      <<
-      \new Staff = SopranoStaff \with { }
-      \context Staff = SopranoStaff {
-        \clef "treble"
-        \set Staff.autoBeaming = ##f
-        \"/soprano/music"
-      }
-      \new Lyrics {
-        \lyricsto "soprano_voice1" { \"/soprano/lyrics/voice1/1" }
-      }
-      \new Lyrics {
-        \lyricsto "soprano_voice1" { \"/soprano/lyrics/voice1/2" }
-      }
+      \new OrchestraGroup \with { } <<
+        \new StaffGroup \with { \consists "Bar_number_engraver"
+          \override SpanBar #'break-visibility = #'#( #t #f #t ) } <<
+          <<
+          \new Staff = SopranoStaff \with { }
+          \context Staff = SopranoStaff {
+            \clef "treble"
+            \set Staff.autoBeaming = ##f
+            \"/soprano/music"
+          }
+          \new Lyrics \with { } {
+            \lyricsto "soprano_voice1" { \"/soprano/lyrics/voice1/1" }
+          }
+          \new Lyrics \with { } {
+            \lyricsto "soprano_voice1" { \"/soprano/lyrics/voice1/2" }
+          }
+          >>
+        >>
       >>
+      \layout { }
     }
   }
 }

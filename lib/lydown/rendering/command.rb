@@ -109,5 +109,46 @@ module Lydown::Rendering
     def cmd_scorePageBreak
       @context.emit(:music, "\\pageBreak ") if (@context.render_mode == :score)
     end
+    
+    def transform_slur_arguments(args)
+      case args.size
+      when 4
+        args = args.map do |a|
+          case a
+          when '_'
+            '#f'
+          when /\(([0-9\.\-]*),([0-9\.\-]*)\)/
+            "(#{$1.empty? ? '0' : $1} . #{$2.empty? ? '0' : $2})"
+          else
+            a
+          end
+        end
+        args.join(" ")
+      when 1
+        args[0].gsub(/_/, ' (0 . 0) ').
+                gsub (/\(([0-9\.\-]*),([0-9\.\-]*)\)/) do |m|
+                  "(#{$1.empty? ? '0' : $1} . #{$2.empty? ? '0' : $2})"
+                end
+      else
+        raise "Invalid slur shape arguments (#{args.inspect})"
+      end
+    end
+    
+    def cmd_slur
+      arguments = transform_slur_arguments(@event[:arguments])
+      @context.emit(:music, "\\sS #'(#{arguments}) ")
+    end
+    
+    # height-limit + eccentricity
+    def cmd_sHLE
+      args = @event[:arguments]
+      @context.emit(:music, "\\sHL #{args[0]} \\sE #{args[1]} ")
+    end
+    
+    # positions
+    def cmd_sP
+      args = @event[:arguments]
+      @context.emit(:music, "\\sP #{args.join(' ')} ")
+    end
   end
 end

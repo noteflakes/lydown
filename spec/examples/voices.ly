@@ -4,7 +4,7 @@
   <<
     \new Voice = "voice1" {
       R1*1
-      
+
       <<
         {
           \voiceOne
@@ -16,7 +16,7 @@
           c2 b4 r
         }
       >>
-    
+
       \oneVoice
       R1*2
       c4 b a g
@@ -38,25 +38,30 @@
   \header {
   }
 
-  \bookpart { 
+  \bookpart {
     \score {
-      <<
-      \new Staff = Staff \with { }
-      \context Staff = Staff {
-        \"//music"
-      }
-      \new Lyrics \with { alignAboveContext = "Staff" } {
-        \lyricsto "voice1" { \"//lyrics/voice1/1" }
-      }
+      \new OrchestraGroup \with { } <<
+        \new StaffGroup \with { \consists "Bar_number_engraver" } <<
+          <<
+          \new Staff = Staff \with { }
+          \context Staff = Staff {
+            \"//music"
+          }
+          \new Lyrics \with { alignAboveContext = "Staff" } {
+            \lyricsto "voice1" { \"//lyrics/voice1/1" }
+          }
 
-      \new Lyrics {
-        \lyricsto "voice2" { \"//lyrics/voice2/1" }
-      }
+          \new Lyrics \with { } {
+            \lyricsto "voice2" { \"//lyrics/voice2/1" }
+          }
 
-      \new Lyrics {
-        \lyricsto "voice2" { \"//lyrics/voice2/2" }
-      }
+          \new Lyrics \with { } {
+            \lyricsto "voice2" { \"//lyrics/voice2/2" }
+          }
+          >>
+        >>
       >>
+      \layout { }
     }
   }
 }

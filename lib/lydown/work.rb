@@ -33,6 +33,14 @@ module Lydown
           @context["global/settings/editions/#{edition}"] = nil
           @context["global/settings"].deep_merge!(edition_settings)
         end
+        
+        (@context["movements"] || {}).each do |n, m|
+          edition_settings = m["settings/editions/#{edition}"]
+          if edition_settings
+            m["settings/editions/#{edition}"] = nil
+            m["settings"].deep_merge!(edition_settings)
+          end
+        end
       end
       
       @context[:variables] = {}

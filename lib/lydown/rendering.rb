@@ -74,6 +74,10 @@ module Lydown::Rendering
     end
     
     def include_files(context, opts)
+      if context.render_mode == :part
+        opts = opts.merge(part: context['render_opts/parts'])
+      end
+      
       filenames = []
       if opts.has_key?(:movement)
         add_includes(filenames, context, :includes, opts)
@@ -97,7 +101,7 @@ module Lydown::Rendering
         when '.ely'
           Lydown::Templates.render(fn, context)
         else
-          "\\include \"#{fn}\""
+          "\\include \"#{File.expand_path(fn)}\""
         end
       end
     end
@@ -137,9 +141,32 @@ module Lydown::Rendering
         layout.deep_merge!(context.get_merged_setting_tree('score/layout', opts) || {})
       when :part
         layout.deep_merge!(context.get_merged_setting_tree('parts/layout', opts) || {})
+        layout.deep_merge!(context.get_merged_setting_tree("parts/#{context['render_opts/parts']}/layout", opts) || {})
       end
       
       layout
+    end
+
+    def get_set_variables(context, opts = {})
+      set = (context.get_merged_setting_tree(:set, opts) || {}).deep!
+      
+      case context.render_mode
+      when :score
+        set.deep_merge!(context.get_merged_setting_tree('score/set', opts) || {})
+      when :part
+        set.deep_merge!(context.get_merged_setting_tree('parts/set', opts) || {})
+        set.deep_merge!(context.get_merged_setting_tree("parts/#{context['render_opts/parts']}/set", opts) || {})
+      end
+      
+      set
+    end
+    
+    def lyrics_markup(context, opts = {})
+      if context.render_mode == :part
+        opts = opts.merge(part: context['render_opts/parts'])
+      end
+      
+      context.get_setting('lyrics_markup', opts)
     end
   end
 end

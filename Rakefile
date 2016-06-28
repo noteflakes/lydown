@@ -116,3 +116,24 @@ def download_native_extension(target, gem_name_and_version)
   sh "curl -L --fail -o packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-#{target}-#{gem_name_and_version}.tar.gz " +
     "#{TRAVELING_RUBY_BASE_URL}/traveling-ruby-gems-#{TRAVELING_RUBY_VERSION}-#{target}/#{gem_name_and_version}.tar.gz"
 end
+
+
+
+
+
+
+desc "Push gem to rubygems.org"
+task :push_gem do
+  sh "gem build lydown.gemspec"
+  sh "gem push lydown-#{VERSION}.gem"
+  sh "rm *.gem"
+end
+
+desc "Install gem locally"
+task :install_gem do
+  sh "gem uninstall -a -x --force lydown"
+  sh "gem build lydown.gemspec"
+  sh "gem install lydown-#{VERSION}.gem"
+  sh "rm lydown-#{VERSION}.gem"
+end
+

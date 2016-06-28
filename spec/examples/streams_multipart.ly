@@ -1,4 +1,5 @@
 \version "2.18.2"
+ #(define lydown:render-mode 'score)
 
 "/soprano1/music" = \relative c {
   << \new Voice = "soprano1_voice1" {
@@ -21,36 +22,40 @@
   \header {
   }
 
-  \bookpart { 
+  \bookpart {
     \score {
-      \new StaffGroup <<
-        \set StaffGroup.systemStartDelimiterHierarchy = #'(SystemStartBracket soprano1 soprano2)
-        <<
-        \new Staff = SopranoIStaff \with { }
-        \context Staff = SopranoIStaff {
-          \set Staff.instrumentName = #"Soprano I"
-          \clef "treble"
-          \set Staff.autoBeaming = ##f
-          \"/soprano1/music"
-        }
-        \new Lyrics {
-          \lyricsto "soprano1_voice1" { \"/soprano1/lyrics/voice1/1" }
-        }
-        >>
+      \new OrchestraGroup \with { }  <<
+        \new StaffGroup \with {
+          \consists "Bar_number_engraver"
+          \override SpanBar #'break-visibility = #'#( #t #f #t ) } <<
+            <<
+            \new Staff = SopranoIStaff \with { }
+            \context Staff = SopranoIStaff {
+              \set Staff.instrumentName = #"Soprano I"
+              \clef "treble"
+              \set Staff.autoBeaming = ##f
+              \"/soprano1/music"
+            }
+            \new Lyrics \with { } {
+              \lyricsto "soprano1_voice1" { \"/soprano1/lyrics/voice1/1" }
+            }
+            >>
 
-        <<
-        \new Staff = SopranoIIStaff \with { }
-        \context Staff = SopranoIIStaff {
-          \set Staff.instrumentName = #"Soprano II"
-          \clef "treble"
-          \set Staff.autoBeaming = ##f
-          \"/soprano2/music"
-        }
-        \new Lyrics {
-          \lyricsto "soprano2_voice1" { \"/soprano2/lyrics/voice1/1" }
-        }
+          <<
+          \new Staff = SopranoIIStaff \with { }
+          \context Staff = SopranoIIStaff {
+            \set Staff.instrumentName = #"Soprano II"
+            \clef "treble"
+            \set Staff.autoBeaming = ##f
+            \"/soprano2/music"
+          }
+          \new Lyrics \with { } {
+            \lyricsto "soprano2_voice1" { \"/soprano2/lyrics/voice1/1" }
+          }
+          >>
         >>
       >>
+      \layout { }
     }
   }
 }

@@ -10,8 +10,25 @@ module Lydown::Rendering
     '6' => '16',
     '3' => '32'
   }
-
+  
   class Duration < Base
+    def self.full_bar_value(time)
+      r = Rational(time)
+      case r.numerator
+      when 1
+        r.denominator.to_s
+      when 3
+        case r.denominator
+        when 1
+          "\\breve."
+        else
+          "#{r.denominator / 2}."
+        end
+      else
+        nil
+      end
+    end
+    
     def translate
       Notes.cleanup_duration_macro(@context)
 
@@ -185,23 +202,11 @@ module Lydown::Rendering
   class Rest < Base
     include Notes
 
-    def full_bar_value(time)
-      r = Rational(time)
-      case r.numerator
-      when 1
-        r.denominator.to_s
-      when 3
-        "#{r.denominator / 2}."
-      else
-        nil
-      end
-    end
-
     def translate
       translate_expressions
 
       if @event[:multiplier]
-        value = full_bar_value(@context.get_current_setting(:time))
+        value = Duration.full_bar_value(@context.get_current_setting(:time))
         @context['process/duration_macro'] = nil unless @context['process/macro_group']
         if value
           @event[:rest_value] = "#{value}*#{@event[:multiplier]}"
@@ -222,21 +227,9 @@ module Lydown::Rendering
   class Silence < Base
     include Notes
 
-    def full_bar_value(time)
-      r = Rational(time)
-      case r.numerator
-      when 1
-        r.denominator.to_s
-      when 3
-        "#{r.denominator / 2}."
-      else
-        nil
-      end
-    end
-
     def translate
       if @event[:multiplier]
-        value = full_bar_value(@context.get_current_setting(:time))
+        value = Duration.full_bar_value(@context.get_current_setting(:time))
         @context['process/duration_macro'] = nil unless @context['process/macro_group']
         if value
           @event[:rest_value] = "#{value}*#{@event[:multiplier]}"
@@ -290,13 +283,18 @@ module Lydown::Rendering
     LILYPOND_BARLINES = {
       '|:' => '.|:',
       ':|' => ':|.',
+      '|\''=> '\halfBarline',
       '?|' => ''
     }
     
     def translate
       barline = @event[:barline]
       barline = LILYPOND_BARLINES[barline] || barline
-      @context.emit(:music, "\\bar \"#{barline}\" ")
+      if barline =~ /^\\/
+        @context.emit(:music, "#{barline} ")
+      else
+        @context.emit(:music, "\\bar \"#{barline}\" ")
+      end
     end
   end
 end
